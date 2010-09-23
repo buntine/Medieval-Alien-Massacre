@@ -1,17 +1,19 @@
 # mam
 
-FIXME: write description
+A sadistic, pro-death text-based adventure for children.
 
 ## Usage
 
-FIXME: write
+Unsure as of the moment...
 
 ## Installation
 
-FIXME: write
+$ lein deps
+$ lein uberjar
+$ java -jar mam-version-standalone.jar
 
 ## License
 
-Copyright (C) 2010 FIXME
+Copyright (C) 2010 Andrew Buntine
 
 Distributed under the Eclipse Public License, the same as Clojure.
