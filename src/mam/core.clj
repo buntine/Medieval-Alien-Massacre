@@ -8,6 +8,12 @@
 
 
 (ns mam.core
+  (:gen-class)
   (:use mam.gameplay))
+
+(defn new-game []
+  "Game initializer. Welcomes user and starts loop."
+  (print-welcome-message)
+  (messages 0))
 
 (new-game)
