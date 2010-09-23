@@ -17,7 +17,7 @@
   (println "A sadistic, pro-death text-based adventure for children")
   (println "---------------------------------------------------------\n"))
 
-(defn mam []
+(defn -main []
   "Game initializer. Welcomes user and starts loop."
   (print-welcome-message)
   (messages 0))

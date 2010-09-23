@@ -1,7 +1,7 @@
 
 ; rooms.clj
-; Defines data structures for describing rooms
-; and objects.
+; Defines data structures for describing rooms,
+; maps and objects.
 
 
 (ns mam.rooms)
