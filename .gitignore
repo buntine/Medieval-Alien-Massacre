@@ -1,3 +1,4 @@
+*.swp
 pom.xml
 *jar
 lib
