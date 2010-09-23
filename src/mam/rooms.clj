@@ -6,12 +6,6 @@
 
 (ns mam.rooms)
 
-(defn print-welcome-message []
-  (println "---------------------------------------------------------")
-  (println "                MEDIEVAL ALIEN MASSACRE")
-  (println "A sadistic, pro-death text-based adventure for children")
-  (println "---------------------------------------------------------\n"))
-
 (def rooms
   (vector
     '("You are in a dark cavern, standing in a pool of your own vomit. An arrow is protruding from your neck."

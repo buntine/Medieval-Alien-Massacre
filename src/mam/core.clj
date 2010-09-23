@@ -11,9 +11,13 @@
   (:gen-class)
   (:use mam.gameplay))
 
-(defn new-game []
+(defn print-welcome-message []
+  (println "---------------------------------------------------------")
+  (println "                MEDIEVAL ALIEN MASSACRE")
+  (println "A sadistic, pro-death text-based adventure for children")
+  (println "---------------------------------------------------------\n"))
+
+(defn mam []
   "Game initializer. Welcomes user and starts loop."
   (print-welcome-message)
   (messages 0))
-
-(new-game)
