@@ -7,7 +7,6 @@
 (ns mam.gameplay
   (:use mam.rooms))
 
-
 (defn describe-room [room]
   "Prints a description of the current room"
   (println (first (nth rooms room))))
