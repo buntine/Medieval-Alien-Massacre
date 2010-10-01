@@ -20,4 +20,4 @@
 (defn -main []
   "Game initializer. Welcomes user and starts loop."
   (print-welcome-message)
-  (messages 0))
+  (messages))
