@@ -11,7 +11,6 @@
 ; The current room the player is in.
 (def current-room 0)
 
-
 ; Declarations for some procedures I mention before they have been
 ; defined.
 (declare messages)
@@ -44,4 +43,3 @@
   (print "> ")
   (flush)
   (parse-input (read-line)))
-
