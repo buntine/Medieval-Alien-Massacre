@@ -38,9 +38,9 @@
   "Parses the user input."
   (if (not (empty? s))
     (let [cmd (command->list s)]
-      (println s)
       (if (false? (verb-parse cmd))
         (println "I don't understand that."))
+      (newline)
       (messages))))
 
 (defn messages []
