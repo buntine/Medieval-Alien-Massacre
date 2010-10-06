@@ -8,8 +8,8 @@
   (:use mam.rooms))
 
 
-; The current room the player is in.
-(def current-room 0)
+(def current-room 0)    ; The current room the player is in.
+(def visited-rooms [])  ; The rooms that the player has visited.
 
 ; Declarations for some procedures I mention before they have been
 ; defined.
@@ -18,7 +18,13 @@
 
 (defn describe-room [room]
   "Prints a description of the current room"
-  (println (first (nth rooms room))))
+  (let [visited? (some #{room} visited-rooms)
+        descs (nth rooms room)]
+    (if visited?
+      (println (second descs))
+      (do
+        (def visited-rooms (conj visited-rooms room))
+        (println (first descs))))))
 
 (defn verb-parse [verb-lst]
   "Calls the procedure identified by the first usable verb"
