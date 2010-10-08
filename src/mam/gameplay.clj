@@ -27,7 +27,8 @@
         (println (first descs))))))
 
 (defn verb-parse [verb-lst]
-  "Calls the procedure identified by the first usable verb"
+  "Calls the procedure identified by the first usable verb. Returns
+   false if the command is not understood."
   false)
 
 (defn command->list [s]
