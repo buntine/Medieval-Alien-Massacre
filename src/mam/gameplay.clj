@@ -16,6 +16,14 @@
 (declare messages)
 
 
+(defn describe-objects-for-room [room]
+  "Prints a description for each object thats in the given room"
+  (let [objects (nth room-objects room)
+        descs (map (fn [o] (first (nth object-descriptions o))) objects)]
+    (println
+      (reduce (fn [t o]
+                (str t (str "\n" o))) descs))))
+
 (defn describe-room [room]
   "Prints a description of the current room"
   (let [visited? (some #{room} visited-rooms)
@@ -24,7 +32,8 @@
       (println (second descs))
       (do
         (def visited-rooms (conj visited-rooms room))
-        (println (first descs))))))
+        (println (first descs))))
+    (describe-objects-for-room room)))
 
 (defn verb-parse [verb-lst]
   "Calls the procedure identified by the first usable verb. Returns

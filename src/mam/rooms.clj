@@ -23,16 +23,18 @@
 ; Create a variable for each object that the user can interact with.
 ; I stole this pattern for representing objects from Dunnet, so thanks Ron.
 ; TODO: Implement.
-'()
+(def obj-longbow 0)
+(def obj-bow 0)
 
 ; A vector containing the objects that each room contains when the game starts. Nil means
-; the room is initially empty.
+; the room is initially empty. Each index corresponds to the room as defined in 'rooms'.
 (def room-objects
   (vector
     (list obj-longbow)
      nil))
 
-; The descriptions of objects, as they appear in game and in the inventory.
+; The descriptions of objects, as they appear in game and in the inventory. Each object is
+; assigned a number above, which corresponds to it's index here.
 (def object-descriptions
   (vector
-    '("There is a wooden Longbow here", "A longbow")))
+    '("There is a wooden longbow here", "A longbow")))
