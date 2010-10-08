@@ -31,7 +31,7 @@
 (def room-objects
   (vector
     (list obj-longbow)
-     nil))
+     '()))
 
 ; The descriptions of objects, as they appear in game and in the inventory. Each object is
 ; assigned a number above, which corresponds to it's index here.

@@ -17,12 +17,15 @@
 
 
 (defn describe-objects-for-room [room]
-  "Prints a description for each object thats in the given room"
+  "Prints a description for each object that's in the given room"
   (let [objects (nth room-objects room)
-        descs (map (fn [o] (first (nth object-descriptions o))) objects)]
-    (println
-      (reduce (fn [t o]
-                (str t (str "\n" o))) descs))))
+        descs (map (fn [o]
+                     (str " - "
+                          (first (nth object-descriptions o)))) objects)]
+    (if (not (empty? objects))
+      (println
+        (reduce (fn [t o]
+                  (str t (str "\n" o))) descs)))))
 
 (defn describe-room [room]
   "Prints a description of the current room"
@@ -38,10 +41,12 @@
 (defn verb-parse [verb-lst]
   "Calls the procedure identified by the first usable verb. Returns
    false if the command is not understood."
+  ; TODO: Implement.
   false)
 
 (defn command->list [s]
   "Translates the given string to a list"
+  ; TODO: Implement.
   '())
 
 (defn parse-input [s]
@@ -56,6 +61,7 @@
 (defn messages []
   "Describes current room and prompts for user input."
   (describe-room current-room)
+  (newline)
   (print "> ")
   (flush)
   (parse-input (read-line)))
