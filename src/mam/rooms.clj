@@ -15,10 +15,24 @@
     '("The cavern has opened up into a large hall, although it's still very dark. Blood is rushing from your neck."
       "A large, dim hall. Smells of blood.")))
 
+; Specifies the verbs that users can identify an object with.
+(def obj-identifiers
+  (vector
+    {'longbow 0 'bow 0}))
+
+; Create a variable for each object that the user can interact with.
+; I stole this pattern for representing objects from Dunnet, so thanks Ron.
+; TODO: Implement.
+'()
+
 ; A vector containing the objects that each room contains when the game starts. Nil means
 ; the room is initially empty.
-; I stole this pattern for representing objects from Dunnet, so thanks Ron.
 (def room-objects
   (vector
-    (list 'obj-longbow)
+    (list obj-longbow)
      nil))
+
+; The descriptions of objects, as they appear in game and in the inventory.
+(def object-descriptions
+  (vector
+    '("There is a wooden Longbow here", "A longbow")))
