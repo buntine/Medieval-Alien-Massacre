@@ -15,7 +15,8 @@
     '("The cavern has opened up into a large hall, although it's still very dark. Blood is rushing from your neck."
       "A large, dim hall. Smells of blood.")))
 
-; Specifies the verbs that users can identify an object with.
+; Specifies the verbs that users can identify an object with (a gun might
+; be "gun", "weapon", etc). Each index corresponds to the same index in room-objects.
 (def obj-identifiers
   (vector
     {'longbow 0 'bow 0}))
