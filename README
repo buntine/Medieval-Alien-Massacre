@@ -8,9 +8,11 @@ Unsure as of the moment...
 
 ## Installation
 
+First, install Leiningen: http://github.com/technomancy/leiningen
+
 $ lein deps
 $ lein uberjar
-$ java -jar mam-version-standalone.jar
+$ java -jar mam-1.0.0-SNAPSHOT-standalone.jar
 
 ## License
 
