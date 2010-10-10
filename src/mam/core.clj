@@ -1,11 +1,10 @@
 
-; MEDIEVAL ALIEN MASSACRE. v0.1
+; MEDIEVAL ALIEN MASSACRE.
 ; By Andrew Buntine, 2010
 ; http://www.andrewbuntine.com
 ;
 ; core.clj
 ; Initialises the game and gets things moving.
-
 
 (ns mam.core
   (:gen-class)

@@ -3,7 +3,6 @@
 ; Handles all aspects of gameplay including prompts,
 ; command parsing, saves, loads, etc.
 
-
 (ns mam.gameplay
   (:use mam.rooms))
 
