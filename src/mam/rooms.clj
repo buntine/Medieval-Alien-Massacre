@@ -6,9 +6,6 @@
 
 (ns mam.rooms)
 
-(defmacro def-from-string [s val]
-  `(def ~(symbol (eval s)) ~val))
-
 
 ; A vector of pairs. Each index contains both a large description (first visit) and a brief
 ; description (all subsequent visits).

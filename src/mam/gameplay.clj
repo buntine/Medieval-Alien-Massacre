@@ -18,7 +18,7 @@
 
 (defn describe-object [obj]
   "Returns the string which describes the given object (symbol)"
-  (str " - " (object-descriptions (objects obj))))
+  (str " - " (first (object-descriptions (objects obj)))))
 
 (defn describe-objects-for-room [room]
   "Prints a description for each object that's in the given room"
