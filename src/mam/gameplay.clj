@@ -16,13 +16,15 @@
 (declare messages)
 
 
+(defn describe-object [obj]
+  "Returns the string which describes the given object (symbol)"
+  (str " - " (object-descriptions (objects obj))))
+
 (defn describe-objects-for-room [room]
   "Prints a description for each object that's in the given room"
-  (let [objects (nth room-objects room)
-        descs (map (fn [o]
-                     (str " - "
-                          (first (nth object-descriptions o)))) objects)]
-    (if (not (empty? objects))
+  (let [objs (room-objects room)
+        descs (map describe-object objs)]
+    (if (not (empty? objs))
       (println
         (reduce (fn [t o]
                   (str t (str "\n" o))) descs)))))
@@ -30,7 +32,7 @@
 (defn describe-room [room]
   "Prints a description of the current room"
   (let [visited? (some #{room} visited-rooms)
-        descs (nth rooms room)]
+        descs (rooms room)]
     (if visited?
       (println (second descs))
       (do

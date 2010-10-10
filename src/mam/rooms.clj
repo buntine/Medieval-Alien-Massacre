@@ -6,6 +6,10 @@
 
 (ns mam.rooms)
 
+(defmacro def-from-string [s val]
+  `(def ~(symbol (eval s)) ~val))
+
+
 ; A vector of pairs. Each index contains both a large description (first visit) and a brief
 ; description (all subsequent visits).
 (def rooms
@@ -17,21 +21,19 @@
 
 ; Specifies the verbs that users can identify an object with (a gun might
 ; be "gun", "weapon", etc). Each index corresponds to the same index in room-objects.
-(def obj-identifiers
+(def object-identifiers
   (vector
-    {'longbow 0 'bow 0}))
+    {'obj-longbow 0 'obj-bow 0}))
 
-; Create a variable for each object that the user can interact with.
-; I stole this pattern for representing objects from Dunnet, so thanks Ron.
-; TODO: Implement.
-(def obj-longbow 0)
-(def obj-bow 0)
+; Create a flattened map of all objects that the user can interact with.
+; I sorta' stole/borrowed this pattern for representing objects from Dunnet, so thanks Ron.
+(def objects (reduce conj object-identifiers))
 
 ; A vector containing the objects that each room contains when the game starts. Nil means
 ; the room is initially empty. Each index corresponds to the room as defined in 'rooms'.
 (def room-objects
   (vector
-    (list obj-longbow)
+    (list 'obj-longbow)
      '()))
 
 ; The descriptions of objects, as they appear in game and in the inventory. Each object is
