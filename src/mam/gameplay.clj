@@ -4,7 +4,8 @@
 ; command parsing, saves, loads, etc.
 
 (ns mam.gameplay
-  (:use mam.rooms))
+  (:use mam.rooms)
+  (:use [clojure.contrib.string :only (split)]))
 
 
 (def current-room 0)    ; The current room the player is in.
@@ -45,15 +46,15 @@
   ; TODO: Implement.
   false)
 
-(defn command->list [s]
-  "Translates the given string to a list"
+(defn command->seq [s]
+  "Translates the given string to a sequence"
   ; TODO: Implement.
-  '())
+  (split #"\s+" s))
 
 (defn parse-input [s]
   "Parses the user input."
   (if (not (empty? s))
-    (let [cmd (command->list s)]
+    (let [cmd (command->seq s)]
       (if (false? (verb-parse cmd))
         (println "I don't understand that."))
       (newline)
