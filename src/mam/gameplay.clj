@@ -8,8 +8,9 @@
   (:use [clojure.contrib.string :only (split)]))
 
 
-(def current-room 0)    ; The current room the player is in.
-(def visited-rooms [])  ; The rooms that the player has visited.
+(def current-room 0)              ; The current room the player is in.
+(def visited-rooms [])            ; The rooms that the player has visited.
+(def ignore-verbs '(the that is)) ; Verbs that should be ignored in commands.
 
 ; Declarations for some procedures I mention before they have been
 ; defined.
@@ -42,17 +43,19 @@
 
 (defn verb-parse [verb-lst]
   "Calls the procedure identified by the first usable verb. Returns
-   false if the command is not understood."
+   false if the command is not understood"
   ; TODO: Implement.
   false)
 
 (defn command->seq [s]
-  "Translates the given string to a sequence"
-  ; TODO: Implement.
-  (split #"\s+" s))
+  "Translates the given string to a sequence, removing ignored words"
+  (let [verbs (split #"\s+" s)]
+    (filter (fn [v]
+              (not (some #{(symbol v)} ignore-verbs)))
+            verbs)))
 
 (defn parse-input [s]
-  "Parses the user input."
+  "Parses the user input"
   (if (not (empty? s))
     (let [cmd (command->seq s)]
       (if (false? (verb-parse cmd))
@@ -61,7 +64,7 @@
       (messages))))
 
 (defn messages []
-  "Describes current room and prompts for user input."
+  "Describes current room and prompts for user input"
   (describe-room current-room)
   (newline)
   (print "> ")
