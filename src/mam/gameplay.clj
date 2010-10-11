@@ -64,7 +64,9 @@
     (if (empty? verb-lst)
       false
       (if f
-        (f (rest verb-lst))
+        (do
+          (f (rest verb-lst))
+           true)
         (verb-parse (rest verb-lst))))))
 
 (defn command->seq [s]
