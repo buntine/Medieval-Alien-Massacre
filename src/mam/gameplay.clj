@@ -11,7 +11,7 @@
 
 (def current-room 0)               ; The current room the player is in.
 (def visited-rooms [])             ; The rooms that the player has visited.
-(def ignore-verbs '(the that is to ; Verbs that should be ignored in commands.
+(def ignore-words '(the that is to ; Verbs that should be ignored in commands.
                     fucking damn)) 
 
 ; Maps user commands to the appropriate function.
@@ -73,7 +73,7 @@
   "Translates the given string to a sequence, removing ignored words"
   (let [verbs (split #"\s+" s)]
     (filter (fn [v]
-              (not (some #{(symbol v)} ignore-verbs)))
+              (not (some #{(symbol v)} ignore-words)))
             verbs)))
 
 (defn parse-input [s]
