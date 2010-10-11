@@ -8,9 +8,10 @@
   (:use [clojure.contrib.string :only (split)]))
 
 
-(def current-room 0)              ; The current room the player is in.
-(def visited-rooms [])            ; The rooms that the player has visited.
-(def ignore-verbs '(the that is)) ; Verbs that should be ignored in commands.
+(def current-room 0)                     ; The current room the player is in.
+(def visited-rooms [])                   ; The rooms that the player has visited.
+(def ignore-verbs '(the that is fucking  ; Verbs that should be ignored in commands.
+                    damn)) 
 
 ; Declarations for some procedures I mention before they have been
 ; defined.
