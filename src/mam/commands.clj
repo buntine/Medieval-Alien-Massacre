@@ -2,10 +2,17 @@
 ; commands.clj
 ; Defines functions for handling user commands.
 
-(ns mam.commands)
+(in-ns 'mam.gameplay)
+(declare set-current-room)
+
+(ns mam.commands
+  (:use mam.gameplay)
+  (:use mam.rooms))
+
 
 (defn move-room [dir]
   "Attempts to move in the given direction."
+  ; TODO: Implement.
   (println "You can't go that way."))
 
 (defn cmd-go [verbs]
