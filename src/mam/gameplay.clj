@@ -9,10 +9,10 @@
   (:use [clojure.contrib.string :only (split)]))
 
 
-(def current-room 0)                     ; The current room the player is in.
-(def visited-rooms [])                   ; The rooms that the player has visited.
-(def ignore-verbs '(the that is fucking  ; Verbs that should be ignored in commands.
-                    damn)) 
+(def current-room 0)               ; The current room the player is in.
+(def visited-rooms [])             ; The rooms that the player has visited.
+(def ignore-verbs '(the that is to ; Verbs that should be ignored in commands.
+                    fucking damn)) 
 
 ; Maps user commands to the appropriate function.
 (def cmd-verbs
@@ -22,7 +22,6 @@
    'northeast cmd-northeast 'southeast cmd-southeast 'southwest cmd-southwest
    'northwest cmd-northwest})
    
-
 ; Declarations for some procedures I mention before they have been
 ; defined.
 (declare messages)
@@ -52,11 +51,21 @@
         (println (first descs))))
     (describe-objects-for-room room)))
 
+(defn fn-for-command [cmd]
+  "Returns the function for the given command verb, or nil"
+  (if cmd
+    (cmd-verbs (symbol cmd))
+    nil))
+
 (defn verb-parse [verb-lst]
   "Calls the procedure identified by the first usable verb. Returns
    false if the command is not understood"
-  ; TODO: Implement.
-  false)
+  (let [f (fn-for-command (first verb-lst))]
+    (if (empty? verb-lst)
+      false
+      (if f
+        (f (rest verb-lst))
+        (verb-parse (rest verb-lst))))))
 
 (defn command->seq [s]
   "Translates the given string to a sequence, removing ignored words"

@@ -7,7 +7,8 @@
 
 (defn cmd-go [verbs]
   "Expects to be given direction. Dispatches to the correct function"
-  false)
+  (println "You can't go that way.")
+  true)
 
 (defn cmd-north [verbs]
   false)
