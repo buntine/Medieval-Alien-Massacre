@@ -10,10 +10,17 @@
 ; description (all subsequent visits).
 (def rooms
   (vector
-    '("You are in a dark cavern, standing in a pool of your own vomit. An arrow is protruding from your neck."
-      "Dark cavern, vomit is everywhere.")
+    '("You are in a dark cavern, standing in a pool of your own vomit. An arrow is protruding from your neck. A passage leads to the north."
+      "Dark cavern, vomit is everywhere. Passage to north.")
     '("The cavern has opened up into a large hall, although it's still very dark. Blood is rushing from your neck."
       "A large, dim hall. Smells of blood.")))
+
+; Map to specify which rooms the player will enter on the given movement.
+(def map
+  (vector
+;    no  ea  so  we  ne  se  sw  nw 
+    [1   nil nil nil nil nil nil nil]
+    [nil nil 0   nil nil nil nil nil]))
 
 ; Specifies the verbs that users can identify an object with (a gun might
 ; be "gun", "weapon", etc). Each index corresponds to the same index in room-objects.
