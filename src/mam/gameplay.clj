@@ -5,6 +5,7 @@
 
 (ns mam.gameplay
   (:use mam.rooms)
+  (:use mam.commands)
   (:use [clojure.contrib.string :only (split)]))
 
 
@@ -12,6 +13,15 @@
 (def visited-rooms [])                   ; The rooms that the player has visited.
 (def ignore-verbs '(the that is fucking  ; Verbs that should be ignored in commands.
                     damn)) 
+
+; Maps user commands to the appropriate function.
+(def cmd-verbs
+  {'go cmd-go 'n cmd-north 'e cmd-east 's cmd-south 'w cmd-west
+   'ne cmd-northeast 'se cmd-southeast 'sw cmd-southwest 'nw cmd-northwest
+   'north cmd-north 'east cmd-east 'south cmd-south 'west cmd-west
+   'northeast cmd-northeast 'southeast cmd-southeast 'southwest cmd-southwest
+   'northwest cmd-northwest})
+   
 
 ; Declarations for some procedures I mention before they have been
 ; defined.
