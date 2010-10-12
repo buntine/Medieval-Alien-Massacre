@@ -12,7 +12,7 @@
 (def current-room (ref 0))         ; The current room the player is in.
 (def visited-rooms (ref []))       ; The rooms that the player has visited.
 (def inventory (ref []))           ; The players inventory of items.
-(def ignore-words '(the that is to ; Verbs that should be ignored in commands.
+(def ignore-words '(the that is to ; Words that should be ignored in commands.
                     fucking damn)) 
 
 ; Maps user commands to the appropriate function.
@@ -21,7 +21,7 @@
    'ne cmd-northeast 'se cmd-southeast 'sw cmd-southwest 'nw cmd-northwest
    'north cmd-north 'east cmd-east 'south cmd-south 'west cmd-west
    'northeast cmd-northeast 'southeast cmd-southeast 'southwest cmd-southwest
-   'northwest cmd-northwest 'help cmd-help})
+   'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take})
    
 ; Declarations for some procedures I mention before they have been
 ; defined.

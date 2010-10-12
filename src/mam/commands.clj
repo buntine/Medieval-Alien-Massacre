@@ -60,3 +60,7 @@
   (println "   * Inspired by Dunnet, by Rob Schnell")
   (println "   * If you're wondering why you keep dying, don't worry, it's just a game.")
   (println "  ------------------------------"))
+
+(defn cmd-take [verbs]
+  "Attempts to take an object from the current room"
+  (println "I don't see that here..."))
