@@ -63,4 +63,5 @@
 
 (defn cmd-take [verbs]
   "Attempts to take an object from the current room"
+  ; TODO: Implement.
   (println "I don't see that here..."))
