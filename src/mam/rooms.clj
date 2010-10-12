@@ -16,6 +16,7 @@
       "A large, dim hall. Smells of blood.")))
 
 ; Map to specify which rooms the player will enter on the given movement.
+; 999 indicates that something special needs to be done (check conditions, etc).
 (def world-map
   (vector
 ;    no  ea  so  we  ne  se  sw  nw 
