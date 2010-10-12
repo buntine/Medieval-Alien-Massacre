@@ -20,7 +20,7 @@
    'ne cmd-northeast 'se cmd-southeast 'sw cmd-southwest 'nw cmd-northwest
    'north cmd-north 'east cmd-east 'south cmd-south 'west cmd-west
    'northeast cmd-northeast 'southeast cmd-southeast 'southwest cmd-southwest
-   'northwest cmd-northwest})
+   'northwest cmd-northwest 'help cmd-help})
    
 ; Declarations for some procedures I mention before they have been
 ; defined.

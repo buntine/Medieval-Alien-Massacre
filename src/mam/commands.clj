@@ -50,3 +50,10 @@
 
 (defn cmd-northwest [verbs]
   (move-room 'northwest))
+
+(defn cmd-help [verbs]
+  (println "  M-A-M HELP")
+  (println "  ------------------------------")
+  (println "   * Directions can be specified in full (north, southwest, etc) or abbreviated (n, sw, etc).")
+  (println "   * If you're wondering why you keep dying, don't worry, it's just a game.")
+  (println "  ------------------------------"))
