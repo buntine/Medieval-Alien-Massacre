@@ -11,6 +11,7 @@
 
 (def current-room (ref 0))         ; The current room the player is in.
 (def visited-rooms (ref []))       ; The rooms that the player has visited.
+(def inventory (ref []))           ; The players inventory of items.
 (def ignore-words '(the that is to ; Verbs that should be ignored in commands.
                     fucking damn)) 
 

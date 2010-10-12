@@ -35,8 +35,8 @@
 ; I sorta' stole/borrowed this pattern for representing objects from Dunnet, so thanks Ron.
 (def objects (reduce conj object-identifiers))
 
-; A vector containing the objects that each room contains when the game starts. Nil means
-; the room is initially empty. Each index corresponds to the room as defined in 'rooms'.
+; A vector containing the objects that each room contains when the game starts. Each index
+; corresponds to the room as defined in 'rooms'.
 (def room-objects
   (vector
     (list 'obj-longbow)
