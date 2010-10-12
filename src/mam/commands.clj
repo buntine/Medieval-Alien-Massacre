@@ -4,6 +4,7 @@
 
 (in-ns 'mam.gameplay)
 (declare set-current-room)
+(declare current-room)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -12,8 +13,13 @@
 
 (defn move-room [dir]
   "Attempts to move in the given direction."
-  ; TODO: Implement.
-  (println "You can't go that way."))
+  (let [i (directions (symbol dir))]
+    (if (not i)
+      (println "I don't understand that direction.")
+      (let [room ((world-map @current-room) i)]
+        (if (nil? room)
+          (println "You can't go that way.")
+          (set-current-room room))))))
 
 (defn cmd-go [verbs]
   "Expects to be given direction. Dispatches to the 'move' command"

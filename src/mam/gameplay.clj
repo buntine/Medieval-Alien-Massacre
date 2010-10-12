@@ -9,8 +9,8 @@
   (:use [clojure.contrib.string :only (split)]))
 
 
-(def current-room 0)               ; The current room the player is in.
-(def visited-rooms [])             ; The rooms that the player has visited.
+(def current-room (ref 0))         ; The current room the player is in.
+(def visited-rooms (ref []))       ; The rooms that the player has visited.
 (def ignore-words '(the that is to ; Verbs that should be ignored in commands.
                     fucking damn)) 
 
@@ -27,6 +27,10 @@
 (declare messages)
 
 
+(defn set-current-room [room]
+  (dosync
+    (ref-set current-room room)))
+
 (defn describe-object [obj]
   "Returns the string which describes the given object (symbol)"
   (str " - " (first (object-descriptions (objects obj)))))
@@ -42,12 +46,12 @@
 
 (defn describe-room [room]
   "Prints a description of the current room"
-  (let [visited? (some #{room} visited-rooms)
+  (let [visited? (some #{room} @visited-rooms)
         descs (rooms room)]
     (if visited?
       (println (second descs))
-      (do
-        (def visited-rooms (conj visited-rooms room))
+      (dosync
+        (alter visited-rooms conj room)
         (println (first descs))))
     (describe-objects-for-room room)))
 
@@ -87,7 +91,7 @@
 
 (defn messages []
   "Describes current room and prompts for user input"
-  (describe-room current-room)
+  (describe-room @current-room)
   (newline)
   (print "> ")
   (flush)
