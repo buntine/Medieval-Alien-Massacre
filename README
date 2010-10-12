@@ -2,9 +2,13 @@
 
 A sadistic, pro-death text-based adventure for children.
 
+
 ## Usage
 
-Unsure as of the moment...
+First install, and then:
+
+$ java -jar mam-1.0.0-SNAPSHOT-standalone.jar
+
 
 ## Installation
 
@@ -12,7 +16,13 @@ First, install Leiningen: http://github.com/technomancy/leiningen
 
 $ lein deps
 $ lein uberjar
-$ java -jar mam-1.0.0-SNAPSHOT-standalone.jar
+
+
+# Notes
+
+ - Type the 'help' command in gameplay for some tips and instructions.
+ - Inspired by Dunnet, by Rob Schnell (bundled with emacs).
+
 
 ## License
 
