@@ -5,6 +5,7 @@
 (in-ns 'mam.gameplay)
 (declare set-current-room)
 (declare current-room)
+(declare take-object)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -62,6 +63,12 @@
   (println "  ------------------------------"))
 
 (defn cmd-take [verbs]
-  "Attempts to take an object from the current room"
-  ; TODO: Implement.
-  (println "I don't see that here..."))
+  "Loops through the verbs trying to match one to a takeable object"
+  (if (empty? verbs)
+    (println "You must supply an object to take!")
+    ; Check all the remaining verbs for a match.
+    (loop [objs verbs]
+      (if (empty? objs)
+        (println "I don't see that here...")
+        (if (not (take-object (symbol (first objs))))
+          (recur (rest objs)))))))

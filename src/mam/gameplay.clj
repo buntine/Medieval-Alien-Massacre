@@ -32,6 +32,11 @@
   (dosync
     (ref-set current-room room)))
 
+(defn take-object [obj]
+  "Attempts to take an object from the current room."
+  ; TODO: Implement.
+  false)
+
 (defn describe-object [obj]
   "Returns the string which describes the given object (symbol)"
   (str " - " (first (object-descriptions (objects obj)))))
