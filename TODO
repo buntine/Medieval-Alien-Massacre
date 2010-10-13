@@ -1,3 +1,4 @@
 - Refactor codebase to be more idiomatic.
 - Add in inventory
 - Add functionality for 'special' things in particular rooms
+- Maybe prevent current-room-info from appearing if the user has not changed room (like when they 'take' a non-existant object)
