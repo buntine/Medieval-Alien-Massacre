@@ -21,7 +21,8 @@
    'ne cmd-northeast 'se cmd-southeast 'sw cmd-southwest 'nw cmd-northwest
    'north cmd-north 'east cmd-east 'south cmd-south 'west cmd-west
    'northeast cmd-northeast 'southeast cmd-southeast 'southwest cmd-southwest
-   'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take})
+   'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take
+   'inventory cmd-inventory})
    
 ; Declarations for some procedures I mention before they have been
 ; defined.
@@ -34,12 +35,13 @@
 
 (defn take-object [obj]
   "Attempts to take an object from the current room."
-  ; TODO: Implement actual state-changes here.
   (let [opts (nth room-objects @current-room)
         obj-index (object-identifiers (symbol obj))]
     (if (or (not obj-index) (not (some #{obj-index} opts)))
       false
-      (do
+      (dosync
+        (alter inventory conj obj-index)
+        ; TODO: Remove object from room...
         (println "Taken...")
         true))))
 

@@ -75,3 +75,8 @@
         (println "I don't see that here...")
         (if (not (take-object (symbol (first objs))))
           (recur (rest objs)))))))
+
+(defn cmd-inventory [verbs]
+  "Displays the players inventory"
+  ; TODO: Implement.
+  (println "You currently have no objects."))

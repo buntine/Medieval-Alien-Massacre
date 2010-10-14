@@ -14,6 +14,7 @@
   (println "---------------------------------------------------------")
   (println "                MEDIEVAL ALIEN MASSACRE")
   (println "A sadistic, pro-death text-based adventure for children")
+  (println "   By Andrew Buntine (http://www.andrewbuntine.com/)")
   (println "---------------------------------------------------------\n"))
 
 (defn -main []
