@@ -97,16 +97,19 @@
 (defn parse-input [s]
   "Parses the user input"
   (if (not (empty? s))
-    (let [cmd (command->seq s)]
+    (let [cmd (command->seq s)
+          orig-room @current-room]
       (if (false? (verb-parse cmd))
         (println "I don't understand that."))
       (newline)
-      (messages))))
+      (messages (not (= orig-room @current-room))))))
 
-(defn messages []
-  "Describes current room and prompts for user input"
-  (describe-room @current-room)
-  (newline)
-  (print "> ")
-  (flush)
-  (parse-input (read-line)))
+(defn messages ([] (messages true))
+  ([verbose]
+   "Describes current room and prompts for user input"
+   (when verbose
+     (describe-room @current-room)
+     (newline))
+   (print "> ")
+   (flush)
+   (parse-input (read-line))))

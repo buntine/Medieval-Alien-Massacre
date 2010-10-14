@@ -1,6 +1,6 @@
 - Refactor codebase to be more idiomatic.
+- Finish off object take/drop functionality.
 - Add in inventory
 - Add functionality for 'special' things in particular rooms
-- Maybe prevent current-room-info from appearing if the user has not changed room (like when they 'take' a non-existant object)
 - Maybe convert all strings to symbols before parsing the given command.
   - '(some command here) instead of '("some" "command" "here")
