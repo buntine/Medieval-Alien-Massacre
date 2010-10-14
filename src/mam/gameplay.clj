@@ -34,12 +34,18 @@
 
 (defn take-object [obj]
   "Attempts to take an object from the current room."
-  ; TODO: Implement.
-  false)
+  ; TODO: Implement actual state-changes here.
+  (let [opts (nth room-objects @current-room)
+        obj-index (object-identifiers (symbol obj))]
+    (if (or (not obj-index) (not (some #{obj-index} opts)))
+      false
+      (do
+        (println "Taken...")
+        true))))
 
-(defn describe-object [obj]
+(defn describe-object [objnum]
   "Returns the string which describes the given object (symbol)"
-  (str " - " (first (object-descriptions (objects obj)))))
+  (str " - " (first (object-descriptions objnum))))
 
 (defn describe-objects-for-room [room]
   "Prints a description for each object that's in the given room"

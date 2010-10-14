@@ -29,22 +29,17 @@
 ; Specifies the verbs that users can identify an object with (a gun might
 ; be "gun", "weapon", etc). Each index corresponds to the same index in room-objects.
 (def object-identifiers
-  (vector
-    {'obj-longbow 0 'obj-bow 0}))
-
-; Create a flattened map of all objects that the user can interact with.
-; I sorta' stole/borrowed this pattern for representing objects from Dunnet, so thanks Ron.
-(def objects (reduce conj object-identifiers))
+  {'longbow 0 'bow 0})
 
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
 (def room-objects
   (vector
-    (list 'obj-longbow)
-     '()))
+    '(0)
+    '()))
 
 ; The descriptions of objects, as they appear in game and in the inventory. Each object is
-; assigned a number above, which corresponds to it's index here.
+; assigned a number in object-identifiers, which corresponds to it's index here.
 (def object-descriptions
   (vector
     '("There is a wooden longbow here", "A longbow")))

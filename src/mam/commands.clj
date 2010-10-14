@@ -2,10 +2,13 @@
 ; commands.clj
 ; Defines functions for handling user commands.
 
+; I need this to allow 'mutual' interation between this namespace and
+; mam.gameplay. There must be a better way of doing this!
 (in-ns 'mam.gameplay)
 (declare set-current-room)
 (declare current-room)
 (declare take-object)
+
 
 (ns mam.commands
   (:use mam.gameplay)
