@@ -5,9 +5,8 @@
 ; I need this to allow 'mutual' interation between this namespace and
 ; mam.gameplay. There must be a better way of doing this!
 (in-ns 'mam.gameplay)
-(declare set-current-room)
-(declare current-room)
-(declare take-object)
+(declare set-current-room current-room take-object
+         inventory)
 
 
 (ns mam.commands
@@ -31,29 +30,14 @@
     (println "You need to supply a direction!")
     (move-room (first verbs))))
 
-(defn cmd-north [verbs]
-  (move-room 'north))
-
-(defn cmd-east [verbs]
-  (move-room 'east))
-
-(defn cmd-south [verbs]
-  (move-room 'south))
-
-(defn cmd-west [verbs]
-  (move-room 'west))
-
-(defn cmd-northeast [verbs]
-  (move-room 'northeast))
-
-(defn cmd-southeast [verbs]
-  (move-room 'southeast))
-
-(defn cmd-southwest [verbs]
-  (move-room 'southwest))
-
-(defn cmd-northwest [verbs]
-  (move-room 'northwest))
+(defn cmd-north [verbs] (move-room 'north))
+(defn cmd-east [verbs] (move-room 'east))
+(defn cmd-south [verbs] (move-room 'south))
+(defn cmd-west [verbs] (move-room 'west))
+(defn cmd-northeast [verbs] (move-room 'northeast))
+(defn cmd-southeast [verbs] (move-room 'southeast))
+(defn cmd-southwest [verbs] (move-room 'southwest))
+(defn cmd-northwest [verbs] (move-room 'northwest))
 
 (defn cmd-help [verbs]
   (println "  M-A-M HELP")
