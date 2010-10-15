@@ -33,15 +33,21 @@
   (dosync
     (ref-set current-room room)))
 
+(defn take-object-from-room [objs opts obj-index]
+  "Physically removes the given object (obj-index) from the current room. Should
+   be called from within (alter)"
+  (assoc-in objs [@current-room]
+           (filter #(not (= obj-index %)) opts)))
+
 (defn take-object [obj]
-  "Attempts to take an object from the current room."
-  (let [opts (nth room-objects @current-room)
+  "Attempts to take an object from the current room"
+  (let [opts (nth @room-objects @current-room)
         obj-index (object-identifiers (symbol obj))]
     (if (or (not obj-index) (not (some #{obj-index} opts)))
       false
       (dosync
         (alter inventory conj obj-index)
-        ; TODO: Remove object from room...
+        (alter room-objects take-object-from-room opts obj-index)
         (println "Taken...")
         true))))
 
@@ -51,7 +57,7 @@
 
 (defn describe-objects-for-room [room]
   "Prints a description for each object that's in the given room"
-  (let [objs (room-objects room)
+  (let [objs (@room-objects room)
         descs (map describe-object objs)]
     (if (not (empty? objs))
       (println

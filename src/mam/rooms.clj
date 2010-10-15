@@ -34,9 +34,9 @@
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
 (def room-objects
-  (vector
-    '(0)
-    '()))
+  (ref (vector
+         '(0)
+         '())))
 
 ; The descriptions of objects, as they appear in game and in the inventory. Each object is
 ; assigned a number in object-identifiers, which corresponds to it's index here.

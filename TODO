@@ -1,5 +1,5 @@
 - Refactor codebase to be more idiomatic.
-- Finish off object take/drop functionality.
+- Finish off object drop functionality.
 - Add in inventory
 - Add functionality for 'special' things in particular rooms
 - Maybe convert all strings to symbols before parsing the given command.
