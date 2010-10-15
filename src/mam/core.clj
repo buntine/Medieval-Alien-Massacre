@@ -5,6 +5,7 @@
 ;
 ; core.clj
 ; Initialises the game and gets things moving.
+; If running in a REPL, execute: (-main)
 
 (ns mam.core
   (:gen-class)

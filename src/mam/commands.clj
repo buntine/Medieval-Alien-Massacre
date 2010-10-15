@@ -62,6 +62,7 @@
 
 (defn cmd-drop [verbs]
   "Loops through the verbs trying to match one to a droppable object"
+  ; TODO: Implement.
   (if (empty? verbs)
     (println "You must supply an object to drop!")
     (println "You can't drop that item.")))
