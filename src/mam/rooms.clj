@@ -26,9 +26,6 @@
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7})
 
-; Holds the players inventory of objects.
-(def inventory (ref []))
-
 ; Specifies the verbs that users can identify an object with (a gun might
 ; be "gun", "weapon", etc). Each index corresponds to the same index in room-objects.
 (def object-identifiers

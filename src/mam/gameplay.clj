@@ -51,9 +51,20 @@
         (println "Taken...")
         true))))
 
-(defn describe-object [objnum]
-  "Returns the string which describes the given object (symbol)"
-  (str " - " (first (object-descriptions objnum))))
+(defn describe-object ([objnum] (describe-object objnum 'game))
+  ([objnum context]
+    "Returns the string which describes the given object (symbol)"
+    (let [f (if (= context 'game) first second)]
+      (str " - " (f (object-descriptions objnum))))))
+
+(defn display-inventory []
+  "Displays the players inventory"
+  (let [descs (map #(describe-object % 'inv) @inventory)]
+    (when (not (empty? descs))
+      (println "You currently have:")
+      (println
+        (reduce (fn [t o]
+                  (str t (str "\n" o))) descs)))))
 
 (defn describe-objects-for-room [room]
   "Prints a description for each object that's in the given room"

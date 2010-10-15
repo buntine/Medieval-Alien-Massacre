@@ -6,7 +6,7 @@
 ; mam.gameplay. There must be a better way of doing this!
 (in-ns 'mam.gameplay)
 (declare set-current-room current-room take-object
-         inventory)
+         inventory display-inventory)
 
 
 (ns mam.commands
@@ -44,7 +44,7 @@
   (println "  ------------------------------")
   (println "   * Directions are north, east, south, west, northeaast, southeast, southwest, northeast.")
   (println "   * Or abbreviated n, e, s, w, ne, se, sw, nw.")
-  (println "   * Keys automatically open the appropriate doors, so you don't need to 'open' them.")
+  (println "   * Keys automatically open the appropriate doors, so you don't need to 'unlock' them.")
   (println "   * Inspired by Dunnet, by Rob Schnell")
   (println "   * If you're wondering why you keep dying, don't worry, it's just a game.")
   (println "  ------------------------------"))
@@ -62,5 +62,6 @@
 
 (defn cmd-inventory [verbs]
   "Displays the players inventory"
-  ; TODO: Implement.
-  (println "You currently have no objects."))
+  (if (empty? @inventory)
+    (println "Your inventory is currently empty.")
+    (display-inventory)))
