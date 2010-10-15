@@ -6,7 +6,7 @@
 ; mam.gameplay. There must be a better way of doing this!
 (in-ns 'mam.gameplay)
 (declare set-current-room current-room take-object
-         inventory display-inventory)
+         inventory display-inventory drop-object)
 
 
 (ns mam.commands
@@ -62,10 +62,13 @@
 
 (defn cmd-drop [verbs]
   "Loops through the verbs trying to match one to a droppable object"
-  ; TODO: Implement.
   (if (empty? verbs)
     (println "You must supply an object to drop!")
-    (println "You can't drop that item.")))
+    (loop [objs verbs]
+      (if (empty? objs)
+        (println "You can't drop that item.")
+        (if (not (drop-object (symbol (first objs))))
+          (recur (rest objs)))))))
 
 (defn cmd-inventory [verbs]
   "Displays the players inventory"
