@@ -22,7 +22,7 @@
    'north cmd-north 'east cmd-east 'south cmd-south 'west cmd-west
    'northeast cmd-northeast 'southeast cmd-southeast 'southwest cmd-southwest
    'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take
-   'inventory cmd-inventory})
+   'drop cmd-drop 'dump cmd-drop 'inventory cmd-inventory})
    
 ; Declarations for some procedures I mention before they have been
 ; defined.

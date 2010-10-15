@@ -60,6 +60,12 @@
         (if (not (take-object (symbol (first objs))))
           (recur (rest objs)))))))
 
+(defn cmd-drop [verbs]
+  "Loops through the verbs trying to match one to a droppable object"
+  (if (empty? verbs)
+    (println "You must supply an object to drop!")
+    (println "You can't drop that item.")))
+
 (defn cmd-inventory [verbs]
   "Displays the players inventory"
   (if (empty? @inventory)
