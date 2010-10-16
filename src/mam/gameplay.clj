@@ -35,7 +35,7 @@
 
 (defn in-inventory? [obj-index]
   "Returns true if object assigned to 'obj-index' is in players inventory"
-  (not (nil? (some #{obj-index} @inventory))))
+  (boolean (some #{obj-index} @inventory)))
 
 (defn take-object-from-room [objs opts obj-index]
   "Removes given object from the current room. Should be called from within (alter)"
