@@ -37,6 +37,16 @@
   "Returns true if object assigned to 'obj-index' is in players inventory"
   (boolean (some #{obj-index} @inventory)))
 
+(defn obj-weight [obj-index]
+  "Returns the weight assigned to the given object"
+  (nth (nth object-details obj-index) 2))
+
+(defn inventory-weight []
+  "Returns the current weight of the players inventory"
+  (if (empty? @inventory)
+    0
+    (reduce (fn [t o] (+ t (obj-weight o)) @inventory))))
+
 (defn take-object-from-room [objs opts obj-index]
   "Removes given object from the current room. Should be called from within (alter)"
   (assoc-in objs [@current-room]
@@ -53,10 +63,13 @@
         obj-index (object-identifiers (symbol obj))]
     (if (or (not obj-index) (not (some #{obj-index} opts)))
       false
-      (dosync
-        (alter inventory conj obj-index)
-        (alter room-objects take-object-from-room opts obj-index)
-        (println "Taken...")
+      (do
+        (if (> (+ (inventory-weight) (obj-weight obj-index)) *total-weight*)
+          (println "You cannot carry that much weight.")
+          (dosync
+            (alter inventory conj obj-index)
+            (alter room-objects take-object-from-room opts obj-index)
+            (println "Taken...")))
         true))))
 
 (defn drop-object [obj]
@@ -75,7 +88,7 @@
   ([objnum context]
     "Returns the string which describes the given object (symbol)"
     (let [f (if (= context 'game) first second)]
-      (str " - " (f (object-descriptions objnum))))))
+      (str " - " (f (object-details objnum))))))
 
 (defn print-with-newlines [lines]
   "Prints a sequence of strings, separated by newlines. Only useful for side-effects"

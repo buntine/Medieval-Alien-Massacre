@@ -38,8 +38,10 @@
          '(0)
          '())))
 
-; The descriptions of objects, as they appear in game and in the inventory. Each object is
-; assigned a number in object-identifiers, which corresponds to it's index here.
-(def object-descriptions
+; The details of objects, incl. in-game and inventory descriptions, weight, etc. Each object
+; is assigned a number in object-identifiers, which corresponds to it's index here.
+(def object-details
   (vector
-    '("There is a wooden longbow here", "A longbow")))
+    ["There is a wooden longbow here", "A longbow", 3]))
+
+(def *total-weight* 12)
