@@ -45,7 +45,7 @@
   "Returns the current weight of the players inventory"
   (if (empty? @inventory)
     0
-    (reduce (fn [t o] (+ t (obj-weight o)) @inventory))))
+    (reduce #(+ %1 (obj-weight %2)) @inventory)))
 
 (defn take-object-from-room [objs opts obj-index]
   "Removes given object from the current room. Should be called from within (alter)"
@@ -93,8 +93,7 @@
 (defn print-with-newlines [lines]
   "Prints a sequence of strings, separated by newlines. Only useful for side-effects"
   (println
-    (reduce (fn [t o]
-              (str t (str "\n" o))) lines)))
+    (reduce #(str %1 "\n" %2) lines)))
 
 (defn display-inventory []
   "Displays the players inventory"
