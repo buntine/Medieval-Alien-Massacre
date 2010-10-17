@@ -1,6 +1,4 @@
 - Refactor codebase to be more idiomatic.
 - Add functionality for 'special' things in particular rooms
-- Maybe convert all strings to symbols before parsing the given command.
-  - '(some command here) instead of '("some" "command" "here")
 - Start writing storyline
 - Start designing/implementing load and save functionality

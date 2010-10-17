@@ -16,7 +16,7 @@
 
 (defn move-room [dir]
   "Attempts to move in the given direction."
-  (let [i (directions (symbol dir))]
+  (let [i (directions dir)]
     (if (not i)
       (println "I don't understand that direction.")
       (let [room ((world-map @current-room) i)]
@@ -57,7 +57,7 @@
     (loop [objs verbs]
       (if (empty? objs)
         (println "I don't see that here...")
-        (if (not (take-object (symbol (first objs))))
+        (if (not (take-object (first objs)))
           (recur (rest objs)))))))
 
 (defn cmd-drop [verbs]
@@ -67,7 +67,7 @@
     (loop [objs verbs]
       (if (empty? objs)
         (println "You can't drop that item.")
-        (if (not (drop-object (symbol (first objs))))
+        (if (not (drop-object (first objs)))
           (recur (rest objs)))))))
 
 (defn cmd-inventory [verbs]

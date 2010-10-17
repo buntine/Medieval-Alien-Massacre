@@ -60,7 +60,7 @@
 (defn take-object [obj]
   "Attempts to take an object from the current room"
   (let [opts (nth @room-objects @current-room)
-        obj-index (object-identifiers (symbol obj))]
+        obj-index (object-identifiers obj)]
     (if (or (not obj-index) (not (some #{obj-index} opts)))
       false
       (do
@@ -75,7 +75,7 @@
 (defn drop-object [obj]
   "Attempts to drop an object into the current room"
   (let [opts (nth @room-objects @current-room)
-        obj-index (object-identifiers (symbol obj))]
+        obj-index (object-identifiers obj)]
     (if (or (not obj-index) (not (in-inventory? obj-index)))
       false
       (dosync
@@ -124,7 +124,7 @@
 (defn fn-for-command [cmd]
   "Returns the function for the given command verb, or nil"
   (if cmd
-    (cmd-verbs (symbol cmd))
+    (cmd-verbs cmd)
     nil))
 
 (defn verb-parse [verb-lst]
@@ -140,11 +140,10 @@
         (verb-parse (rest verb-lst))))))
 
 (defn command->seq [s]
-  "Translates the given string to a sequence, removing ignored words"
+  "Translates the given string to a sequence of symbols, removing ignored words"
   (let [verbs (split #"\s+" s)]
-    (filter (fn [v]
-              (not (some #{(symbol v)} ignore-words)))
-            verbs)))
+    (filter (fn [v] (not (some #{v} ignore-words)))
+            (map symbol verbs))))
 
 (defn parse-input [s]
   "Parses the user input"
