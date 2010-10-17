@@ -49,26 +49,26 @@
   (println "   * If you're wondering why you keep dying, don't worry, it's just a game.")
   (println "  ------------------------------"))
 
-(defn cmd-take [verbs]
-  "Loops through the verbs trying to match one to a takeable object"
-  (if (empty? verbs)
-    (println "You must supply an object to take!")
-    ; Check all the remaining verbs for a match.
-    (loop [objs verbs]
-      (if (empty? objs)
-        (println "I don't see that here...")
-        (if (not (take-object (first objs)))
-          (recur (rest objs)))))))
-
-(defn cmd-drop [verbs]
-  "Loops through the verbs trying to match one to a droppable object"
-  (if (empty? verbs)
-    (println "You must supply an object to drop!")
-    (loop [objs verbs]
-      (if (empty? objs)
-        (println "You can't drop that item.")
-        (if (not (drop-object (first objs)))
-          (recur (rest objs)))))))
+(let [try-take-drop
+      (fn [verbs no-verb not-here mod-fn]
+        "Loops through the verbs trying to match one to a takeable/droppable object"
+        (if (empty? verbs)
+          (println no-verb)
+          (loop [objs verbs]
+            (if (empty? objs)
+              (println not-here)
+              (if (not (mod-fn (first objs)))
+                (recur (rest objs)))))))]
+  (defn cmd-take [verbs]
+    (try-take-drop verbs
+                   "You must supply an item to take!"
+                   "I don't see that here..."
+                   take-object))
+ (defn cmd-drop [verbs]
+    (try-take-drop verbs
+                   "You must supply an item to drop!"
+                   "You don't have that item..."
+                   drop-object)))
 
 (defn cmd-inventory [verbs]
   "Displays the players inventory"
