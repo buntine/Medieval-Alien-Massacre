@@ -8,7 +8,6 @@
 (declare set-current-room current-room take-object
          inventory display-inventory drop-object)
 
-
 (ns mam.commands
   (:use mam.gameplay)
   (:use mam.rooms))
@@ -23,7 +22,9 @@
            (let [room ((world-map @current-room) i)]
              (if (nil? room)
                (println "You can't go that way.")
-               (set-current-room room))))))]
+               (if (fn? room)
+                 (room)
+                 (set-current-room room)))))))]
 
   (defn cmd-go [verbs]
     "Expects to be given direction. Dispatches to the 'move' command"

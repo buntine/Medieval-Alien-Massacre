@@ -3,7 +3,11 @@
 ; Defines data structures for describing rooms,
 ; maps, objects and inventories.
 
-(ns mam.rooms)
+(in-ns 'mam.gameplay)
+(declare set-current-room)
+
+(ns mam.rooms
+  (:use mam.gameplay))
 
 
 ; A vector of pairs. Each index contains both a large description (first visit) and a brief
@@ -16,7 +20,7 @@
       "A large, dim hall. Smells of blood.")))
 
 ; Map to specify which rooms the player will enter on the given movement.
-; 999 indicates that something special needs to be done (check conditions, etc).
+; A function indicates that something special needs to be done (check conditions, etc).
 (def world-map
   (vector
 ;    no  ea  so  we  ne  se  sw  nw 
