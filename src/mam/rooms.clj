@@ -19,6 +19,15 @@
     '("The cavern has opened up into a large hall, although it's still very dark. Blood is rushing from your neck."
       "A large, dim hall. Smells of blood.")))
 
+(defn fuck []
+  (println "balls"))
+
+(defn doroom [func room]
+  "Returns a curried function that executes the given fn and then sets the current room"
+  (fn []
+    (func)
+    (set-current-room room)))
+
 ; Map to specify which rooms the player will enter on the given movement.
 ; A function indicates that something special needs to be done (check conditions, etc).
 (def world-map
