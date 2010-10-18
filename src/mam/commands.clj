@@ -5,8 +5,8 @@
 ; I need this to allow 'mutual' interation between this namespace and
 ; mam.gameplay. There must be a better way of doing this!
 (in-ns 'mam.gameplay)
-(declare set-current-room current-room take-object
-         inventory display-inventory drop-object)
+(declare set-current-room current-room take-object inventory
+         display-inventory drop-object inspect-object)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -51,9 +51,9 @@
   (println "   * If you're wondering why you keep dying, don't worry, it's just a game.")
   (println "  ------------------------------"))
 
-(let [try-take-drop
+(let [try-interact
       (fn [verbs no-verb not-here mod-fn]
-        "Loops through the verbs trying to match one to a takeable/droppable object"
+        "Loops through the verbs trying to match one to a interactable object"
         (if (empty? verbs)
           (println no-verb)
           (loop [objs verbs]
@@ -61,16 +61,22 @@
               (println not-here)
               (if (not (mod-fn (first objs)))
                 (recur (rest objs)))))))]
+
   (defn cmd-take [verbs]
-    (try-take-drop verbs
-                   "You must supply an item to take!"
-                   "I don't see that here..."
-                   take-object))
+    (try-interact verbs
+                  "You must supply an item to take!"
+                  "I don't see that here..."
+                  take-object))
  (defn cmd-drop [verbs]
-    (try-take-drop verbs
-                   "You must supply an item to drop!"
-                   "You don't have that item..."
-                   drop-object)))
+    (try-interact verbs
+                  "You must supply an item to drop!"
+                  "You don't have that item..."
+                  drop-object))
+  (defn cmd-inspect [verbs]
+    (try-interact verbs
+                  "You must supply and item to inspect!"
+                  "I don't see that here..."
+                  inspect-object)))
 
 (defn cmd-inventory [verbs]
   "Displays the players inventory"

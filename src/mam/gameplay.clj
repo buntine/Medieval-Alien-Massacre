@@ -22,7 +22,8 @@
    'north cmd-north 'east cmd-east 'south cmd-south 'west cmd-west
    'northeast cmd-northeast 'southeast cmd-southeast 'southwest cmd-southwest
    'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take
-   'drop cmd-drop 'dump cmd-drop 'inventory cmd-inventory})
+   'drop cmd-drop 'dump cmd-drop 'inventory cmd-inventory 'inspect cmd-inspect
+   'examine cmd-inspect})
    
 ; Declarations for some procedures I mention before they have been
 ; defined.
@@ -46,6 +47,14 @@
   (if (empty? @inventory)
     0
     (reduce #(+ %1 (obj-weight %2)) @inventory)))
+
+(defn describe-object ([objnum] (describe-object objnum 'game))
+  ([objnum context]
+    "Returns the string which describes the given object (symbol)"
+    (let [f ({'game first
+              'inventory second
+              'inspect #(second (rest %))} context)]
+      (str (f (object-details objnum))))))
 
 (defn take-object-from-room [objs opts obj-index]
   "Removes given object from the current room. Should be called from within (alter)"
@@ -84,13 +93,15 @@
         (println "Dropped...")
         true))))
 
-(defn describe-object ([objnum] (describe-object objnum 'game))
-  ([objnum context]
-    "Returns the string which describes the given object (symbol)"
-    (let [f ({'game first
-              'inventory second
-              'inspect #(second (rest %))} context)]
-      (str (f (object-details objnum))))))
+(defn inspect-object [obj]
+  "Attempts to inspect an object in the current room"
+  (let [opts (nth @room-objects @current-room)
+        obj-index (object-identifiers obj)]
+    (if (or (not obj-index) (not (some #{obj-index} opts)))
+      false
+      (do
+        (println (describe-object obj-index 'inspect))
+        true))))
 
 (defn print-with-newlines [lines]
   "Prints a sequence of strings, separated by newlines. Only useful for side-effects"
