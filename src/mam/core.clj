@@ -12,11 +12,17 @@
   (:use mam.gameplay))
 
 (defn print-welcome-message []
-  (println "---------------------------------------------------------")
-  (println "                MEDIEVAL ALIEN MASSACRE")
-  (println "A sadistic, pro-death text-based adventure for children")
-  (println "   By Andrew Buntine (http://www.andrewbuntine.com/)")
-  (println "---------------------------------------------------------\n"))
+  (println "|---------------------------------------------------------|")
+  (println "|                MEDIEVAL ALIEN MASSACRE                  |")
+  (println "|---------------------------------------------------------|")
+  (println "| A sadistic, pro-death text-based adventure for children |")
+  (println "| By Andrew Buntine (http://www.andrewbuntine.com)        |")
+  (println "|                                                         |")
+  (println "| Rated X^3 (18+) for:                                    |")
+  (println "|   * grotesque sexual violence                           |")
+  (println "|   * murder without end                                  |")
+  (println "|   * zombie goat sodomy                                  |")
+  (println "|---------------------------------------------------------|\n"))
 
 (defn -main []
   "Game initializer. Welcomes user and starts loop."

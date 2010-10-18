@@ -2,6 +2,5 @@
 - Add functionality for 'special' things in particular rooms
 - Start writing storyline
 - Start designing/implementing load and save functionality
-- Think about implementing a fighting system ike that of Fighting Fantasy books.
+- Think about implementing a fighting system like that of Fighting Fantasy books.
   - OR Design/implement a simple scoring system
-- Add in an inspect command and relevent details for each object.
