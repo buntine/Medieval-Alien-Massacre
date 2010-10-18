@@ -21,15 +21,14 @@
 
 (defn doroom [func room]
   "Returns a curried function that executes the given fn and then sets the current room"
-  (fn []
-    (func)
-    (set-current-room room)))
+  (fn [] (func)
+         (set-current-room room)))
 
 ; Map to specify which rooms the player will enter on the given movement.
 ; A function indicates that something special needs to be done (check conditions, etc).
 (def world-map
   (vector
-;    north        east        south       west        northeast   southeast   southwest   northwest 
+;    north        east        south       west        northeast   southeast   southwest   northwest
     [1            nil         nil         nil         nil         nil         nil         nil]
     [nil          nil         0           nil         nil         nil         nil         nil]))
 
@@ -48,10 +47,11 @@
          '(0)
          '())))
 
-; The details of objects, incl. in-game and inventory descriptions, weight, etc. Each object
+; The details of objects: [game desc, inventory name, inspect desc, weight]. Each object
 ; is assigned a number in object-identifiers, which corresponds to it's index here.
 (def object-details
   (vector
-    ["There is a wooden longbow here", "A longbow", 3]))
+    ["There is a wooden longbow here", "A longbow",
+     "The longbow seems in working order" 3]))
 
 (def *total-weight* 12)

@@ -39,7 +39,7 @@
 
 (defn obj-weight [obj-index]
   "Returns the weight assigned to the given object"
-  (nth (nth object-details obj-index) 2))
+  (nth (nth object-details obj-index) 3))
 
 (defn inventory-weight []
   "Returns the current weight of the players inventory"
@@ -87,17 +87,19 @@
 (defn describe-object ([objnum] (describe-object objnum 'game))
   ([objnum context]
     "Returns the string which describes the given object (symbol)"
-    (let [f (if (= context 'game) first second)]
-      (str " - " (f (object-details objnum))))))
+    (let [f ({'game first
+              'inventory second
+              'inspect #(second (rest %))} context)]
+      (str (f (object-details objnum))))))
 
 (defn print-with-newlines [lines]
   "Prints a sequence of strings, separated by newlines. Only useful for side-effects"
-  (println
-    (reduce #(str %1 "\n" %2) lines)))
+  (println (str " - "
+    (reduce #(str " - " %1 "\n" %2) lines))))
 
 (defn display-inventory []
   "Displays the players inventory"
-  (let [descs (map #(describe-object % 'inv) @inventory)]
+  (let [descs (map #(describe-object % 'inventory) @inventory)]
     (when (not (empty? descs))
       (println "You currently have:")
       (print-with-newlines descs))))
