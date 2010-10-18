@@ -56,20 +56,13 @@
               'inspect #(second (rest %))} context)]
       (str (f (object-details objnum))))))
 
-(defn take-object-from-room [objs opts obj-index]
-  "Removes given object from the current room. Should be called from within (alter)"
-  (assoc-in objs [@current-room]
-            (filter #(not (= obj-index %)) opts)))
-
-(defn drop-object-in-room [objs opts obj-index]
-  "Adds given object to the current room. Should be called from within (alter)"
-  (assoc-in objs [@current-room]
-            (conj opts obj-index)))
-
 (defn take-object [obj]
   "Attempts to take an object from the current room"
   (let [opts (nth @room-objects @current-room)
-        obj-index (object-identifiers obj)]
+        obj-index (object-identifiers obj)
+        dotake (fn [objs]
+                 (assoc-in objs [@current-room]
+                           (filter #(not (= obj-index %)) opts)))]
     (if (or (not obj-index) (not (some #{obj-index} opts)))
       false
       (do
@@ -77,19 +70,22 @@
           (println "You cannot carry that much weight.")
           (dosync
             (alter inventory conj obj-index)
-            (alter room-objects take-object-from-room opts obj-index)
+            (alter room-objects dotake)
             (println "Taken...")))
         true))))
 
 (defn drop-object [obj]
   "Attempts to drop an object into the current room"
   (let [opts (nth @room-objects @current-room)
-        obj-index (object-identifiers obj)]
+        obj-index (object-identifiers obj)
+        dodrop (fn [objs]
+                 (assoc-in objs [@current-room]
+                           (conj opts obj-index)))]
     (if (or (not obj-index) (not (in-inventory? obj-index)))
       false
       (dosync
         (alter inventory (fn [i] (filter #(not (= % obj-index)) i)))
-        (alter room-objects drop-object-in-room opts obj-index)
+        (alter room-objects dodrop)
         (println "Dropped...")
         true))))
 
