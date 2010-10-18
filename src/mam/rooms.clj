@@ -29,9 +29,9 @@
 ; A function indicates that something special needs to be done (check conditions, etc).
 (def world-map
   (vector
-;    no  ea  so  we  ne  se  sw  nw 
-    [1   nil nil nil nil nil nil nil]
-    [nil nil 0   nil nil nil nil nil]))
+;    north        east        south       west        northeast   southeast   southwest   northwest 
+    [1            nil         nil         nil         nil         nil         nil         nil]
+    [nil          nil         0           nil         nil         nil         nil         nil]))
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7})
