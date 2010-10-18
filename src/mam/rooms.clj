@@ -19,9 +19,6 @@
     '("The cavern has opened up into a large hall, although it's still very dark. Blood is rushing from your neck."
       "A large, dim hall. Smells of blood.")))
 
-(defn fuck []
-  (println "balls"))
-
 (defn doroom [func room]
   "Returns a curried function that executes the given fn and then sets the current room"
   (fn []
