@@ -3,9 +3,6 @@
 - Start writing storyline
 - Start designing/implementing load and save functionality
 - Add in look command (describes room in detail)
-- Allow for permanent objects (beds, etc)
-  - Use same data structues, but add a boolean for permanency in object-details.
-  - Command functions will need to check manually. e.g:
-    - CMD-BED: IF HAS-BED? THEN "You fall asleep and fucking die"
+- Fix up problem with newline after print-with-newlines
 - Think about implementing a fighting system like that of Fighting Fantasy books.
   - OR Design/implement a simple scoring system
