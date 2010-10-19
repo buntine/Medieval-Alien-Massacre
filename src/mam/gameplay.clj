@@ -56,6 +56,9 @@
               'inspect #(second (rest %))} context)]
       (str (f (object-details objnum))))))
 
+(defn permanent-object? [obj-index]
+  (true? ((nth object-details obj-index) 4)))
+
 (defn take-object [obj]
   "Attempts to take an object from the current room"
   (let [opts (nth @room-objects @current-room)
@@ -66,12 +69,14 @@
     (if (or (not obj-index) (not (some #{obj-index} opts)))
       false
       (do
-        (if (> (+ (inventory-weight) (obj-weight obj-index)) *total-weight*)
-          (println "You cannot carry that much weight.")
-          (dosync
-            (alter inventory conj obj-index)
-            (alter room-objects dotake)
-            (println "Taken...")))
+        (if (permanent-object? obj-index)
+          (println "You can't take that.")
+          (if (> (+ (inventory-weight) (obj-weight obj-index)) *total-weight*)
+            (println "You cannot carry that much weight.")
+            (dosync
+              (alter inventory conj obj-index)
+              (alter room-objects dotake)
+              (println "Taken..."))))
         true))))
 
 (defn drop-object [obj]
