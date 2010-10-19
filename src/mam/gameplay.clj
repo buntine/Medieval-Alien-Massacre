@@ -171,4 +171,4 @@
      (newline))
    (print "> ")
    (flush)
-   (parse-input (read-line))))
+     (parse-input (do (print "\033[31m") (flush) (def aaa (read-line)) (flush) (print "\033[0m") aaa))))
