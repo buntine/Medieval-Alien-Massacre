@@ -14,10 +14,10 @@
 ; description (all subsequent visits).
 (def rooms
   (vector
-    '("You are in a dark cavern, standing in a pool of your own vomit. An arrow is protruding from your neck. A passage leads to the north."
-      "Dark cavern, vomit is everywhere. Passage to north.")
-    '("The cavern has opened up into a large hall, although it's still very dark. Blood is rushing from your neck."
-      "A large, dim hall. Smells of blood.")))
+    '("You are in a small, silver-walled room with nothing except a bed. There are doors to the north and east."
+      "Empty room with a bed. Doors to north and east.")
+    '("You enter a large platform. There is a long row of broken flying machines here. A large sign reads 'Repairs deck: West end'. 'Where the fuck am I?' you think to yourself. The passage leads east."
+      "West-end of the repairs deck. Passage leads east.")))
 
 (defn doroom [func room]
   "Returns a curried function that executes the given fn and then sets the current room"

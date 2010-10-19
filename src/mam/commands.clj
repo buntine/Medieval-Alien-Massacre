@@ -47,7 +47,7 @@
   (println "   * Directions are north, east, south, west, northeaast, southeast, southwest, northeast.")
   (println "   * Or abbreviated n, e, s, w, ne, se, sw, nw.")
   (println "   * Keys automatically open the appropriate doors, so you don't need to 'unlock' them.")
-  (println "   * To exit, type 'quit' or 'suicide' or forever dwell in green mess!")
+  (println "   * To quit the game, type 'quit' or 'suicide' or forever dwell in green mess!")
   (println "   * Inspired by Dunnet, by Rob Schnell")
   (println "   * If you're wondering why you keep dying, don't worry, it's just a game.")
   (println "  ------------------------------"))
