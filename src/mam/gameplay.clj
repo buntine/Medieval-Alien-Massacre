@@ -101,8 +101,8 @@
 
 (defn print-with-newlines [lines]
   "Prints a sequence of strings, separated by newlines. Only useful for side-effects"
-  (println (str " - "
-    (reduce #(str " - " %1 "\n" %2) lines))))
+  (println (reduce #(str %1 " - " %2 "\n")
+                   "" lines)))
 
 (defn display-inventory []
   "Displays the players inventory"
