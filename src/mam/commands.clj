@@ -84,3 +84,9 @@
   (if (empty? @inventory)
     (println "Your inventory is currently empty.")
     (display-inventory)))
+
+(defn cmd-quit [verbs]
+  "Quits the game and returns user to terminal."
+  (println "\033[0m Thanks for playing, friend!")
+  (flush)
+  (. System exit 0))
