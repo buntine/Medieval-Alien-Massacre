@@ -49,6 +49,7 @@
 
 ; The details of objects: [game desc, inventory name, inspect desc, weight, permanent?]. Each
 ; object is assigned a number in object-identifiers, which corresponds to it's index here.
+; Permanent object cannot be taken.
 (def object-details
   (vector
     ["There is a wooden longbow here" "A longbow"

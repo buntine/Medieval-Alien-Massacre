@@ -99,3 +99,8 @@
   (println "\033[0m Thanks for playing, friend!")
   (flush)
   (. System exit 0))
+
+(defn cmd-bed [verbs]
+  (if (= @current-room 0)
+    (println "You get into bed and slowly fall to sleep. You begin dreaming of a cruel medical examination. You wake up feeling violated")
+    (println "There is no bed here. You try to sleep standing up and just get bored")))
