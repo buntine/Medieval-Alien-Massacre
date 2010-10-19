@@ -163,6 +163,15 @@
       (newline)
       (messages (not (= orig-room @current-room))))))
 
+(defn request-command []
+  "Sends a terminal escape sequence (green text), reads a command, and then resets the colour"
+  (print "\033[1;32m")
+  (flush)
+  (let [cmd (read-line)]
+    (flush)
+    (print "\033[0m")
+    cmd))
+
 (defn messages ([] (messages true))
   ([verbose]
    "Describes current room and prompts for user input"
@@ -171,4 +180,4 @@
      (newline))
    (print "> ")
    (flush)
-     (parse-input (do (print "\033[31m") (flush) (def aaa (read-line)) (flush) (print "\033[0m") aaa))))
+   (parse-input (request-command))))
