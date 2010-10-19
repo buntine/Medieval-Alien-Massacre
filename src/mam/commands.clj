@@ -6,12 +6,18 @@
 ; mam.gameplay. There must be a better way of doing this!
 (in-ns 'mam.gameplay)
 (declare set-current-room current-room take-object inventory
-         display-inventory drop-object inspect-object)
+         display-inventory drop-object inspect-object parse-input)
 
 (ns mam.commands
   (:use mam.gameplay)
   (:use mam.rooms))
 
+
+(defn direction? [verb]
+  (boolean
+    (some #{verb}
+          '(n e s w ne se sw nw north east south west
+            northeast southeast southwest northwest))))
 
 (let [move-room
      (fn [dir]
@@ -30,7 +36,10 @@
     "Expects to be given direction. Dispatches to the 'move' command"
     (if (empty? verbs)
       (println "You need to supply a direction!")
-      (move-room (first verbs))))
+      ; Catch commands like "go to bed", etc.
+      (if (direction? (first verbs))
+        (move-room (first verbs))
+        (parse-input (reduce #(str %1 " " %2) "" verbs)))))
 
   (defn cmd-north [verbs] (move-room 'north))
   (defn cmd-east [verbs] (move-room 'east))
