@@ -6,7 +6,7 @@
 (ns mam.gameplay
   (:use mam.rooms)
   (:use mam.commands)
-  (:use [clojure.contrib.string :only (split)]))
+  (:use [clojure.contrib.string :only (split join)]))
 
 
 (def current-room (ref 0))         ; The current room the player is in.
@@ -106,8 +106,8 @@
 
 (defn print-with-newlines [lines]
   "Prints a sequence of strings, separated by newlines. Only useful for side-effects"
-  (println (reduce #(str %1 " - " %2 "\n")
-                   "" lines)))
+  (println (str " - "
+                (join "\n - " lines))))
 
 (defn display-inventory []
   "Displays the players inventory"

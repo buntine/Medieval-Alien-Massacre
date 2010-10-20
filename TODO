@@ -3,6 +3,5 @@
 - Start writing storyline
 - Start designing/implementing load and save functionality
 - Add in look command (describes room in detail)
-- Fix up problem with newline after print-with-newlines
 - Think about implementing a fighting system like that of Fighting Fantasy books.
   - OR Design/implement a simple scoring system
