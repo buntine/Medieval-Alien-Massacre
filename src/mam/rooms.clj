@@ -16,6 +16,8 @@
   (vector
     '("You are in a small, silver-walled room with no windows. There are doors to the north and east."
       "Empty room with a bed. Doors to north and east.")
+    '("You are in another small, featureless room. There is nothing of interest here except doors to the north and west."
+      "Small, featureless room. Doors to north and west.")
     '("You enter a larger room with a few blank screens. There are doors to the east and west."
       "Control room with doors to east and west")
     '("You enter a large platform. There is a long row of broken flying machines here. A large sign reads 'Repairs deck: West end'. 'Where the fuck am I?' you think to yourself. The passage leads east."
@@ -31,8 +33,9 @@
 (def world-map
   (vector
 ;    north        east        south       west        northeast   southeast   southwest   northwest
-    [2            1           nil         nil         nil         nil         nil         nil]
-    [nil          3           nil         0           nil         nil         nil         nil]
+    [3            2           nil         nil         nil         nil         nil         nil]
+    [4            nil         nil         2           nil         nil         nil         nil]
+    [nil          1           nil         0           nil         nil         nil         nil]
     [nil          nil         0           nil         nil         nil         nil         nil]))
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
@@ -41,21 +44,20 @@
 ; Specifies the verbs that users can identify an object with (a gun might
 ; be "gun", "weapon", etc). Each index corresponds to the same index in room-objects.
 (def object-identifiers
-  (vector
-    {'longbow 0 'bow 0 'bed 1}
-    {'lever 2}))
+    {'longbow 0 'bow 0 'bed 1 'lever 2})
 
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
 (def room-objects
   (ref (vector
          '(0 1)
+         '()
          '(2)
          '())))
 
 ; The details of objects: [game desc, inventory name, inspect desc, weight, permanent?]. Each
 ; object is assigned a number in object-identifiers, which corresponds to it's index here.
-; Permanent object cannot be taken.
+; Permanent object cannot be taken and thus don't require weights or inventory descriptions.
 (def object-details
   (vector
     ["There is a wooden longbow here" "A longbow"

@@ -107,7 +107,7 @@
 
 (defn cmd-pull [verbs]
   "Attempts to pull something."
-  (if (and (= (first verbs) 'lever) (= @current-room 1))
+  (if (and (= (first verbs) 'lever) (= @current-room 2))
     (do
       (println "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You now find yourself back in the small room you started in")
       (set-current-room 0))
