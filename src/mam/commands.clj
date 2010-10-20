@@ -6,11 +6,14 @@
 ; mam.gameplay. There must be a better way of doing this!
 (in-ns 'mam.gameplay)
 (declare set-current-room current-room take-object inventory
-         display-inventory drop-object inspect-object parse-input)
+         display-inventory drop-object inspect-object parse-input
+         describe-room)
 
 (ns mam.commands
   (:use mam.gameplay)
   (:use mam.rooms))
+
+(declare cmd-inspect)
 
 
 (defn direction? [verb]
@@ -62,6 +65,11 @@
   (println "   * If you're wondering why you keep dying, don't worry, it's just a game.")
   (println "  ------------------------------"))
 
+(defn cmd-look ([verbs] (cmd-inspect verbs))
+  ([]
+   "Prints a long description of a room"
+   (describe-room @current-room true)))
+
 (let [try-interact
       (fn [verbs no-verb not-here mod-fn]
         "Loops through the verbs trying to match one to a interactable object"
@@ -84,10 +92,12 @@
                   "You don't have that item..."
                   drop-object))
   (defn cmd-inspect [verbs]
-    (try-interact verbs
-                  "You must supply and item to inspect!"
-                  "I don't see that here..."
-                  inspect-object)))
+    (if (empty? verbs)
+      (cmd-look)
+      (try-interact verbs
+                    "You must supply and item to inspect!"
+                    "I don't see that here..."
+                    inspect-object))))
 
 (defn cmd-inventory [verbs]
   "Displays the players inventory"

@@ -22,10 +22,10 @@
    'ne cmd-northeast 'se cmd-southeast 'sw cmd-southwest 'nw cmd-northwest
    'north cmd-north 'east cmd-east 'south cmd-south 'west cmd-west
    'northeast cmd-northeast 'southeast cmd-southeast 'southwest cmd-southwest
+   'drop cmd-drop 'dump cmd-drop 'inventory cmd-inventory 'pull cmd-pull
    'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take
-   'drop cmd-drop 'dump cmd-drop 'inventory cmd-inventory 'inspect cmd-inspect
-   'examine cmd-inspect 'quit cmd-quit 'suicide cmd-quit 'bed cmd-bed
-   'sleep cmd-bed 'pull cmd-pull})
+   'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
+   'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed})
    
 ; Declarations for some procedures I mention before they have been
 ; defined.
@@ -130,16 +130,17 @@
     (if (not (empty? objs))
       (print-with-newlines descs))))
 
-(defn describe-room [room]
-  "Prints a description of the current room"
-  (let [visited? (some #{room} @visited-rooms)
-        descs (rooms room)]
-    (if visited?
-      (println (second descs))
-      (dosync
-        (alter visited-rooms conj room)
-        (println (first descs))))
-    (describe-objects-for-room room)))
+(defn describe-room ([room] (describe-room room false))
+  ([room verbose?]
+   "Prints a description of the current room"
+   (let [visited? (some #{room} @visited-rooms)
+         descs (rooms room)]
+     (if visited?
+       (println ((if verbose? first second) descs))
+       (dosync
+         (alter visited-rooms conj room)
+         (println (first descs))))
+     (describe-objects-for-room room))))
 
 (defn fn-for-command [cmd]
   "Returns the function for the given command verb, or nil"
