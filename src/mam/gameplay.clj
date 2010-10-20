@@ -24,7 +24,7 @@
    'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take
    'drop cmd-drop 'dump cmd-drop 'inventory cmd-inventory 'inspect cmd-inspect
    'examine cmd-inspect 'quit cmd-quit 'suicide cmd-quit 'bed cmd-bed
-   'pull cmd-pull})
+   'sleep cmd-bed 'pull cmd-pull})
    
 ; Declarations for some procedures I mention before they have been
 ; defined.
