@@ -104,3 +104,11 @@
   (if (= @current-room 0)
     (println "You get into bed and slowly fall to sleep. You begin dreaming of a cruel medical examination. You wake up feeling violated")
     (println "There is no bed here. You try to sleep standing up and just get bored")))
+
+(defn cmd-pull [verbs]
+  "Attempts to pull something."
+  (if (and (= (first verbs) 'lever) (= @current-room 1))
+    (do
+      (println "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You now find yourself back in the small room you started in")
+      (set-current-room 0))
+    (println "I don't see that here.")))
