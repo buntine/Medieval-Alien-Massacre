@@ -12,6 +12,7 @@
 (def current-room (ref 0))         ; The current room the player is in.
 (def visited-rooms (ref []))       ; The rooms that the player has visited.
 (def inventory (ref []))           ; The players inventory of items.
+(def credits (ref 0))              ; The players credits (aka $$$$).
 (def ignore-words '(the that is to ; Words that should be ignored in commands.
                     fucking damn)) 
 
@@ -105,17 +106,22 @@
         (println (describe-object obj-index 'inspect))
         true))))
 
-(defn print-with-newlines [lines]
-  "Prints a sequence of strings, separated by newlines. Only useful for side-effects"
-  (println (str " - "
-                (join "\n - " lines))))
+(defn print-with-newlines
+  ([lines] (print-with-newlines lines ""))
+  ([lines prepend]
+   "Prints a sequence of strings, separated by newlines. Only useful for side-effects"
+   (if (not (empty? prepend))
+     (println prepend))
+   (println (str " - "
+                 (join "\n - " lines)))))
 
 (defn display-inventory []
   "Displays the players inventory"
   (let [descs (map #(describe-object % 'inventory) @inventory)]
-    (when (not (empty? descs))
-      (println "You currently have:")
-      (print-with-newlines descs))))
+    (if (not (empty? descs))
+      (print-with-newlines descs "You currently have:")
+      (println "Your inventory is currently empty."))
+    (println (str "\nCREDITS: " @credits))))
 
 (defn describe-objects-for-room [room]
   "Prints a description for each object that's in the given room"

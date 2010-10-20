@@ -21,7 +21,9 @@
     '("You enter a larger room with a few blank screens. There are doors to the east and west."
       "Control room with doors to east and west")
     '("You enter a large platform. There is a long row of broken flying machines here. A large sign reads 'Repairs deck: West end'. 'Where the fuck am I?' you think to yourself. The passage leads east."
-      "West-end of the repairs deck. Passage leads east.")))
+      "West-end of the repairs deck. Passage leads east.")
+    '("You walk into a hallway with doors to your west and south. The hallway is leading north."
+      "Hallway. Doors to the west and south. Passage leads north.")))
 
 (defn doroom [func room]
   "Returns a curried function that executes the given fn and then sets the current room"
@@ -36,7 +38,8 @@
     [3            2           nil         nil         nil         nil         nil         nil]
     [4            nil         nil         2           nil         nil         nil         nil]
     [nil          1           nil         0           nil         nil         nil         nil]
-    [nil          nil         0           nil         nil         nil         nil         nil]))
+    [nil          nil         0           nil         nil         nil         nil         nil]
+    [5            nil         1           8           nil         nil         nil         nil]))
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7})
@@ -53,6 +56,7 @@
          '(0 1)
          '()
          '(2)
+         '()
          '())))
 
 ; The details of objects: [game desc, inventory name, inspect desc, weight, permanent?]. Each

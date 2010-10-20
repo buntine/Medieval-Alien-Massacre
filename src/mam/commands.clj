@@ -56,6 +56,7 @@
   (println "   * Directions are north, east, south, west, northeaast, southeast, southwest, northeast.")
   (println "   * Or abbreviated n, e, s, w, ne, se, sw, nw.")
   (println "   * Keys automatically open the appropriate doors, so you don't need to 'unlock' them.")
+  (println "   * Credit is equivalent to our concept of money. Use it wisely!")
   (println "   * To end the game, type 'quit' or 'suicide' or forever dwell in green mess!")
   (println "   * Inspired by Dunnet, by Rob Schnell")
   (println "   * If you're wondering why you keep dying, don't worry, it's just a game.")
@@ -90,9 +91,7 @@
 
 (defn cmd-inventory [verbs]
   "Displays the players inventory"
-  (if (empty? @inventory)
-    (println "Your inventory is currently empty.")
-    (display-inventory)))
+  (display-inventory))
 
 (defn cmd-quit [verbs]
   "Quits the game and returns user to terminal."
