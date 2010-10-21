@@ -7,8 +7,8 @@
 (in-ns 'mam.gameplay)
 (declare set-current-room current-room take-object inventory
          display-inventory drop-object inspect-object parse-input
-         describe-room room-has-object? add-object-to-room
-         remove-object-from-room)
+         describe-room room-has-object? drop-object-in-room
+         take-object-from-room)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -118,9 +118,9 @@
 (defn cmd-pull [verbs]
   "Attempts to pull something."
   (if (and (= (first verbs) 'lever) (= @current-room 2) (room-has-object? @current-room 'lever))
-    (do
+    (dosync
       (println "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You notice that one of the creatures drops something. You now find yourself back in the small room you started in.")
-      (remove-object-from-room @current-room 'lever)
-      (add-object-to-room @current-room 'porno)
+      (take-object-from-room @current-room 'lever)
+      (drop-object-in-room @current-room 'porno)
       (set-current-room 0))
     (println "I don't see that here.")))
