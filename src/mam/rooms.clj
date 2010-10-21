@@ -4,7 +4,7 @@
 ; maps, objects and inventories.
 
 (in-ns 'mam.gameplay)
-(declare set-current-room)
+(declare set-current-room! in-inventory?)
 
 (ns mam.rooms
   (:use mam.gameplay))
@@ -25,24 +25,31 @@
     '("You walk into a hallway with doors to your west and south. The hallway is leading north."
       "Hallway. Doors to the west and south. Passage leads north.")
     '("You continue along the passage and pass more broken machines. Passage leads east or west."
-      "Repairs desk, center. Passage leads west/east.")))
+      "Repairs desk, center. Passage leads west/east.")
+    '("You are at the end of the hallway. There is a large, sliding door to the north."
+      "End of hallway. Large door to north.")))
 
-(defn doroom [func room]
-  "Returns a curried function that executes the given fn and then sets the current room"
-  (fn [] (func)
-         (set-current-room room)))
+(defn check-key [key-type room]
+  "Checks if the player has the given type of security card. If they do, set the current
+   room to 'room'. Otherwise, let them know"
+  (let [keys {:green 4 :red 5 :silver 6}]
+    (if (in-inventory? (keys key-type))
+      (set-current-room! room)
+      (println "You don't have security clearance for this door!"))))
 
 ; Map to specify which rooms the player will enter on the given movement.
 ; A function indicates that something special needs to be done (check conditions, etc).
 (def world-map
   (vector
-;    north        east        south       west        northeast   southeast   southwest   northwest
-    [3            2           nil         nil         nil         nil         nil         nil]
-    [4            nil         nil         2           nil         nil         nil         nil]
-    [nil          1           nil         0           nil         nil         nil         nil]
-    [nil          5           0           nil         nil         nil         nil         nil]
-    [7            nil         1           6           nil         nil         nil         nil]
-    [nil          6           nil         3           nil         nil         nil         nil]))
+;    north         east         south        west         northeast    southeast    southwest    northwest
+    [3             2            nil          nil          nil          nil          nil          nil]
+    [4             nil          nil          2            nil          nil          nil          nil]
+    [nil           1            nil          0            nil          nil          nil          nil]
+    [nil           5            0            nil          nil          nil          nil          nil]
+    [6             nil          1            7            nil          nil          nil          nil]
+    [nil           7            nil          3            nil          nil          nil          nil]
+    [#(check-key
+       :green 8)   nil          4            nil          nil          nil          nil          nil]))
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7})
@@ -50,7 +57,7 @@
 ; Specifies the verbs that users can identify an object with (a gun might
 ; be "gun", "weapon", etc). Each index corresponds to the same index in room-objects.
 (def object-identifiers
-    {'longbow 0 'bow 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3})
+    {'candy 0 'bar 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3})
 
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
@@ -61,6 +68,7 @@
          '(2)
          '()
          '()
+         '()
          '())))
 
 ; The details of objects: [game desc, inventory name, inspect desc, weight, permanent?]. Each
@@ -68,13 +76,19 @@
 ; Permanent object cannot be taken and thus don't require weights or inventory descriptions.
 (def object-details
   (vector
-    ["There is a wooden longbow here" "A longbow"
-     "The longbow seems in working order" 3 false],
+    ["There is a tasty-looking candy bar here" "A candy bar"
+     "It's called 'Space hack bar'" 1 false],
     ["There is a small bed here" nil
      "The bed is black and sorta' small looking. Perhaps for a child?" nil true],
     ["There is a large metal lever here" nil
      "There is no label, but it seems to have some wear from usage" nil true]
     ["There is a porno mag here" "A porno mag"
-     "The title is 'Humaniod Whores, vol 99239'." 1 false]))
+     "The title is 'Humaniod Whores, vol 99239'." 1 false]
+    ["There is a green keycard here" "Green keycard"
+     "It says 'All access: Green'" 1 false]
+    ["There is a red keycard here" "Red keycard"
+     "It says 'All access: Red'" 1 false]
+    ["There is a silver keycard here" "Silver keycard"
+     "It says 'All access: Silver'" 1 false]))
 
 (def *total-weight* 12)

@@ -4,8 +4,8 @@
 ; command parsing, saves, loads, etc.
 
 (ns mam.gameplay
-  (:use mam.rooms)
   (:use mam.commands)
+  (:use mam.rooms)
   (:use [clojure.contrib.string :only (split join)]))
 
 
@@ -213,3 +213,12 @@
    (print "> ")
    (flush)
    (parse-input (request-command))))
+
+(defn save-game! []
+  "Saves the current game data into a file on the disk"
+  ; current-room, inventory, visited-rooms, credits, room-objects
+  )
+
+(defn load-game! []
+  "Loads all previously saved game data"
+  )
