@@ -32,7 +32,7 @@
 (declare messages)
 
 
-(defn set-current-room [room]
+(defn set-current-room! [room]
   (dosync
     (ref-set current-room room)))
 
@@ -71,25 +71,25 @@
     (room-has-object? room (object-identifiers obj))
     (boolean (some #{obj} (objects-in-room room)))))
 
-(defn take-object-from-room [room obj]
+(defn take-object-from-room! [room obj]
   "Physically removes an object from the given room. Must be called from within
    a dosync form."
   (if (symbol? obj)
-    (take-object-from-room room (object-identifiers obj))
+    (take-object-from-room! room (object-identifiers obj))
     (alter room-objects (fn [objs]
                           (assoc-in objs [room]
                                     (filter #(not (= obj %)) (objects-in-room room)))))))
 
-(defn drop-object-in-room [room obj]
+(defn drop-object-in-room! [room obj]
   "Physically adds an object to the given room. Must be called from within
    a dosync form."
   (if (symbol? obj)
-    (drop-object-in-room room (object-identifiers obj))
+    (drop-object-in-room! room (object-identifiers obj))
     (alter room-objects (fn [objs]
                           (assoc-in objs [room]
                                     (conj (objects-in-room room) obj))))))
 
-(defn take-object [obj]
+(defn take-object! [obj]
   "Attempts to take an object from the current room"
   (let [obj-index (object-identifiers obj)]
     (if (or (not obj-index) (not (room-has-object? @current-room obj-index)))
@@ -101,18 +101,18 @@
             (println "You cannot carry that much weight.")
             (dosync
               (alter inventory conj obj-index)
-              (take-object-from-room @current-room obj-index)
+              (take-object-from-room! @current-room obj-index)
               (println "Taken..."))))
         true))))
 
-(defn drop-object [obj]
+(defn drop-object! [obj]
   "Attempts to drop an object into the current room"
   (let [obj-index (object-identifiers obj)]
     (if (or (not obj-index) (not (in-inventory? obj-index)))
       false
       (dosync
         (alter inventory (fn [i] (filter #(not (= % obj-index)) i)))
-        (drop-object-in-room @current-room obj-index)
+        (drop-object-in-room! @current-room obj-index)
         (println "Dropped...")
         true))))
 

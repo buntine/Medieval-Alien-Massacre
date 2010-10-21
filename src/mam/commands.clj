@@ -5,10 +5,10 @@
 ; I need this to allow 'mutual' interation between this namespace and
 ; mam.gameplay. There must be a better way of doing this!
 (in-ns 'mam.gameplay)
-(declare set-current-room current-room take-object inventory
-         display-inventory drop-object inspect-object parse-input
-         describe-room room-has-object? drop-object-in-room
-         take-object-from-room)
+(declare set-current-room! current-room take-object! inventory
+         display-inventory drop-object! inspect-object parse-input
+         describe-room room-has-object? drop-object-in-room!
+         take-object-from-room!)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -34,7 +34,7 @@
                (println "You can't go that way.")
                (if (fn? room)
                  (room)
-                 (set-current-room room)))))))]
+                 (set-current-room! room)))))))]
 
   (defn cmd-go [verbs]
     "Expects to be given direction. Dispatches to the 'move' command"
@@ -86,12 +86,12 @@
     (try-interact verbs
                   "You must supply an item to take!"
                   "I don't see that here..."
-                  take-object))
+                  take-object!))
  (defn cmd-drop [verbs]
     (try-interact verbs
                   "You must supply an item to drop!"
                   "You don't have that item..."
-                  drop-object))
+                  drop-object!))
   (defn cmd-inspect [verbs]
     (if (empty? verbs)
       (cmd-look)
@@ -120,7 +120,7 @@
   (if (and (= (first verbs) 'lever) (= @current-room 2) (room-has-object? @current-room 'lever))
     (dosync
       (println "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You notice that one of the creatures drops something. You now find yourself back in the small room you started in.")
-      (take-object-from-room @current-room 'lever)
-      (drop-object-in-room @current-room 'porno)
-      (set-current-room 0))
+      (take-object-from-room! @current-room 'lever)
+      (drop-object-in-room! @current-room 'porno)
+      (set-current-room! 0))
     (println "I don't see that here.")))
