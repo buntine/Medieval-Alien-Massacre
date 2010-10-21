@@ -50,7 +50,7 @@
 ; Specifies the verbs that users can identify an object with (a gun might
 ; be "gun", "weapon", etc). Each index corresponds to the same index in room-objects.
 (def object-identifiers
-    {'longbow 0 'bow 0 'bed 1 'lever 2})
+    {'longbow 0 'bow 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3})
 
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
@@ -73,6 +73,8 @@
     ["There is a small bed here" nil
      "The bed is black and sorta' small looking. Perhaps for a child?" nil true],
     ["There is a large metal lever here" nil
-     "There is no label, but it seems to have some wear from usage" nil true]))
+     "There is no label, but it seems to have some wear from usage" nil true]
+    ["There is a porno mag here" "A porno mag"
+     "The title is 'Humaniod Whores, vol 99239'." 1 false]))
 
 (def *total-weight* 12)

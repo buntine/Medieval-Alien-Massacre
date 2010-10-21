@@ -7,7 +7,8 @@
 (in-ns 'mam.gameplay)
 (declare set-current-room current-room take-object inventory
          display-inventory drop-object inspect-object parse-input
-         describe-room)
+         describe-room room-has-object? add-object-to-room
+         remove-object-from-room)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -111,13 +112,15 @@
 
 (defn cmd-bed [verbs]
   (if (= @current-room 0)
-    (println "You get into bed and slowly fall to sleep. You begin dreaming of a cruel medical examination. You wake up feeling violated")
-    (println "There is no bed here. You try to sleep standing up and just get bored")))
+    (println "You get into bed and slowly fall to sleep. You begin dreaming of a cruel medical examination. You wake up in a pool of sweat, feeling violated.")
+    (println "There is no bed here. You try to sleep standing up and just get bored.")))
 
 (defn cmd-pull [verbs]
   "Attempts to pull something."
-  (if (and (= (first verbs) 'lever) (= @current-room 2))
+  (if (and (= (first verbs) 'lever) (= @current-room 2) (room-has-object? @current-room 'lever))
     (do
-      (println "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You now find yourself back in the small room you started in")
+      (println "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You notice that one of the creatures drops something. You now find yourself back in the small room you started in.")
+      (remove-object-from-room @current-room 'lever)
+      (add-object-to-room @current-room 'porno)
       (set-current-room 0))
     (println "I don't see that here.")))

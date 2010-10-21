@@ -61,14 +61,23 @@
 (defn permanent-object? [obj-index]
   (true? ((nth object-details obj-index) 4)))
 
+(defn objects-in-room ([] (objects-in-room @current-room))
+  ([room]
+   (nth @room-objects room)))
+
+(defn room-has-object? [room obj]
+  "Returns true if the gien room currently houses the given object"
+  (if (symbol? obj)
+    (room-has-object? (object-identifiers room obj))
+    (boolean (some #{obj} (objects-in-room room)))))
+
 (defn take-object [obj]
   "Attempts to take an object from the current room"
-  (let [opts (nth @room-objects @current-room)
-        obj-index (object-identifiers obj)
+  (let [obj-index (object-identifiers obj)
         dotake (fn [objs]
                  (assoc-in objs [@current-room]
-                           (filter #(not (= obj-index %)) opts)))]
-    (if (or (not obj-index) (not (some #{obj-index} opts)))
+                           (filter #(not (= obj-index %)) (objects-in-room))))]
+    (if (or (not obj-index) (not (room-has-object? @current-room obj-index)))
       false
       (do
         (if (permanent-object? obj-index)
@@ -83,11 +92,10 @@
 
 (defn drop-object [obj]
   "Attempts to drop an object into the current room"
-  (let [opts (nth @room-objects @current-room)
-        obj-index (object-identifiers obj)
+  (let [obj-index (object-identifiers obj)
         dodrop (fn [objs]
                  (assoc-in objs [@current-room]
-                           (conj opts obj-index)))]
+                           (conj (objects-in-room) obj-index)))]
     (if (or (not obj-index) (not (in-inventory? obj-index)))
       false
       (dosync
@@ -98,9 +106,8 @@
 
 (defn inspect-object [obj]
   "Attempts to inspect an object in the current room"
-  (let [opts (nth @room-objects @current-room)
-        obj-index (object-identifiers obj)]
-    (if (or (not obj-index) (not (some #{obj-index} opts)))
+  (let [obj-index (object-identifiers obj)]
+    (if (or (not obj-index) (not (room-has-object? @current-room obj-index)))
       false
       (do
         (println (describe-object obj-index 'inspect))
