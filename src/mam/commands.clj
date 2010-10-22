@@ -71,14 +71,18 @@
    "Prints a long description of a room"
    (describe-room @current-room true)))
 
+(defn teen-takes-porno []
+  "Occurs when the player drops the porno in the teenagers room"
+  (dosync
+    (println "The teenagers eyes explode!! He quickly picks up the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room.")
+    (take-object-from-room! @current-room 'porno)
+    (take-object-from-room! @current-room 'teenager)
+    (drop-object-in-room! @current-room 'keycard)))
+
 (defn drop-check [verbs]
   "Checks if the conditions are right for a special occurrence"
   (if (and (= @current-room 7) (room-has-object? @current-room 'porno))
-    (dosync
-      (println "The teenagers eyes explode!! He quickly picks up the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room.")
-      (take-object-from-room! @current-room 'porno)
-      (take-object-from-room! @current-room 'teenager)
-      (drop-object-in-room! @current-room 'keycard))))
+    (teen-takes-porno)))
 
 (let [try-interact
       (fn [verbs no-verb not-here mod-fn]
