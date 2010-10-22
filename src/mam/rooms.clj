@@ -27,7 +27,9 @@
     '("You continue along the passage and pass more broken machines. Passage leads east or west."
       "Repairs desk, center. Passage leads west/east.")
     '("You are at the end of the hallway. There is a large, sliding door to the north."
-      "End of hallway. Large door to north.")))
+      "End of hallway. Large door to north.")
+    '("There are just more broken machines lying around on the repears deck. The passage ends with a door to the east."
+      "Repairs deck. Door to the east and passage south.")))
 
 (defn check-key [key-type room]
   "Checks if the player has the given type of security card. If they do, set the current
@@ -49,7 +51,8 @@
     [6             nil          1            7            nil          nil          nil          nil]
     [nil           7            nil          3            nil          nil          nil          nil]
     [#(check-key
-       :green 8)   nil          4            nil          nil          nil          nil          nil]))
+       :green 8)   nil          4            nil          nil          nil          nil          nil]
+    [nil           4            nil          5            nil          nil          nil          nil]))
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7})
@@ -57,7 +60,8 @@
 ; Specifies the verbs that users can identify an object with (a gun might
 ; be "gun", "weapon", etc). Each index corresponds to the same index in room-objects.
 (def object-identifiers
-    {'candy 0 'bar 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3})
+    {'candy 0 'bar 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3 'boy 7
+     'teenager 7 'keycard 4 'key 4})
 
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
@@ -69,7 +73,8 @@
          '()
          '()
          '()
-         '())))
+         '()
+         '(7))))
 
 ; The details of objects: [game desc, inventory name, inspect desc, weight, permanent?]. Each
 ; object is assigned a number in object-identifiers, which corresponds to it's index here.
@@ -89,6 +94,8 @@
     ["There is a red keycard here" "Red keycard"
      "It says 'All access: Red'" 1 false]
     ["There is a silver keycard here" "Silver keycard"
-     "It says 'All access: Silver'" 1 false]))
+     "It says 'All access: Silver'" 1 false]
+    ["There is a teenage alien boy here!" nil
+     "He is excitedly looking for something..." nil true]))
 
 (def *total-weight* 12)

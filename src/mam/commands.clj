@@ -71,6 +71,15 @@
    "Prints a long description of a room"
    (describe-room @current-room true)))
 
+(defn drop-check [verbs]
+  "Checks if the conditions are right for a special occurrence"
+  (if (and (= @current-room 7) (room-has-object? @current-room 'porno))
+    (dosync
+      (println "The teenagers eyes explode!! He quickly picks up the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room.")
+      (take-object-from-room! @current-room 'porno)
+      (take-object-from-room! @current-room 'teenager)
+      (drop-object-in-room! @current-room 'keycard))))
+
 (let [try-interact
       (fn [verbs no-verb not-here mod-fn]
         "Loops through the verbs trying to match one to a interactable object"
@@ -91,7 +100,9 @@
     (try-interact verbs
                   "You must supply an item to drop!"
                   "You don't have that item..."
-                  drop-object!))
+                  drop-object!)
+    (drop-check verbs))
+
   (defn cmd-inspect [verbs]
     (if (empty? verbs)
       (cmd-look)

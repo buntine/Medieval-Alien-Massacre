@@ -22,7 +22,7 @@
    'ne cmd-northeast 'se cmd-southeast 'sw cmd-southwest 'nw cmd-northwest
    'north cmd-north 'east cmd-east 'south cmd-south 'west cmd-west
    'northeast cmd-northeast 'southeast cmd-southeast 'southwest cmd-southwest
-   'drop cmd-drop 'dump cmd-drop 'inventory cmd-inventory 'pull cmd-pull
+   'drop cmd-drop 'throw cmd-drop 'inventory cmd-inventory 'pull cmd-pull
    'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take
    'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
    'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed})

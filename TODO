@@ -1,5 +1,6 @@
 - Add functionality for 'special' things in particular rooms
-- Start writing storyline
+- Allow player to eat shit
+- Work out how to deal with multiple key types (green, red, silver)
 - Start designing/implementing load and save functionality
 - Think about implementing a fighting system like that of Fighting Fantasy books.
   - OR Design/implement a simple scoring system
