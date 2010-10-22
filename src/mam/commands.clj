@@ -62,6 +62,7 @@
   (println "   * Keys automatically open the appropriate doors, so you don't need to 'unlock' them.")
   (println "   * Credit is equivalent to our concept of money. Use it wisely!")
   (println "   * To end the game, type 'quit' or 'suicide' or forever dwell in green mess!")
+  (println "   * You can 'save' and 'load' your game, mother fucker!")
   (println "   * Inspired by Dunnet, by Rob Schnell")
   (println "   * If you're wondering why you keep dying, don't worry, it's just a game.")
   (println "  ------------------------------"))
@@ -74,6 +75,7 @@
 (defn teen-takes-porno []
   "Occurs when the player drops the porno in the teenagers room"
   (dosync
+    (newline)
     (println "The teenagers eyes explode!! He quickly picks up the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room.")
     (take-object-from-room! @current-room 'porno)
     (take-object-from-room! @current-room 'teenager)
