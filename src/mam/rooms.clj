@@ -76,26 +76,45 @@
          '()
          '(7))))
 
-; The details of objects: [game desc, inventory name, inspect desc, weight, permanent?]. Each
-; object is assigned a number in object-identifiers, which corresponds to it's index here.
-; Permanent object cannot be taken and thus don't require weights or inventory descriptions.
+(defn make-dets [details]
+  "A helper function to merge in some sane defaults for object details"
+  (let [defaults {:inv nil, :weight nil, :edible false, :permanency false}]
+    (merge defaults details)))
+
+; The details of all objects. Each object is assigned a number in object-identifiers, which
+; corresponds to it's index here. Permanent object cannot be taken and thus don't require
+; weights or inventory descriptions.
 (def object-details
   (vector
-    ["There is a tasty-looking candy bar here" "A candy bar"
-     "It's called 'Space hack bar'" 1 false],
-    ["There is a small bed here" nil
-     "The bed is black and sorta' small looking. Perhaps for a child?" nil true],
-    ["There is a large metal lever here" nil
-     "There is no label, but it seems to have some wear from usage" nil true]
-    ["There is a porno mag here" "A porno mag"
-     "The title is 'Humaniod Whores, vol 99239'." 1 false]
-    ["There is a green keycard here" "Green keycard"
-     "It says 'All access: Green'" 1 false]
-    ["There is a red keycard here" "Red keycard"
-     "It says 'All access: Red'" 1 false]
-    ["There is a silver keycard here" "Silver keycard"
-     "It says 'All access: Silver'" 1 false]
-    ["There is a teenage alien boy here!" nil
-     "He is excitedly looking for something..." nil true]))
+    (make-dets {:game "There is a tasty-looking candy bar here"
+                :inv "A candy bar"
+                :inspect "It's called 'Space hack bar' and there is a competition running according to the wrapper"
+                :weight 1
+                :edible true}),
+    (make-dets {:game "There is a small bed here"
+                :inspect "The bed is black and sorta' small looking. Perhaps for a child?"
+                :permanency true}),
+    (make-dets {:game "There is a large metal lever here"
+                :inspect "There is no label, but it seems to have some wear from usage"
+                :permanency true}),
+    (make-dets {:game "There is a porno mag here"
+                :inv "A porno mag"
+                :inspect "The title is 'Humaniod Whores, vol 99239'."
+                :weight 2}),
+    (make-dets {:game "There is a green keycard here"
+                :inv "Green keycard"
+                :inspect "It says 'All access: Green'"
+                :weight 1}),
+    (make-dets {:game "There is a red keycard here"
+                :inv "Red keycard"
+                :inspect "It says 'All access: Red'"
+                :weight 1}),
+    (make-dets {:game "There is a silver keycard here"
+                :inv "Silver keycard"
+                :inspect "It says 'All access: Silver'"
+                :weight 1}),
+    (make-dets {:game "There is a teenage alien boy here!"
+                :inspect "He is excitedly looking for something..."
+                :permanency true})))
 
 (def *total-weight* 12)

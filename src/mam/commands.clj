@@ -8,7 +8,7 @@
 (declare set-current-room! current-room take-object! inventory
          display-inventory drop-object! inspect-object parse-input
          describe-room room-has-object? drop-object-in-room!
-         take-object-from-room!)
+         take-object-from-room! eat-object)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -86,16 +86,17 @@
   (if (and (= @current-room 7) (room-has-object? @current-room 'porno))
     (teen-takes-porno)))
 
-(let [try-interact
-      (fn [verbs no-verb not-here mod-fn]
-        "Loops through the verbs trying to match one to a interactable object"
-        (if (empty? verbs)
-          (println no-verb)
-          (loop [objs verbs]
-            (if (empty? objs)
-              (println not-here)
-              (if (not (mod-fn (first objs)))
-                (recur (rest objs)))))))]
+(letfn
+  [(try-interact
+     [verbs no-verb not-here mod-fn]
+     "Loops through the verbs trying to match one to a interactable object"
+     (if (empty? verbs)
+       (println no-verb)
+       (loop [objs verbs]
+         (if (empty? objs)
+           (println not-here)
+           (if (not (mod-fn (first objs)))
+             (recur (rest objs)))))))]
 
   (defn cmd-take [verbs]
     (try-interact verbs
@@ -115,7 +116,13 @@
       (try-interact verbs
                     "You must supply and item to inspect!"
                     "I don't see that here..."
-                    inspect-object))))
+                    inspect-object)))
+
+  (defn cmd-eat [verbs]
+    (try-interact verbs
+                  "You must supply an item to eat!"
+                  "You don't have that item..."
+                  eat-object)))
 
 (defn cmd-inventory [verbs]
   "Displays the players inventory"

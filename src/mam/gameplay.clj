@@ -25,7 +25,7 @@
    'drop cmd-drop 'throw cmd-drop 'inventory cmd-inventory 'pull cmd-pull
    'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take
    'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
-   'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed})
+   'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat})
    
 ; Declarations for some procedures I mention before they have been
 ; defined.
@@ -42,7 +42,7 @@
 
 (defn obj-weight [obj-index]
   "Returns the weight assigned to the given object"
-  (nth (nth object-details obj-index) 3))
+  ((object-details obj-index) :weight))
 
 (defn inventory-weight []
   "Returns the current weight of the players inventory"
@@ -50,16 +50,24 @@
     0
     (reduce #(+ %1 (obj-weight %2)) @inventory)))
 
-(defn describe-object ([objnum] (describe-object objnum 'game))
-  ([objnum context]
-    "Returns the string which describes the given object (symbol)"
-    (let [f ({'game first
-              'inventory second
-              'inspect #(second (rest %))} context)]
-      (str (f (object-details objnum))))))
+(defn kill-player []
+  "Kills the player and ends the game"
+  ; TODO: Implement.
+  true)
+
+(defn is-same-object? [obj-index obj-sym]
+  (= obj-index (object-identifiers obj-sym)))
+
+(defn describe-object ([obj-index] (describe-object obj-index :game))
+  ([obj-index context]
+    "Returns the string which describes the given object"
+    (str ((object-details obj-index) context))))
 
 (defn permanent-object? [obj-index]
-  (true? ((nth object-details obj-index) 4)))
+  (true? ((object-details obj-index) :permanency)))
+
+(defn edible-object? [obj-index]
+  (true? ((object-details obj-index) :edible)))
 
 (defn objects-in-room ([] (objects-in-room @current-room))
   ([room]
@@ -73,7 +81,7 @@
 
 (defn take-object-from-room! [room obj]
   "Physically removes an object from the given room. Must be called from within
-   a dosync form."
+   a dosync form"
   (if (symbol? obj)
     (take-object-from-room! room (object-identifiers obj))
     (alter room-objects (fn [objs]
@@ -82,13 +90,20 @@
 
 (defn drop-object-in-room! [room obj]
   "Physically adds an object to the given room. Must be called from within
-   a dosync form."
+   a dosync form"
   (if (symbol? obj)
     (drop-object-in-room! room (object-identifiers obj))
     (alter room-objects (fn [objs]
                           (assoc-in objs [room]
                                     (conj (objects-in-room room) obj))))))
 
+(defn remove-object-from-inventory! [obj]
+  "Physically removes an object from the players inventory. Must be called
+   within a dosync form"
+  (if (symbol? obj)
+    (remove-object-from-inventory! (object-identifiers obj))
+    (alter inventory (fn [i] (filter #(not (= % obj)) i)))))
+ 
 (defn take-object! [obj]
   "Attempts to take an object from the current room"
   (let [obj-index (object-identifiers obj)]
@@ -111,7 +126,7 @@
     (if (or (not obj-index) (not (in-inventory? obj-index)))
       false
       (dosync
-        (alter inventory (fn [i] (filter #(not (= % obj-index)) i)))
+        (remove-object-from-inventory! obj-index)
         (drop-object-in-room! @current-room obj-index)
         (println "Dropped...")
         true))))
@@ -122,8 +137,28 @@
     (if (or (not obj-index) (not (room-has-object? @current-room obj-index)))
       false
       (do
-        (println (describe-object obj-index 'inspect))
+        (println (describe-object obj-index :inspect))
         true))))
+
+(defn eat-object [obj]
+  "Attempts to eat the given object"
+  (let [obj-index (object-identifiers obj)]
+    (cond
+      (not obj-index)
+        false
+      (not (edible-object? obj-index))
+        (do
+          (println (str "You force the " obj " into your throat and fucking die in pain."))
+          (kill-player))
+      :else
+        (dosync
+          (if (is-same-object? obj-index 'candy)
+            (do
+              (println "You feel like you just ate crusty skin off Donald Trump's forehead. Although inside the wrapper there was an 'instant win' of 5 credits!")
+              (alter credits + 5))
+            (println "That tasted like a cold peice of shit..."))
+          (remove-object-from-inventory! obj-index)
+          true))))
 
 (defn print-with-newlines
   ([lines] (print-with-newlines lines ""))
@@ -136,7 +171,7 @@
 
 (defn display-inventory []
   "Displays the players inventory"
-  (let [descs (map #(describe-object % 'inventory) @inventory)]
+  (let [descs (map #(describe-object % :inv) @inventory)]
     (if (not (empty? descs))
       (print-with-newlines descs "You currently have:")
       (println "Your inventory is currently empty."))
@@ -216,9 +251,11 @@
 
 (defn save-game! []
   "Saves the current game data into a file on the disk"
-  ; current-room, inventory, visited-rooms, credits, room-objects
+  ; TODO: Implement
+  ; State: current-room, inventory, visited-rooms, credits, room-objects
   )
 
 (defn load-game! []
   "Loads all previously saved game data"
+  ; TODO: Implement
   )
