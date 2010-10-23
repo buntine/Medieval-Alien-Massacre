@@ -176,6 +176,27 @@
           (remove-object-from-inventory! obj-index)
           true))))
 
+(defn speech-for [obj-index]
+  "Some objects have things to say. This function will return the speech for
+   the given object"
+  (or ((object-details obj-index) :speech)
+      "Sorry, they have nothing to say at the moment."))
+
+(defn talk-to-object [obj]
+  "Attempts to talk to the given object"
+  (let [obj-index (object-identifiers obj)]
+    (cond
+      (or (not obj-index) (not (room-has-object? @current-room obj-index)))
+        false
+      (not (object-is? obj-index :living))
+        (do
+          (println (str "The " obj " does not possess the ability to talk."))
+          true)
+      :else
+        (do
+          (println (speech-for obj-index))
+          true))))
+
 (defn print-with-newlines
   ([lines] (print-with-newlines lines ""))
   ([lines prepend]

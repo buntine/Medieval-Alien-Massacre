@@ -78,7 +78,8 @@
 
 (defn make-dets [details]
   "A helper function to merge in some sane defaults for object details"
-  (let [defaults {:inv nil, :weight nil, :edible false, :permanent false :living false}]
+  (let [defaults {:inv nil, :weight nil, :edible false, :permanent false :living false
+                  :speech nil}]
     (merge defaults details)))
 
 ; The details of all objects. Each object is assigned a number in object-identifiers, which
@@ -116,6 +117,7 @@
     (make-dets {:game "There is a teenage alien boy here!"
                 :inspect "He is excitedly looking for something..."
                 :permanent true
+                :speech "He mentions that he's looking for 'some ill pronz with Sasha Grey'. You nod, knowingly"
                 :living true})))
 
 (def *total-weight* 12)

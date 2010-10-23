@@ -1,6 +1,7 @@
 
 ; commands.clj
-; Defines functions for handling user commands.
+; Defines functions for handling user commands. Lots of dispatch
+; to mam.gameplay going on here...
 
 ; I need this to allow 'mutual' interation between this namespace and
 ; mam.gameplay. There must be a better way of doing this!
@@ -8,7 +9,7 @@
 (declare set-current-room! current-room take-object! inventory
          display-inventory drop-object! inspect-object parse-input
          describe-room room-has-object? drop-object-in-room!
-         take-object-from-room! eat-object fuck-object)
+         take-object-from-room! eat-object fuck-object talk-to-object)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -61,7 +62,7 @@
   (println "   * Or abbreviated n, e, s, w, ne, se, sw, nw.")
   (println "   * Keys automatically open the appropriate doors, so you don't need to 'unlock' them.")
   (println "   * Credit is equivalent to our concept of money. Use it wisely!")
-  (println "   * You can 'speak' to both Humans and Aliens, but some may be a tad vulgar..."
+  (println "   * You can 'speak' to both Humans and Aliens, but some may be a tad vulgar...")
   (println "   * To end the game, type 'quit' or 'suicide' or forever dwell in green mess!")
   (println "   * You can 'save' and 'load' your game, mother fucker!")
   (println "   * Inspired by Dunnet, by Rob Schnell")
@@ -130,7 +131,13 @@
     (try-interact verbs
                   "Fuck what exactly?"
                   "I don't see him/her/it here..."
-                  fuck-object)))
+                  fuck-object))
+
+  (defn cmd-talk [verbs]
+    (try-interact verbs
+                  "Talk to who exactly, dumbass?"
+                  "I don't see him/her/it here..."
+                  talk-to-object)))
 
 (defn cmd-inventory [verbs]
   "Displays the players inventory"
@@ -156,8 +163,3 @@
       (drop-object-in-room! @current-room 'porno)
       (set-current-room! 0))
     (println "I don't see that here.")))
- 
-(defn cmd-talk [verbs]
-  "Attempts to talk to the object identified by the first verb"
-  ; TODO: Implement
-  true)
