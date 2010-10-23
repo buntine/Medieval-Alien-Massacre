@@ -144,7 +144,7 @@
   "Attempts to eat the given object"
   (let [obj-index (object-identifiers obj)]
     (cond
-      (not obj-index)
+      (or (not obj-index) (not (in-inventory? obj-index)))
         false
       (not (edible-object? obj-index))
         (do
