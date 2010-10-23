@@ -1,6 +1,9 @@
 - Work out how to deal with multiple key types (green, red, silver)
 - Finish implementing load and save functionality
 - Add in points system.
-- Write macro for the xx-object functions.
+- Macros: 
+  - for the xx-object functions.
+  - (do (println s) true)
+
 - Think about implementing a fighting system like that of Fighting Fantasy books.
   - OR Design/implement a simple scoring system

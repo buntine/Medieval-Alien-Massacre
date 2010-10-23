@@ -8,7 +8,7 @@
 (declare set-current-room! current-room take-object! inventory
          display-inventory drop-object! inspect-object parse-input
          describe-room room-has-object? drop-object-in-room!
-         take-object-from-room! eat-object)
+         take-object-from-room! eat-object fuck-object)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -23,18 +23,18 @@
           '(n e s w ne se sw nw north east south west
             northeast southeast southwest northwest))))
 
-(let [move-room
-     (fn [dir]
-       "Attempts to move in the given direction."
-       (let [i (directions dir)]
-         (if (not i)
-           (println "I don't understand that direction.")
-           (let [room ((world-map @current-room) i)]
-             (if (nil? room)
-               (println "You can't go that way.")
-               (if (fn? room)
-                 (room)
-                 (set-current-room! room)))))))]
+(letfn
+  [(move-room [dir]
+     "Attempts to move in the given direction."
+     (let [i (directions dir)]
+       (if (not i)
+         (println "I don't understand that direction.")
+         (let [room ((world-map @current-room) i)]
+           (if (nil? room)
+             (println "You can't go that way.")
+             (if (fn? room)
+               (room)
+               (set-current-room! room)))))))]
 
   (defn cmd-go [verbs]
     "Expects to be given direction. Dispatches to the 'move' command"
@@ -123,7 +123,13 @@
     (try-interact verbs
                   "You must supply an item to eat!"
                   "You don't have that item..."
-                  eat-object)))
+                  eat-object))
+
+  (defn cmd-fuck [verbs]
+    (try-interact verbs
+                  "Fuck what exactly?"
+                  "I don't see him/her/it here..."
+                  fuck-object)))
 
 (defn cmd-inventory [verbs]
   "Displays the players inventory"
@@ -149,8 +155,4 @@
       (drop-object-in-room! @current-room 'porno)
       (set-current-room! 0))
     (println "I don't see that here.")))
-
-(defn cmd-fuck [verbs]
-  "Attempts to fuck something. Must be living!"
-  ; TODO: Implement
-  true)
+ 

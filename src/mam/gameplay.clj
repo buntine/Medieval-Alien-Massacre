@@ -65,10 +65,13 @@
     (str ((object-details obj-index) context))))
 
 (defn permanent-object? [obj-index]
-  (true? ((object-details obj-index) :permanency)))
+  ((object-details obj-index) :permanency))
 
 (defn edible-object? [obj-index]
-  (true? ((object-details obj-index) :edible)))
+  ((object-details obj-index) :edible))
+
+(defn living-object? [obj-index]
+  ((object-details obj-index) :living))
 
 (defn objects-in-room ([] (objects-in-room @current-room))
   ([room]
@@ -140,6 +143,23 @@
       (do
         (println (describe-object obj-index :inspect))
         true))))
+
+(defn fuck-object
+  ([obj]
+   "Attempts to fuck the given object."
+   (let [obj-index (object-identifiers obj)]
+     (cond
+       (or (not obj-index) (not (room-has-object? @current-room obj-index)))
+         false
+       (not (living-object? obj-index))
+         (do 
+           (println (str "You start fucking the " obj " but it just feels painful."))
+           true)
+       :else
+         (do
+           (println "Hmm... I bet that felt pretty good!")
+           true))))
+  {:ridiculous true})
 
 (defn eat-object [obj]
   "Attempts to eat the given object"
