@@ -2,7 +2,7 @@
   - Or maybe get smart and allow for all objects to be "multi-selectable",
     that is, certain conditions are checked. E.g "boy" means object 12 in room
     7 but it means object 43 in rooms 12 and 13. Cool?
-- Add in "speak" command. Can be done now because of :living data for objects.
+- Add in "speak/talk" command. Can be done now because of :living data for objects.
 - Finish implementing load and save functionality.
 - Add in points system.
 - Macros: 

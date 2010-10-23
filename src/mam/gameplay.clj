@@ -26,7 +26,7 @@
    'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take
    'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
    'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat 'fuck cmd-fuck
-   'rape cmd-fuck})
+   'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk})
    
 ; Declarations for some procedures I mention before they have been
 ; defined.
@@ -64,14 +64,9 @@
     "Returns the string which describes the given object"
     (str ((object-details obj-index) context))))
 
-(defn permanent-object? [obj-index]
-  ((object-details obj-index) :permanency))
-
-(defn edible-object? [obj-index]
-  ((object-details obj-index) :edible))
-
-(defn living-object? [obj-index]
-  ((object-details obj-index) :living))
+(defn object-is? [obj-index k]
+  "Returns true is the object adheres to the given keyword"
+  ((object-details obj-index) k))
 
 (defn objects-in-room ([] (objects-in-room @current-room))
   ([room]
@@ -114,7 +109,7 @@
     (if (or (not obj-index) (not (room-has-object? @current-room obj-index)))
       false
       (do
-        (if (permanent-object? obj-index)
+        (if (object-is? obj-index :permanent)
           (println "You can't take that.")
           (if (> (+ (inventory-weight) (obj-weight obj-index)) *total-weight*)
             (println "You cannot carry that much weight.")
@@ -151,7 +146,7 @@
      (cond
        (or (not obj-index) (not (room-has-object? @current-room obj-index)))
          false
-       (not (living-object? obj-index))
+       (not (object-is? obj-index :living))
          (do 
            (println (str "You start fucking the " obj " but it just feels painful."))
            true)
@@ -167,7 +162,7 @@
     (cond
       (or (not obj-index) (not (in-inventory? obj-index)))
         false
-      (not (edible-object? obj-index))
+      (not (object-is? obj-index :edible))
         (do
           (println (str "You force the " obj " into your throat and fucking die in pain."))
           (kill-player))

@@ -1,6 +1,6 @@
 # MEDIEVAL ALIEN MASSACRE
 
-A sadistic, pro-death text-based adventure for children.
+A sadistic and pro-death text-based adventure for (bastard) children.
 
 
 ## Usage
@@ -21,7 +21,7 @@ $ lein uberjar
 # Notes
 
  - Type the 'help' command in gameplay for some tips and instructions.
- - Inspired by Dunnet, by Rob Schnell (bundled with emacs).
+ - Inspired by Dunnet, by Rob Schnell ($ emacs -batch -l dunnet).
 
 
 ## License

@@ -78,7 +78,7 @@
 
 (defn make-dets [details]
   "A helper function to merge in some sane defaults for object details"
-  (let [defaults {:inv nil, :weight nil, :edible false, :permanency false :living false}]
+  (let [defaults {:inv nil, :weight nil, :edible false, :permanent false :living false}]
     (merge defaults details)))
 
 ; The details of all objects. Each object is assigned a number in object-identifiers, which
@@ -93,10 +93,10 @@
                 :edible true}),
     (make-dets {:game "There is a small bed here"
                 :inspect "The bed is black and sorta' small looking. Perhaps for a child?"
-                :permanency true}),
+                :permanent true}),
     (make-dets {:game "There is a large metal lever here"
                 :inspect "There is no label, but it seems to have some wear from usage"
-                :permanency true}),
+                :permanent true}),
     (make-dets {:game "There is a porno mag here"
                 :inv "A porno mag"
                 :inspect "The title is 'Humaniod Whores, vol 99239'."
@@ -115,7 +115,7 @@
                 :weight 1}),
     (make-dets {:game "There is a teenage alien boy here!"
                 :inspect "He is excitedly looking for something..."
-                :permanency true
+                :permanent true
                 :living true})))
 
 (def *total-weight* 12)

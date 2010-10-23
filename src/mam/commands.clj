@@ -61,10 +61,11 @@
   (println "   * Or abbreviated n, e, s, w, ne, se, sw, nw.")
   (println "   * Keys automatically open the appropriate doors, so you don't need to 'unlock' them.")
   (println "   * Credit is equivalent to our concept of money. Use it wisely!")
+  (println "   * You can 'speak' to both Humans and Aliens, but some may be a tad vulgar..."
   (println "   * To end the game, type 'quit' or 'suicide' or forever dwell in green mess!")
   (println "   * You can 'save' and 'load' your game, mother fucker!")
   (println "   * Inspired by Dunnet, by Rob Schnell")
-  (println "   * If you're wondering why you keep dying, don't worry, it's just a game.")
+  (println "   * Don't forget: Life is a game and everything is pointless.")
   (println "  ------------------------------"))
 
 (defn cmd-look ([verbs] (cmd-inspect verbs))
@@ -156,3 +157,7 @@
       (set-current-room! 0))
     (println "I don't see that here.")))
  
+(defn cmd-talk [verbs]
+  "Attempts to talk to the object identified by the first verb"
+  ; TODO: Implement
+  true)
