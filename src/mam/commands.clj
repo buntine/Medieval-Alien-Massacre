@@ -148,3 +148,8 @@
       (drop-object-in-room! @current-room 'porno)
       (set-current-room! 0))
     (println "I don't see that here.")))
+
+(defn cmd-fuck [verbs]
+  "Attempts to fuck something. Must be living!"
+  ; TODO: Implement
+  true)

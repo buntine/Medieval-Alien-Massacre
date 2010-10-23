@@ -25,7 +25,8 @@
    'drop cmd-drop 'throw cmd-drop 'inventory cmd-inventory 'pull cmd-pull
    'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take
    'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
-   'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat})
+   'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat 'fuck cmd-fuck
+   'rape cmd-fuck})
    
 ; Declarations for some procedures I mention before they have been
 ; defined.
