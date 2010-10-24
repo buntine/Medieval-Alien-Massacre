@@ -62,6 +62,7 @@
   (println "   * Or abbreviated n, e, s, w, ne, se, sw, nw.")
   (println "   * Keys automatically open the appropriate doors, so just walk in their direction.")
   (println "   * Credit is equivalent to our concept of money. Use it wisely!")
+  (println "   * Check your items and credit with 'inventory' or 'inv'")
   (println "   * You can 'speak' to both Humans and Aliens, but some may be a tad vulgar...")
   (println "   * To end the game, type 'quit' or 'suicide' or forever dwell in green mess!")
   (println "   * You can 'save' and 'load' your game, mother fucker!")
@@ -79,12 +80,12 @@
   (letfn
     [(teen-takes-porno []
        "Occurs when the player drops the porno in the teenagers room"
-       (dosync
        (newline)
        (println "The teenagers eyes explode!! He quickly picks up the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room.")
-       (take-object-from-room! @current-room 'porno)
-       (take-object-from-room! @current-room 'teenager)
-       (drop-object-in-room! @current-room 'keycard)))]
+       (dosync
+         (take-object-from-room! @current-room 'porno)
+         (take-object-from-room! @current-room 'teenager)
+         (drop-object-in-room! @current-room 'keycard)))]
 
     (if (and (= @current-room 7) (room-has-object? @current-room 'porno))
       (teen-takes-porno))))

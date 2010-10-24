@@ -26,7 +26,7 @@
    'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take
    'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
    'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat 'fuck cmd-fuck
-   'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk})
+   'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory})
    
 ; Declarations for some procedures I mention before they have been
 ; defined.
@@ -46,13 +46,13 @@
   (dosync
     (ref-set current-room room)))
 
-(defn in-inventory? [obj-index]
-  "Returns true if object assigned to 'obj-index' is in players inventory"
-  (boolean (some #{obj-index} @inventory)))
+(defn in-inventory? [objnum]
+  "Returns true if object assigned to 'objnum' is in players inventory"
+  (boolean (some #{objnum} @inventory)))
 
-(defn obj-weight [obj-index]
+(defn obj-weight [objnum]
   "Returns the weight assigned to the given object"
-  ((object-details obj-index) :weight))
+  ((object-details objnum) :weight))
 
 (defn inventory-weight []
   "Returns the current weight of the players inventory"
@@ -65,17 +65,17 @@
   ; TODO: Implement.
   true)
 
-(defn is-same-object? [obj-index obj-sym]
-  (= obj-index (object-identifiers obj-sym)))
+(defn is-same-object? [objnum obj-sym]
+  (= objnum (object-identifiers obj-sym)))
 
-(defn describe-object ([obj-index] (describe-object obj-index :game))
-  ([obj-index context]
+(defn describe-object ([objnum] (describe-object objnum :game))
+  ([objnum context]
     "Returns the string which describes the given object"
-    (str ((object-details obj-index) context))))
+    (str ((object-details objnum) context))))
 
-(defn object-is? [obj-index k]
+(defn object-is? [objnum k]
   "Returns true is the object adheres to the given keyword"
-  ((object-details obj-index) k))
+  ((object-details objnum) k))
 
 (defn objects-in-room ([] (objects-in-room @current-room))
   ([room]
@@ -114,89 +114,89 @@
  
 (defn take-object! [obj]
   "Attempts to take an object from the current room"
-  (let [obj-index (object-identifiers obj)]
-    (if (or (not obj-index) (not (room-has-object? @current-room obj-index)))
+  (let [objnum (object-identifiers obj)]
+    (if (or (not objnum) (not (room-has-object? @current-room objnum)))
       false
       (do-true
-        (if (object-is? obj-index :permanent)
+        (if (object-is? objnum :permanent)
           (println "You can't take that.")
-          (if (> (+ (inventory-weight) (obj-weight obj-index)) *total-weight*)
+          (if (> (+ (inventory-weight) (obj-weight objnum)) *total-weight*)
             (println "You cannot carry that much weight.")
             (dosync
-              (alter inventory conj obj-index)
-              (take-object-from-room! @current-room obj-index)
+              (alter inventory conj objnum)
+              (take-object-from-room! @current-room objnum)
               (println "Taken..."))))))))
 
 (defn drop-object! [obj]
   "Attempts to drop an object into the current room"
-  (let [obj-index (object-identifiers obj)]
-    (if (or (not obj-index) (not (in-inventory? obj-index)))
+  (let [objnum (object-identifiers obj)]
+    (if (or (not objnum) (not (in-inventory? objnum)))
       false
       (dosync-true
-        (remove-object-from-inventory! obj-index)
-        (drop-object-in-room! @current-room obj-index)
+        (remove-object-from-inventory! objnum)
+        (drop-object-in-room! @current-room objnum)
         (println "Dropped...")))))
 
 (defn inspect-object [obj]
   "Attempts to inspect an object in the current room"
-  (let [obj-index (object-identifiers obj)]
-    (if (or (not obj-index) (not (room-has-object? @current-room obj-index)))
+  (let [objnum (object-identifiers obj)]
+    (if (or (not objnum) (not (room-has-object? @current-room objnum)))
       false
       (do-true
-        (println (describe-object obj-index :inspect))))))
+        (println (describe-object objnum :inspect))))))
 
 (defn fuck-object
   ([obj]
    "Attempts to fuck the given object."
-   (let [obj-index (object-identifiers obj)]
+   (let [objnum (object-identifiers obj)]
      (cond
-       (or (not obj-index) (not (room-has-object? @current-room obj-index)))
+       (or (not objnum) (not (room-has-object? @current-room objnum)))
          false
-       (not (object-is? obj-index :living))
+       (not (object-is? objnum :living))
          (do-true 
            (println (str "You start fucking the " obj " but it just feels painful.")))
        :else
-         (dotrue
+         (do-true
            (println "Hmm... I bet that felt pretty good!")))))
   {:ridiculous true})
 
 (defn eat-object [obj]
   "Attempts to eat the given object"
-  (let [obj-index (object-identifiers obj)]
+  (let [objnum (object-identifiers obj)]
     (cond
-      (or (not obj-index) (not (in-inventory? obj-index)))
+      (or (not objnum) (not (in-inventory? objnum)))
         false
-      (not (object-is? obj-index :edible))
+      (not (object-is? objnum :edible))
         (do
           (println (str "You force the " obj " into your throat and fucking die in pain."))
           (kill-player))
       :else
         (dosync-true
-          (if (is-same-object? obj-index 'candy)
+          (if (is-same-object? objnum 'candy)
             (do
               (println "You feel like you just ate crusty skin off Donald Trump's forehead. Although inside the wrapper there was an 'instant win' of 5 credits!")
               (alter credits + 5))
             (println "That tasted like a cold peice of shit..."))
-          (remove-object-from-inventory! obj-index)))))
+          (remove-object-from-inventory! objnum)))))
 
-(defn speech-for [obj-index]
+(defn speech-for [objnum]
   "Some objects have things to say. This function will return the speech for
    the given object"
-  (or ((object-details obj-index) :speech)
+  (or ((object-details objnum) :speech)
       "Sorry, they have nothing to say at the moment."))
 
 (defn talk-to-object [obj]
   "Attempts to talk to the given object"
-  (let [obj-index (object-identifiers obj)]
+  (let [objnum (object-identifiers obj)]
     (cond
-      (or (not obj-index) (not (room-has-object? @current-room obj-index)))
+      (or (not objnum) (not (room-has-object? @current-room objnum)))
         false
-      (not (object-is? obj-index :living))
+      (not (object-is? objnum :living))
         (do-true
           (println (str "The " obj " does not possess the ability to talk.")))
       :else
         (do-true
-          (println (speech-for obj-index))))))
+          (println (speech-for objnum))))))
 
 (defn print-with-newlines
   ([lines] (print-with-newlines lines ""))

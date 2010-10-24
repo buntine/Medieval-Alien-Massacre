@@ -123,7 +123,7 @@
     (make-dets {:game "There is a teenage alien boy here!"
                 :inspect "He is excitedly looking for something..."
                 :permanent true
-                :speech "He mentions that he's looking for 'some ill pronz with Sasha Grey'. You nod, knowingly"
+                :speech "He mentions that he's looking for 'some ill pronz with Sasha Grey'. You nod, knowingly."
                 :living true})))
 
 (def *total-weight* 12)
