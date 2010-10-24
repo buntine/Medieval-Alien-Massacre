@@ -60,7 +60,7 @@
   (println "  ------------------------------")
   (println "   * Directions are north, east, south, west, northeaast, southeast, southwest, northeast.")
   (println "   * Or abbreviated n, e, s, w, ne, se, sw, nw.")
-  (println "   * Keys automatically open the appropriate doors, so you don't need to 'unlock' them.")
+  (println "   * Keys automatically open the appropriate doors, so just walk in their direction.")
   (println "   * Credit is equivalent to our concept of money. Use it wisely!")
   (println "   * You can 'speak' to both Humans and Aliens, but some may be a tad vulgar...")
   (println "   * To end the game, type 'quit' or 'suicide' or forever dwell in green mess!")
