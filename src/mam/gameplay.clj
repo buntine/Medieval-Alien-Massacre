@@ -33,6 +33,15 @@
 (declare messages)
 
 
+(defmacro do-true [& body]
+  "Executes body in a do form and returns true"
+  (cons 'do (into '(true) body)))
+
+(defmacro dosync-true [& body]
+  "Executes body in a dosync form and returns true"
+  (cons 'dosync (into '(true) body)))
+
+
 (defn set-current-room! [room]
   (dosync
     (ref-set current-room room)))
@@ -108,7 +117,7 @@
   (let [obj-index (object-identifiers obj)]
     (if (or (not obj-index) (not (room-has-object? @current-room obj-index)))
       false
-      (do
+      (do-true
         (if (object-is? obj-index :permanent)
           (println "You can't take that.")
           (if (> (+ (inventory-weight) (obj-weight obj-index)) *total-weight*)
@@ -116,28 +125,25 @@
             (dosync
               (alter inventory conj obj-index)
               (take-object-from-room! @current-room obj-index)
-              (println "Taken..."))))
-        true))))
+              (println "Taken..."))))))))
 
 (defn drop-object! [obj]
   "Attempts to drop an object into the current room"
   (let [obj-index (object-identifiers obj)]
     (if (or (not obj-index) (not (in-inventory? obj-index)))
       false
-      (dosync
+      (dosync-true
         (remove-object-from-inventory! obj-index)
         (drop-object-in-room! @current-room obj-index)
-        (println "Dropped...")
-        true))))
+        (println "Dropped...")))))
 
 (defn inspect-object [obj]
   "Attempts to inspect an object in the current room"
   (let [obj-index (object-identifiers obj)]
     (if (or (not obj-index) (not (room-has-object? @current-room obj-index)))
       false
-      (do
-        (println (describe-object obj-index :inspect))
-        true))))
+      (do-true
+        (println (describe-object obj-index :inspect))))))
 
 (defn fuck-object
   ([obj]
@@ -147,13 +153,11 @@
        (or (not obj-index) (not (room-has-object? @current-room obj-index)))
          false
        (not (object-is? obj-index :living))
-         (do 
-           (println (str "You start fucking the " obj " but it just feels painful."))
-           true)
+         (do-true 
+           (println (str "You start fucking the " obj " but it just feels painful.")))
        :else
-         (do
-           (println "Hmm... I bet that felt pretty good!")
-           true))))
+         (dotrue
+           (println "Hmm... I bet that felt pretty good!")))))
   {:ridiculous true})
 
 (defn eat-object [obj]
@@ -167,14 +171,13 @@
           (println (str "You force the " obj " into your throat and fucking die in pain."))
           (kill-player))
       :else
-        (dosync
+        (dosync-true
           (if (is-same-object? obj-index 'candy)
             (do
               (println "You feel like you just ate crusty skin off Donald Trump's forehead. Although inside the wrapper there was an 'instant win' of 5 credits!")
               (alter credits + 5))
             (println "That tasted like a cold peice of shit..."))
-          (remove-object-from-inventory! obj-index)
-          true))))
+          (remove-object-from-inventory! obj-index)))))
 
 (defn speech-for [obj-index]
   "Some objects have things to say. This function will return the speech for
@@ -189,13 +192,11 @@
       (or (not obj-index) (not (room-has-object? @current-room obj-index)))
         false
       (not (object-is? obj-index :living))
-        (do
-          (println (str "The " obj " does not possess the ability to talk."))
-          true)
+        (do-true
+          (println (str "The " obj " does not possess the ability to talk.")))
       :else
-        (do
-          (println (speech-for obj-index))
-          true))))
+        (do-true
+          (println (speech-for obj-index))))))
 
 (defn print-with-newlines
   ([lines] (print-with-newlines lines ""))
@@ -246,9 +247,8 @@
     (if (empty? verb-lst)
       false
       (if f
-        (do
-          (f (rest verb-lst))
-           true)
+        (do-true
+          (f (rest verb-lst)))
         (verb-parse (rest verb-lst))))))
 
 (defn command->seq [s]

@@ -14,9 +14,9 @@
    room to 'room'. Otherwise, let them know"
   (let [keys {:green 4 :red 5 :silver 6}]
     (if (in-inventory? (keys key-type))
-      (do
+      (let [key-name (apply str (rest (str key-type)))]
         (set-current-room! room)
-        (println (str " * Door unlocked with " (reduce str (rest (str key-type))) " keycard. *")))
+        (println (str " * Door unlocked with " key-name " keycard. *")))
       (println "You don't have security clearance for this door!"))))
 
 ; A vector of pairs. Each index contains both a large description (first visit) and a brief
@@ -41,7 +41,6 @@
       "Repairs deck. Door to the east and passage south.")
     '("You are in a large room with space age decor. It seems to be the central control room. The walls are lined with pictures of the late comedian, Bill Hicks. There are walkways to the east and northeast and a door to the south."
       "Central control room, walkways to east and northeast, door to south.")))
-
 
 ; Map to specify which rooms the player will enter on the given movement.
 ; A function indicates that something special needs to be done (check conditions, etc).
