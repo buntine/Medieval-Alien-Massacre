@@ -17,6 +17,16 @@
 (def ignore-words '(the that is to ; Words that should be ignored in commands.
                     fucking damn)) 
 
+(defn mam-pr [s]
+  "Prints a string per-character like the ancient terminals used to"
+  (if (empty? s)
+    (newline)
+    (do
+      (print (first s))
+      (flush)
+      (. Thread sleep 30)
+      (recur (rest s)))))
+
 ; Maps user commands to the appropriate function.
 (def cmd-verbs
   {'go cmd-go 'n cmd-north 'e cmd-east 's cmd-south 'w cmd-west
@@ -121,13 +131,13 @@
       false
       (do-true
         (if (object-is? objnum :permanent)
-          (println "You can't take that.")
+          (mam-pr "You can't take that.")
           (if (> (+ (inventory-weight) (obj-weight objnum)) *total-weight*)
-            (println "You cannot carry that much weight.")
+            (mam-pr "You cannot carry that much weight.")
             (dosync
               (alter inventory conj objnum)
               (take-object-from-room! @current-room objnum)
-              (println "Taken..."))))))))
+              (mam-pr "Taken..."))))))))
 
 (defn drop-object! [obj]
   "Attempts to drop an object into the current room"
@@ -137,7 +147,7 @@
       (dosync-true
         (remove-object-from-inventory! objnum)
         (drop-object-in-room! @current-room objnum)
-        (println "Dropped...")))))
+        (mam-pr "Dropped...")))))
 
 (defn inspect-object [obj]
   "Attempts to inspect an object in the current room"
@@ -145,7 +155,7 @@
     (if (or (not objnum) (not (room-has-object? @current-room objnum)))
       false
       (do-true
-        (println (describe-object objnum :inspect))))))
+        (mam-pr (describe-object objnum :inspect))))))
 
 (defn fuck-object
   ([obj]
@@ -156,10 +166,10 @@
          false
        (not (object-is? objnum :living))
          (do-true 
-           (println (str "You start fucking the " obj " but it just feels painful.")))
+           (mam-pr (str "You start fucking the " obj " but it just feels painful.")))
        :else
          (do-true
-           (println "Hmm... I bet that felt pretty good!")))))
+           (mam-pr "Hmm... I bet that felt pretty good!")))))
   {:ridiculous true})
 
 (defn eat-object [obj]
@@ -170,15 +180,15 @@
         false
       (not (object-is? objnum :edible))
         (do
-          (println (str "You force the " obj " into your throat and fucking die in pain."))
+          (mam-pr (str "You force the " obj " into your throat and fucking die in pain."))
           (kill-player))
       :else
         (dosync-true
           (if (is-same-object? objnum 'candy)
             (do
-              (println "You feel like you just ate crusty skin off Donald Trump's forehead. Although inside the wrapper there was an 'instant win' of 5 credits!")
+              (mam-pr "You feel like you just ate crusty skin off Donald Trump's forehead. Although inside the wrapper there was an 'instant win' of 5 credits!")
               (alter credits + 5))
-            (println "That tasted like a cold peice of shit..."))
+            (mam-pr "That tasted like a cold peice of shit..."))
           (remove-object-from-inventory! objnum)))))
 
 (defn speech-for [objnum]
@@ -195,18 +205,18 @@
         false
       (not (object-is? objnum :living))
         (do-true
-          (println (str "The " obj " does not possess the ability to talk.")))
+          (mam-pr (str "The " obj " does not possess the ability to talk.")))
       :else
         (do-true
-          (println (speech-for objnum))))))
+          (mam-pr (speech-for objnum))))))
 
 (defn print-with-newlines
   ([lines] (print-with-newlines lines ""))
   ([lines prepend]
    "Prints a sequence of strings, separated by newlines. Only useful for side-effects"
    (if (not (empty? prepend))
-     (println prepend))
-   (println (str " - "
+     (mam-pr prepend))
+   (mam-pr (str " - "
                  (join "\n - " lines)))))
 
 (defn display-inventory []
@@ -214,8 +224,8 @@
   (let [descs (map #(describe-object % :inv) @inventory)]
     (if (not (empty? descs))
       (print-with-newlines descs "You currently have:")
-      (println "Your inventory is currently empty."))
-    (println (str "\nCREDITS: " @credits))))
+      (mam-pr "Your inventory is currently empty."))
+    (mam-pr (str "\nCREDITS: " @credits))))
 
 (defn describe-objects-for-room [room]
   "Prints a description for each object that's in the given room"
@@ -230,10 +240,10 @@
    (let [visited? (some #{room} @visited-rooms)
          descs (rooms room)]
      (if visited?
-       (println ((if verbose? first second) descs))
+       (mam-pr ((if verbose? first second) descs))
        (dosync
          (alter visited-rooms conj room)
-         (println (first descs))))
+         (mam-pr (first descs))))
      (describe-objects-for-room room))))
 
 (defn fn-for-command [cmd]
@@ -265,7 +275,7 @@
     (let [cmd (command->seq s)
           orig-room @current-room]
       (if (false? (verb-parse cmd))
-        (println "I don't understand that."))
+        (mam-pr "I don't understand that."))
       (newline)
       (messages (not (= orig-room @current-room))))))
 
@@ -307,4 +317,4 @@
         (ref-set visited-rooms (game-state :visited-rooms))
         (ref-set credits (game-state :credits))
         (ref-set room-objects (game-state :room-objects))))
-    (println "No saved data data!")))
+    (mam-pr "No saved data data!")))

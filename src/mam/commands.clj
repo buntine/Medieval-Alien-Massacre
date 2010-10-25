@@ -10,7 +10,7 @@
          display-inventory drop-object! inspect-object parse-input
          describe-room room-has-object? drop-object-in-room!
          take-object-from-room! eat-object fuck-object talk-to-object
-         save-game! load-game!)
+         save-game! load-game! mam-pr)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -30,10 +30,10 @@
      "Attempts to move in the given direction."
      (let [i (directions dir)]
        (if (not i)
-         (println "I don't understand that direction.")
+         (mam-pr "I don't understand that direction.")
          (let [room ((world-map @current-room) i)]
            (if (nil? room)
-             (println "You can't go that way.")
+             (mam-pr "You can't go that way.")
              (if (fn? room)
                (room)
                (set-current-room! room)))))))]
@@ -41,7 +41,7 @@
   (defn cmd-go [verbs]
     "Expects to be given direction. Dispatches to the 'move' command"
     (if (empty? verbs)
-      (println "You need to supply a direction!")
+      (mam-pr "You need to supply a direction!")
       ; Catch commands like "go to bed", etc.
       (if (direction? (first verbs))
         (move-room (first verbs))
@@ -64,7 +64,7 @@
   (println "   * Keys automatically open the appropriate doors, so just walk in their direction.")
   (println "   * Credit is equivalent to our concept of money. Use it wisely!")
   (println "   * Check your items and credit with 'inventory' or 'inv'")
-  (println "   * You can 'speak' to both Humans and Aliens, but some may be a tad vulgar...")
+  (println "   * You can 'speak' to humans, aliens and robots, but some may be a tad vulgar...")
   (println "   * To end the game, type 'quit' or 'suicide' or forever dwell in green mess!")
   (println "   * You can 'save' and 'load' your game, mother fucker!")
   (println "   * Inspired by Dunnet, by Rob Schnell")
@@ -82,7 +82,7 @@
     [(teen-takes-porno []
        "Occurs when the player drops the porno in the teenagers room"
        (newline)
-       (println "The teenagers eyes explode!! He quickly picks up the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room.")
+       (mam-pr "The teenagers eyes explode!! He quickly picks up the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room.")
        (dosync
          (take-object-from-room! @current-room 'porno)
          (take-object-from-room! @current-room 'teenager)
@@ -96,10 +96,10 @@
      [verbs no-verb not-here mod-fn]
      "Loops through the verbs trying to match one to a interactable object"
      (if (empty? verbs)
-       (println no-verb)
+       (mam-pr no-verb)
        (loop [objs verbs]
          (if (empty? objs)
-           (println not-here)
+           (mam-pr not-here)
            (if (not (mod-fn (first objs)))
              (recur (rest objs)))))))]
 
@@ -147,29 +147,29 @@
 
 (defn cmd-quit [verbs]
   "Quits the game and returns user to terminal."
-  (println "\033[0m Thanks for playing, friend!")
+  (mam-pr "\033[0mThanks for playing, friend!")
   (flush)
   (. System exit 0))
 
 (defn cmd-bed [verbs]
   (if (= @current-room 0)
-    (println "You get into bed and slowly fall to sleep. You begin dreaming of a cruel medical examination. You wake up in a pool of sweat, feeling violated.")
-    (println "There is no bed here. You try to sleep standing up and just get bored.")))
+    (mam-pr "You get into bed and slowly fall to sleep. You begin dreaming of a cruel medical examination. You wake up in a pool of sweat, feeling violated.")
+    (mam-pr "There is no bed here. You try to sleep standing up and just get bored.")))
 
 (defn cmd-pull [verbs]
   "Attempts to pull something."
   (if (and (= (first verbs) 'lever) (= @current-room 2) (room-has-object? @current-room 'lever))
     (dosync
-      (println "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You notice that one of the creatures drops something. You now find yourself back in the small room you started in.")
+      (mam-pr "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You notice that one of the creatures drops something. You now find yourself back in the small room you started in.")
       (take-object-from-room! @current-room 'lever)
       (drop-object-in-room! @current-room 'porno)
       (set-current-room! 0))
-    (println "I don't see that here.")))
+    (mam-pr "I don't see that here.")))
 
 (defn cmd-save [verbs]
   (save-game!)
-  (println " * Game saved *"))
+  (mam-pr " * Game saved *"))
 
 (defn cmd-load [verbs]
   (load-game!)
-  (println " * Game loaded *"))
+  (mam-pr " * Game loaded *"))

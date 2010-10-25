@@ -4,7 +4,7 @@
 ; maps, objects and inventories.
 
 (in-ns 'mam.gameplay)
-(declare set-current-room! in-inventory?)
+(declare set-current-room! in-inventory? mam-pr)
 
 (ns mam.rooms
   (:use mam.gameplay))
@@ -16,10 +16,10 @@
     (if (in-inventory? (keys key-type))
       (let [key-name (apply str (rest (str key-type)))]
         (set-current-room! room)
-        (println (str " * Door unlocked with " key-name " keycard. *")))
-      (println "You don't have security clearance for this door!"))))
+        (mam-pr (str " * Door unlocked with " key-name " keycard. *")))
+      (mam-pr "You don't have security clearance for this door!"))))
 
-; A vector of pairs. Each index contains both a large description (first visit) and a brief
+; A vector of rooms. Each index contains both a large description (first visit) and a brief
 ; description (all subsequent visits).
 (def rooms
   (vector
@@ -40,7 +40,8 @@
     '("There are just more broken machines lying around on the repears deck. The passage ends with a door to the east."
       "Repairs deck. Door to the east and passage south.")
     '("You are in a large room with space age decor. It seems to be the central control room. The walls are lined with pictures of the late comedian, Bill Hicks. There are walkways to the east and northeast and a door to the south."
-      "Central control room, walkways to east and northeast, door to south.")))
+      "Central control room, walkways to east and northeast, door to south.")
+     '("")))
 
 ; Map to specify which rooms the player will enter on the given movement.
 ; A function indicates that something special needs to be done (check conditions, etc).
