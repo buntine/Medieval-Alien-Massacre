@@ -6,7 +6,8 @@
 (ns mam.gameplay
   (:use mam.commands)
   (:use mam.rooms)
-  (:use [clojure.contrib.string :only (split join)]))
+  (:use [clojure.contrib.string :only (split join)])
+  (:use [clojure.contrib.duck-streams :only (spit)]))
 
 
 (def current-room (ref 0))         ; The current room the player is in.
@@ -26,7 +27,8 @@
    'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take
    'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
    'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat 'fuck cmd-fuck
-   'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory})
+   'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
+   'save cmd-save})
    
 ; Declarations for some procedures I mention before they have been
 ; defined.
@@ -288,9 +290,13 @@
 
 (defn save-game! []
   "Saves the current game data into a file on the disk"
-  ; TODO: Implement
   ; State: current-room, inventory, visited-rooms, credits, room-objects
-  )
+  (let [game-state {:current-room @current-room
+                    :inventory @inventory
+                    :visited-rooms @visited-rooms
+                    :credits @credits
+                    :room-objects @room-objects}]
+    (spit "savedata", game-state)))
 
 (defn load-game! []
   "Loads all previously saved game data"

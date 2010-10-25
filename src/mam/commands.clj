@@ -9,7 +9,8 @@
 (declare set-current-room! current-room take-object! inventory
          display-inventory drop-object! inspect-object parse-input
          describe-room room-has-object? drop-object-in-room!
-         take-object-from-room! eat-object fuck-object talk-to-object)
+         take-object-from-room! eat-object fuck-object talk-to-object
+         save-game!)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -164,3 +165,7 @@
       (drop-object-in-room! @current-room 'porno)
       (set-current-room! 0))
     (println "I don't see that here.")))
+
+(defn cmd-save [verbs]
+  (save-game!)
+  (println " * Game saved *"))
