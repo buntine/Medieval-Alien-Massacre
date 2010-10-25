@@ -28,7 +28,7 @@
    'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
    'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat 'fuck cmd-fuck
    'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
-   'save cmd-save})
+   'save cmd-save 'load cmd-load})
    
 ; Declarations for some procedures I mention before they have been
 ; defined.
@@ -96,7 +96,7 @@
     (take-object-from-room! room (object-identifiers obj))
     (alter room-objects (fn [objs]
                           (assoc-in objs [room]
-                                    (filter #(not (= obj %)) (objects-in-room room)))))))
+                                    (vec (filter #(not (= obj %)) (objects-in-room room))))))))
 
 (defn drop-object-in-room! [room obj]
   "Physically adds an object to the given room. Must be called from within
@@ -290,7 +290,6 @@
 
 (defn save-game! []
   "Saves the current game data into a file on the disk"
-  ; State: current-room, inventory, visited-rooms, credits, room-objects
   (let [game-state {:current-room @current-room
                     :inventory @inventory
                     :visited-rooms @visited-rooms
@@ -300,5 +299,12 @@
 
 (defn load-game! []
   "Loads all previously saved game data"
-  ; TODO: Implement
-  )
+  (if (. (java.io.File. "savedata") exists)
+    (let [game-state (load-file "savedata")]
+      (dosync
+        (ref-set current-room (game-state :current-room))
+        (ref-set inventory (game-state :inventory))
+        (ref-set visited-rooms (game-state :visited-rooms))
+        (ref-set credits (game-state :credits))
+        (ref-set room-objects (game-state :room-objects))))
+    (println "No saved data data!")))

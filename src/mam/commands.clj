@@ -10,7 +10,7 @@
          display-inventory drop-object! inspect-object parse-input
          describe-room room-has-object? drop-object-in-room!
          take-object-from-room! eat-object fuck-object talk-to-object
-         save-game!)
+         save-game! load-game!)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -169,3 +169,7 @@
 (defn cmd-save [verbs]
   (save-game!)
   (println " * Game saved *"))
+
+(defn cmd-load [verbs]
+  (load-game!)
+  (println " * Game loaded *"))

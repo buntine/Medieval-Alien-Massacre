@@ -71,15 +71,15 @@
 ; corresponds to the room as defined in 'rooms'.
 (def room-objects
   (ref (vector
-         '(0 1)
-         '()
-         '(2)
-         '()
-         '()
-         '()
-         '()
-         '(7)
-         '())))
+         [0 1]
+         []
+         [2]
+         []
+         []
+         []
+         []
+         [7]
+         [])))
 
 (defn make-dets [details]
   "A helper function to merge in some sane defaults for object details"
@@ -99,7 +99,7 @@
                 :weight 1
                 :edible true}),
     (make-dets {:game "There is a small bed here"
-                :inspect "The bed is black and sorta' small looking. Perhaps for a child?"
+                :inspect "It's black and sorta' small looking. Perhaps for a child?"
                 :permanent true}),
     (make-dets {:game "There is a large metal lever here"
                 :inspect "There is no label, but it seems to have some wear from usage"
