@@ -31,13 +31,13 @@
       "Control room with doors to east and west")
     '("You enter a large platform. There is a long row of broken flying machines here. A large sign reads 'Repairs deck: West end'. 'Where the fuck am I?' you think to yourself. The passage leads east. There is a door to the south."
       "West-end of the repairs deck. Passage leads east. Door to the south.")
-    '("You walk into a hallway with doors to your west and south. The hallway is leading north."
+    '("You walk into a hallway with doors to your west and south. The door to the west has a sign reading 'Repairs deck'. The hallway is leading north."
       "Hallway. Doors to the west and south. Passage leads north.")
     '("You continue along the passage and pass more broken machines. Passage leads east or west."
       "Repairs desk, center. Passage leads west/east.")
     '("You are at the end of the hallway. There is a large, sliding door to the north."
       "End of hallway. Large door to north.")
-    '("There are just more broken machines lying around on the repears deck. The passage ends with a door to the east."
+    '("There are a bunch broken machines lying around on the repairs deck. There is a door to the east or a passage south."
       "Repairs deck. Door to the east and passage south.")
     '("You are in a large room with space age decor. It seems to be the central control room. The walls are lined with pictures of the late comedian, Bill Hicks. There are walkways to the east and northeast and a door to the south."
       "Central control room, walkways to east and northeast, door to south.")
