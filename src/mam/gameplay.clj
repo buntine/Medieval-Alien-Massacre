@@ -277,7 +277,8 @@
       (if (false? (verb-parse cmd))
         (mam-pr "I don't understand that."))
       (newline)
-      (messages (not (= orig-room @current-room))))))
+      (messages (not (= orig-room @current-room))))
+    (messages false)))
 
 (defn request-command []
   "Sends a terminal escape sequence (green text), reads a command, and then resets the colour"
