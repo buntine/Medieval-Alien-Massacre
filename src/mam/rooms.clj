@@ -39,25 +39,29 @@
       "End of hallway. Large door to north.")
     '("There are a bunch broken machines lying around on the repairs deck. There is a door to the east or a passage south."
       "Repairs deck. Door to the east and passage south.")
-    '("You are in a large room with space age decor. It seems to be the central control room. The walls are lined with pictures of the late comedian, Bill Hicks. There are walkways to the east and northeast and a door to the south."
+    '("You are in a large room with space age decor. It seems to be the central control room. The walls are lined with pictures of the late comedian, Bill Hicks. There are walkways to the west and northwest and a door to the south."
       "Central control room, walkways to east and northeast, door to south.")
-     '("")))
+     '("You can see some more framed pictures of Bill Hicks here. As you walk past them, Bills eyes seem to follow you. The passage goes west or east."
+       "Passage with more creepy Bill Hicks pictures. Passage leads east/west.")
+     '("Balls" "Balls")))
 
 ; Map to specify which rooms the player will enter on the given movement.
 ; A function indicates that something special needs to be done (check conditions, etc).
 (def world-map
   (vector
 ;    north         east         south        west         northeast    southeast    southwest    northwest
-    [3             2            nil          nil          nil          nil          nil          nil]
-    [4             nil          nil          2            nil          nil          nil          nil]
-    [nil           1            nil          0            nil          nil          nil          nil]
-    [nil           5            0            nil          nil          nil          nil          nil]
-    [6             nil          1            7            nil          nil          nil          nil]
-    [nil           7            nil          3            nil          nil          nil          nil]
+    [3             2            nil          nil          nil          nil          nil          nil]   ;0
+    [4             nil          nil          2            nil          nil          nil          nil]   ;1
+    [nil           1            nil          0            nil          nil          nil          nil]   ;2
+    [nil           5            0            nil          nil          nil          nil          nil]   ;3
+    [6             nil          1            7            nil          nil          nil          nil]   ;4
+    [nil           7            nil          3            nil          nil          nil          nil]   ;5
     [#(check-key
-       :green 8)   nil          4            nil          nil          nil          nil          nil]
-    [nil           4            nil          5            nil          nil          nil          nil]
-    [nil           10           6            nil          9            nil          nil          nil]))
+       :green 8)   nil          4            nil          nil          nil          nil          nil]   ;6
+    [nil           4            nil          5            nil          nil          nil          nil]   ;7
+    [nil           nil          6            9            nil          nil          nil          11]    ;8
+    [nil           8            nil          10           nil          nil          nil          nil]   ;9
+    [nil           9            nil          nil          11           nil          nil          nil])) ;10
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7})
@@ -80,7 +84,9 @@
          []
          []
          [7]
-         [])))
+         []
+         []
+         [8])))
 
 (defn make-dets [details]
   "A helper function to merge in some sane defaults for object details"
@@ -107,7 +113,7 @@
                 :permanent true}),
     (make-dets {:game "There is a porno mag here"
                 :inv "A porno mag"
-                :inspect "The title is 'Humaniod Whores, vol 99239'."
+                :inspect "The title is 'Humaniod Whores, vol #995, June 2351'"
                 :weight 2}),
     (make-dets {:game "There is a green keycard here"
                 :inv "Green keycard"
@@ -124,7 +130,12 @@
     (make-dets {:game "There is a teenage alien boy here!"
                 :inspect "He is excitedly looking for something..."
                 :permanent true
-                :speech "He mentions that he's looking for 'some ill pronz with Sasha Grey'. You nod, knowingly."
+                :speech "He mentions that he's looking for 'some ill pronz with Sasha Grey'. You nod, knowingly"
+                :living true}),
+    (make-dets {:game "There is a Human man here"
+                :inspect "He is wearing a nice uniform and has a tag that says 'Pod manager'"
+                :permanent true
+                :speech "Needs to be a function... TODO: Implement"
                 :living true})))
 
 (def *total-weight* 12)
