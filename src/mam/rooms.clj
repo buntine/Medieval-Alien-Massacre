@@ -23,13 +23,13 @@
 ; description (all subsequent visits).
 (def rooms
   (vector
-    '("You are in a small, silver-walled room with no windows. There are doors to the north and east."
+    '("You are in a small, silver-walled room with no windows. There is a door to the north labelled 'Repairs deck' and another door to the east."
       "Empty room with a bed. Doors to north and east.")
     '("You are in another small, featureless room. There is nothing of interest here except doors to the north and west."
       "Small, featureless room. Doors to north and west.")
     '("You enter a larger room with a few blank screens. There are doors to the east and west."
       "Control room with doors to east and west")
-    '("You enter a large platform. There is a long row of broken flying machines here. A large sign reads 'Repairs deck: West end'. 'Where the fuck am I?' you think to yourself. The passage leads east. There is a door to the south."
+    '("There is a long row of broken flying machines here. A large sign reads 'Repairs deck: West end'. 'Where the fuck am I?' you think to yourself. The passage leads east. There is a door to the south."
       "West-end of the repairs deck. Passage leads east. Door to the south.")
     '("You walk into a hallway with doors to your west and south. The door to the west has a sign reading 'Repairs deck'. The hallway is leading north."
       "Hallway. Doors to the west and south. Passage leads north.")
@@ -40,10 +40,11 @@
     '("There are a bunch broken machines lying around on the repairs deck. There is a door to the east or a passage south."
       "Repairs deck. Door to the east and passage south.")
     '("You are in a large room with space age decor. It seems to be the central control room. The walls are lined with pictures of the late comedian, Bill Hicks. There are walkways to the west and northwest and a door to the south."
-      "Central control room, walkways to east and northeast, door to south.")
+      "Central control room, walkways to west and northwest, door to south.")
      '("You can see some more framed pictures of Bill Hicks here. As you walk past them, Bills eyes seem to follow you. The passage goes west or east."
        "Passage with more creepy Bill Hicks pictures. Passage leads east/west.")
-     '("Balls" "Balls")))
+     '("Balls" "Balls")
+     '("Walls" "Walls")))
 
 ; Map to specify which rooms the player will enter on the given movement.
 ; A function indicates that something special needs to be done (check conditions, etc).
@@ -61,7 +62,8 @@
     [nil           4            nil          5            nil          nil          nil          nil]   ;7
     [nil           nil          6            9            nil          nil          nil          11]    ;8
     [nil           8            nil          10           nil          nil          nil          nil]   ;9
-    [nil           9            nil          nil          11           nil          nil          nil])) ;10
+    [nil           9            nil          nil          11           nil          nil          nil]   ;10
+    [nil           nil          nil          nil          nil          10           8            nil])) ;11
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7})
@@ -86,7 +88,8 @@
          [7]
          []
          []
-         [8])))
+         [8]
+         [9 10])))
 
 (defn make-dets [details]
   "A helper function to merge in some sane defaults for object details"
@@ -135,7 +138,17 @@
     (make-dets {:game "There is a Human man here"
                 :inspect "He is wearing a nice uniform and has a tag that says 'Pod manager'"
                 :permanent true
-                :speech "Needs to be a function... TODO: Implement"
+                :speech "***Needs to be a function***"
+                :living true}),
+    (make-dets {:game "There is an important-looking Alien man here"
+                :inspect "He is wearing a stupid blonde wig, but looks friendly"
+                :permanent true
+                :speech "***Long speech explaining situation***"
+                :living true}),
+    (make-dets {:game "There is a small robot here"
+                :inspect "He looks a bit like R2D2, but without the lights"
+                :permanent true
+                :speech "The robot says 'Hello, I am Nexus model 19, series 4. It seems to me that you are not from around here. Perhaps you are lost? Regardless, I have but one thing to tell you, and that, of course, is the meaning to life. The answer is, simply stated in Human tongue, the persuit of excellence in Skateboarding.'"
                 :living true})))
 
 (def *total-weight* 12)
