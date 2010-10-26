@@ -4,6 +4,7 @@
     7 but it means object 43 in rooms 12 and 13. Cool?
 - Encrypt/compress savedata file.
 - Fix problem with game ending when player enters empty command.
+- Allow for speech to execute a function.
 - Add in points system.
 
 - Think about implementing a fighting system like that of Fighting Fantasy books.
