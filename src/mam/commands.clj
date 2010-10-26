@@ -130,10 +130,16 @@
                   eat-object))
 
   (defn cmd-fuck [verbs]
-    (try-interact verbs
-                  "Fuck what exactly?"
-                  "I don't see him/her/it here..."
-                  fuck-object))
+    (cond
+      (= (first verbs) 'you)
+        (mam-pr "Mmm, sodomy...")
+      (= (first verbs) 'me)
+        (mam-pr "I probably would if I wasn't just a silly machine.")
+      :else
+        (try-interact verbs
+                      "Fuck what exactly?"
+                      "I don't see him/her/it here..."
+                      fuck-object)))
 
   (defn cmd-talk [verbs]
     (try-interact verbs
