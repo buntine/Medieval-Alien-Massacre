@@ -5,8 +5,6 @@
 - Encrypt/compress savedata file.
 - Allow for speech to execute a function.
 - Add in points system.
-- Add 'milestones' set so I can keep track of things the player should know.
-  - The Pod Manager should not let the player leave the ship until he/she has spoken to the captain.
 
 - Think about implementing a fighting system like that of Fighting Fantasy books.
   - OR Design/implement a simple scoring system
