@@ -65,7 +65,7 @@
   (println "   * Credit is equivalent to our concept of money. Use it wisely!")
   (println "   * Check your items and credit with 'inventory' or 'inv'")
   (println "   * You can 'speak' to humans, aliens and robots, but some may be a tad vulgar...")
-  (println "   * To end the game, type 'quit' or 'suicide' or forever dwell in green mess!")
+  (println "   * To end the game, type 'quit' or 'commit suicide' or forever dwell in green mess!")
   (println "   * You can 'save' and 'load' your game, mother fucker!")
   (println "   * Inspired by Dunnet, by Rob Schnell")
   (println "   * Don't forget: Life is a game and everything is pointless.")

@@ -45,7 +45,7 @@
        "Passage with more creepy Bill Hicks pictures. Passage leads east/west.")
      '("You are at the west-end of the room. Here you can see sealed entrance and a sign saying 'Exit pod'."
        "West-end of large room with exit pod.")
-     '("You are at the front of the large room. There is a huge glass-like window here and you can see now that you are infact travelling through space! There are passages going back southeast and southwest."
+     '("You are at the front of the large room. There is a huge glass-like window here and you can see now that you are, infact, travelling through space! There are passages going back southeast and southwest."
        "Front of large room with huge glass-like window. Passages southeast/southwest.")))
 
 ; Map to specify which rooms the player will enter on the given movement.
