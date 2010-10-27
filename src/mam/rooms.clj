@@ -4,7 +4,7 @@
 ; maps, objects and inventories.
 
 (in-ns 'mam.gameplay)
-(declare set-current-room! in-inventory? mam-pr)
+(declare set-current-room! in-inventory? mam-pr can-afford? hit-milestone?)
 
 (ns mam.rooms
   (:use mam.gameplay))
@@ -93,6 +93,21 @@
          [8]
          [9 10])))
 
+; Some living objects have special speech considerations, such as checking conditions.
+; Here I keep a bunch of functions that are assigned to the relevent objects in object-details.
+(def speech-for
+  {:pod-manager
+     #(cond (not (can-afford? 3))
+              (mam-pr "The man says 'Hey, I can help get your sorry ass off this ship, but it will cost you 3 credits. Come back when you can afford it, matey'.")
+            (not (hit-milestone? :speak-to-captain))
+              (mam-pr "The man says 'Hey matey, I can get your sorry ass off here, but I suggest you speak to the captain over there to our northeast first'.")
+            :else
+              (mam-pr "The man says 'Oky doke, matey, lets get your punk ass outta' here. I hope Syndal City on Jupiter 4 is alright'.")),
+   :repairs-captain
+     #(do
+        (mam-pr "Long schpiel about welcoming, future, etc...")
+        (add-milestone! :speak-to-captain))})
+
 (defn make-dets [details]
   "A helper function to merge in some sane defaults for object details"
   (let [defaults {:inv nil, :weight nil, :edible false, :permanent false :living false
@@ -140,12 +155,12 @@
     (make-dets {:game "There is a Human man here"
                 :inspect "He is wearing a nice uniform and has a tag that says 'Pod manager'"
                 :permanent true
-                :speech "***Needs to be a function***"
+                :speech (speech-for :pod-manager)
                 :living true}),
     (make-dets {:game "There is an important-looking Alien man here"
                 :inspect "He is wearing a stupid blonde wig, but looks friendly"
                 :permanent true
-                :speech "***Long speech explaining situation***"
+                :speech (speech-for :repairs-captain)
                 :living true}),
     (make-dets {:game "There is a small robot here"
                 :inspect "He looks a bit like R2D2, but without the lights"

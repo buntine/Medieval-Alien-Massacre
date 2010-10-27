@@ -14,6 +14,7 @@
 (def visited-rooms (ref []))       ; The rooms that the player has visited.
 (def inventory (ref []))           ; The players inventory of items.
 (def credits (ref 0))              ; The players credits (aka $$$$).
+(def milestones (ref #{}))         ; The players milestones. Used to track and manipulate story.
 (def ignore-words '(the that is to ; Words that should be ignored in commands.
                     fucking damn)) 
 
@@ -156,6 +157,19 @@
       false
       (do-true
         (mam-pr (describe-object objnum :inspect))))))
+
+(defn can-afford? [n]
+  "Returns true if the player can afford the given price"
+  (>= @credits n))
+
+(defn hit-milestone? [m]
+  "Returns true if the player has hit the given, named milestone"
+  (contains? @milestones m))
+
+(defn add-milestone! [m]
+  "Adds the given milestone to the players list"
+  (dosync
+    (alter milestones conj m)))
 
 (defn fuck-object
   ([obj]
@@ -305,6 +319,7 @@
                     :inventory @inventory
                     :visited-rooms @visited-rooms
                     :credits @credits
+                    :milestones @milestones
                     :room-objects @room-objects}]
     (spit "savedata", game-state)))
 
@@ -317,5 +332,6 @@
         (ref-set inventory (game-state :inventory))
         (ref-set visited-rooms (game-state :visited-rooms))
         (ref-set credits (game-state :credits))
+        (ref-set milestones (game-state :milestones))
         (ref-set room-objects (game-state :room-objects))))
     (mam-pr "No saved data data!")))
