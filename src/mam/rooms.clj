@@ -43,8 +43,10 @@
       "Central control room, walkways to west and northwest, door to south.")
      '("You can see some more framed pictures of Bill Hicks here. As you walk past them, Bills eyes seem to follow you. The passage goes west or east."
        "Passage with more creepy Bill Hicks pictures. Passage leads east/west.")
-     '("Balls" "Balls")
-     '("Walls" "Walls")))
+     '("You are at the west-end of the room. Here you can see sealed entrance and a sign saying 'Exit pod'."
+       "West-end of large room with exit pod.")
+     '("You are at the front of the large room. There is a huge glass-like window here and you can see now that you are infact travelling through space! There are passages going back southeast and southwest."
+       "Front of large room with huge glass-like window. Passages southeast/southwest.")))
 
 ; Map to specify which rooms the player will enter on the given movement.
 ; A function indicates that something special needs to be done (check conditions, etc).
@@ -63,7 +65,7 @@
     [nil           nil          6            9            nil          nil          nil          11]    ;8
     [nil           8            nil          10           nil          nil          nil          nil]   ;9
     [nil           9            nil          nil          11           nil          nil          nil]   ;10
-    [nil           nil          nil          nil          nil          10           8            nil])) ;11
+    [nil           nil          nil          nil          nil          8            10           nil])) ;11
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7})
