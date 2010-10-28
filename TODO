@@ -1,4 +1,3 @@
-- Keys cannot be dropped.
 - Encrypt/compress savedata file.
 - Add giveables and puttables into object-details.
   - Allows for "give porno to boy" to:
