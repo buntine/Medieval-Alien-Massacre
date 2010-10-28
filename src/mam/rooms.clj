@@ -4,7 +4,8 @@
 ; maps, objects and inventories.
 
 (in-ns 'mam.gameplay)
-(declare set-current-room! in-inventory? mam-pr can-afford? hit-milestone?)
+(declare set-current-room! in-inventory? mam-pr can-afford?
+         hit-milestone? add-milestone!)
 
 (ns mam.rooms
   (:use mam.gameplay))
@@ -73,8 +74,8 @@
 ; Specifies the verbs that users can identify an object with (a gun might
 ; be "gun", "weapon", etc). Each index corresponds to the same index in room-objects.
 (def object-identifiers
-    {'candy 0 'bar 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3 'boy 7
-     'teenager 7 'keycard 4 'key 4})
+    {'candy 0 'bar 0 'bed {0 1} 'lever {2 2} 'mag 3 'magazine 3 'porno 3 'boy 7
+     'teenager 7 'keycard 4 'key 4 'man {10 8, 11 9} 'robot {11 10}})
 
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
@@ -95,7 +96,7 @@
 
 ; Some living objects have special speech considerations, such as checking conditions.
 ; Here I keep a bunch of functions that are assigned to the relevent objects in object-details.
-(def speech-for
+(def speech-fn-for
   {:pod-manager
      #(cond
         (not (can-afford? 3))
@@ -153,15 +154,15 @@
                 :permanent true
                 :speech "He mentions that he's looking for 'some ill pronz with Sasha Grey'. You nod, knowingly"
                 :living true}),
-    (make-dets {:game "There is a Human man here"
+    (make-dets {:game "There is an Alien man here"
                 :inspect "He is wearing a nice uniform and has a tag that says 'Pod manager'"
                 :permanent true
-                :speech (speech-for :pod-manager)
+                :speech (speech-fn-for :pod-manager)
                 :living true}),
     (make-dets {:game "There is an important-looking Alien man here"
                 :inspect "He is wearing a stupid blonde wig, but looks friendly"
                 :permanent true
-                :speech (speech-for :repairs-captain)
+                :speech (speech-fn-for :repairs-captain)
                 :living true}),
     (make-dets {:game "There is a small robot here"
                 :inspect "He looks a bit like R2D2, but without the lights. There seems to be a vac-u-lock Dildo sticking out of his forehead."

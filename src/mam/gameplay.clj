@@ -59,6 +59,14 @@
   (dosync
     (ref-set current-room room)))
 
+(defn object-identifier [obj]
+  "Returns the number that identifies the given object symbol. Some objects
+   can be identified differently depending on which room the player is in"
+  (let [ident (object-identifiers obj)]
+    (if (map? ident)
+      (ident @current-room)
+      ident)))
+
 (defn in-inventory? [objnum]
   "Returns true if object assigned to 'objnum' is in players inventory"
   (boolean (some #{objnum} @inventory)))
@@ -79,7 +87,7 @@
   true)
 
 (defn is-same-object? [objnum obj-sym]
-  (= objnum (object-identifiers obj-sym)))
+  (= objnum (object-identifier obj-sym)))
 
 (defn describe-object ([objnum] (describe-object objnum :game))
   ([objnum context]
@@ -97,14 +105,14 @@
 (defn room-has-object? [room obj]
   "Returns true if the gien room currently houses the given object"
   (if (symbol? obj)
-    (room-has-object? room (object-identifiers obj))
+    (room-has-object? room (object-identifier obj))
     (boolean (some #{obj} (objects-in-room room)))))
 
 (defn take-object-from-room! [room obj]
   "Physically removes an object from the given room. Must be called from within
    a dosync form"
   (if (symbol? obj)
-    (take-object-from-room! room (object-identifiers obj))
+    (take-object-from-room! room (object-identifier obj))
     (alter room-objects (fn [objs]
                           (assoc-in objs [room]
                                     (vec (filter #(not (= obj %)) (objects-in-room room))))))))
@@ -113,7 +121,7 @@
   "Physically adds an object to the given room. Must be called from within
    a dosync form"
   (if (symbol? obj)
-    (drop-object-in-room! room (object-identifiers obj))
+    (drop-object-in-room! room (object-identifier obj))
     (alter room-objects (fn [objs]
                           (assoc-in objs [room]
                                     (conj (objects-in-room room) obj))))))
@@ -122,12 +130,12 @@
   "Physically removes an object from the players inventory. Must be called
    within a dosync form"
   (if (symbol? obj)
-    (remove-object-from-inventory! (object-identifiers obj))
+    (remove-object-from-inventory! (object-identifier obj))
     (alter inventory (fn [i] (filter #(not (= % obj)) i)))))
  
 (defn take-object! [obj]
   "Attempts to take an object from the current room"
-  (let [objnum (object-identifiers obj)]
+  (let [objnum (object-identifier obj)]
     (if (or (not objnum) (not (room-has-object? @current-room objnum)))
       false
       (do-true
@@ -142,7 +150,7 @@
 
 (defn drop-object! [obj]
   "Attempts to drop an object into the current room"
-  (let [objnum (object-identifiers obj)]
+  (let [objnum (object-identifier obj)]
     (if (or (not objnum) (not (in-inventory? objnum)))
       false
       (dosync-true
@@ -152,7 +160,7 @@
 
 (defn inspect-object [obj]
   "Attempts to inspect an object in the current room"
-  (let [objnum (object-identifiers obj)]
+  (let [objnum (object-identifier obj)]
     (if (or (not objnum) (not (room-has-object? @current-room objnum)))
       false
       (do-true
@@ -174,7 +182,7 @@
 (defn fuck-object
   ([obj]
    "Attempts to fuck the given object."
-   (let [objnum (object-identifiers obj)]
+   (let [objnum (object-identifier obj)]
      (cond
        (or (not objnum) (not (room-has-object? @current-room objnum)))
          false
@@ -188,7 +196,7 @@
 
 (defn eat-object [obj]
   "Attempts to eat the given object"
-  (let [objnum (object-identifiers obj)]
+  (let [objnum (object-identifier obj)]
     (cond
       (or (not objnum) (not (in-inventory? objnum)))
         false
@@ -208,12 +216,16 @@
 (defn speech-for [objnum]
   "Some objects have things to say. This function will return the speech for
    the given object"
-  (or ((object-details objnum) :speech)
-      "Sorry, they have nothing to say at the moment."))
+  (let [speech ((object-details objnum) :speech)]
+    (if (nil? speech)
+      (mam-pr "Sorry, they have nothing to say at the moment.")
+      (if (fn? speech)
+        (speech)
+        (mam-pr speech)))))
 
 (defn talk-to-object [obj]
   "Attempts to talk to the given object"
-  (let [objnum (object-identifiers obj)]
+  (let [objnum (object-identifier obj)]
     (cond
       (or (not objnum) (not (room-has-object? @current-room objnum)))
         false
@@ -222,7 +234,7 @@
           (mam-pr (str "The " obj " does not possess the ability to talk.")))
       :else
         (do-true
-          (mam-pr (speech-for objnum))))))
+          (speech-for objnum)))))
 
 (defn print-with-newlines
   ([lines] (print-with-newlines lines ""))
