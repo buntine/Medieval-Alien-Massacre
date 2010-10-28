@@ -5,7 +5,10 @@
   - Only permanent objects can be multi-selectable.
   - Keys cannot be dropped.
 - Encrypt/compress savedata file.
-- Allow for speech to execute a function.
+- Add giveables and puttables into object-details.
+  - Allows for "give porno to boy" to:
+    * Translate porno into objnum (9)
+    * Execute fn given by: (((object-details (object-identifier 'boy)) :giveables) 9)
 - Add in points system.
 
 - Think about implementing a fighting system like that of Fighting Fantasy books.
