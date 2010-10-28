@@ -97,15 +97,16 @@
 ; Here I keep a bunch of functions that are assigned to the relevent objects in object-details.
 (def speech-for
   {:pod-manager
-     #(cond (not (can-afford? 3))
-              (mam-pr "The man says 'Hey, I can help get your sorry ass off this ship, but it will cost you 3 credits. Come back when you can afford it, matey'.")
-            (not (hit-milestone? :speak-to-captain))
-              (mam-pr "The man says 'Hey matey, I can get your sorry ass off here, but I suggest you speak to the captain over there to our northeast first'.")
-            :else
-              (mam-pr "The man says 'Oky doke, matey, lets get your punk ass outta' here. I hope Syndal City on Jupiter 4 is alright'.")),
+     #(cond
+        (not (can-afford? 3))
+          (mam-pr "The man says 'Hey, I can get your sorry ass off this ship, but it will cost you 3 credits. Come back when you can afford it, matey'.")
+        (not (hit-milestone? :speak-to-captain))
+          (mam-pr "The man says 'Hey matey, I can get your sorry ass off here, but I suggest you speak to the captain over there to our northeast first'.")
+        :else
+          (mam-pr "The man says 'Oky doke, matey, lets get your punk ass outta' here. I hope Syndal City on Jupiter 4 is alright'.")),
    :repairs-captain
      #(do
-        (mam-pr "Long schpiel about welcoming, future, etc...")
+        (mam-pr "Long schpiel about welcoming, future, exit pod, etc...")
         (add-milestone! :speak-to-captain))})
 
 (defn make-dets [details]
@@ -163,7 +164,7 @@
                 :speech (speech-for :repairs-captain)
                 :living true}),
     (make-dets {:game "There is a small robot here"
-                :inspect "He looks a bit like R2D2, but without the lights"
+                :inspect "He looks a bit like R2D2, but without the lights. There seems to be a vac-u-lock Dildo sticking out of his forehead."
                 :permanent true
                 :speech "The robot says 'Hello, I am Nexus model 19, series 4. It seems to me that you are not from around here. Perhaps you are lost? Regardless, I have but one thing to tell you, and that, of course, is the meaning to life. The answer is, simply stated in Human tongue, the persuit of excellence in Skateboarding.'"
                 :living true})))
