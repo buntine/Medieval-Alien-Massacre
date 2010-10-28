@@ -71,6 +71,9 @@
   "Returns true if object assigned to 'objnum' is in players inventory"
   (boolean (some #{objnum} @inventory)))
 
+(defn is-keycard? [objnum]
+  (boolean (some #{objnum} (vals keycards))))
+
 (defn obj-weight [objnum]
   "Returns the weight assigned to the given object"
   ((object-details objnum) :weight))
@@ -151,7 +154,7 @@
 (defn drop-object! [obj]
   "Attempts to drop an object into the current room"
   (let [objnum (object-identifier obj)]
-    (if (or (not objnum) (not (in-inventory? objnum)))
+    (if (or (not objnum) (is-keycard? objnum) (not (in-inventory? objnum)))
       false
       (dosync-true
         (remove-object-from-inventory! objnum)

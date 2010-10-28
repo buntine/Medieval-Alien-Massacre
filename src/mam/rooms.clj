@@ -10,15 +10,17 @@
 (ns mam.rooms
   (:use mam.gameplay))
 
+
+(def keycards {:green 4 :red 5 :silver 6})
+
 (defn check-key [key-type room]
   "Checks if the player has the given type of security card. If they do, set the current
    room to 'room'. Otherwise, let them know"
-  (let [keys {:green 4 :red 5 :silver 6}]
-    (if (in-inventory? (keys key-type))
-      (let [key-name (apply str (rest (str key-type)))]
-        (set-current-room! room)
-        (mam-pr (str " * Door unlocked with " key-name " keycard. *")))
-      (mam-pr "You don't have security clearance for this door!"))))
+  (if (in-inventory? (keycards key-type))
+    (let [key-name (apply str (rest (str key-type)))]
+      (set-current-room! room)
+      (mam-pr (str " * Door unlocked with " key-name " keycard. *")))
+    (mam-pr "You don't have security clearance for this door!")))
 
 ; A vector of rooms. Each index contains both a large description (first visit) and a brief
 ; description (all subsequent visits).

@@ -1,9 +1,4 @@
-- Work out how to deal with multiple key types (green, red, silver)
-  - Or maybe get smart and allow for all objects to be "multi-selectable",
-    that is, certain conditions are checked. E.g "boy" means object 12 in room
-    7 but it means object 43 in rooms 12 and 13. Cool?
-  - Only permanent objects can be multi-selectable.
-  - Keys cannot be dropped.
+- Keys cannot be dropped.
 - Encrypt/compress savedata file.
 - Add giveables and puttables into object-details.
   - Allows for "give porno to boy" to:

@@ -108,10 +108,11 @@
                   "You must supply an item to take!"
                   "I don't see that here..."
                   take-object!))
+
  (defn cmd-drop [verbs]
     (try-interact verbs
                   "You must supply an item to drop!"
-                  "You don't have that item..."
+                  "You can't drop that item..."
                   drop-object!)
     (drop-check verbs))
 
