@@ -3,7 +3,7 @@
   - Allows for "give porno to boy" to:
     * Translate porno into objnum (9)
     * Execute fn given by: (((object-details (object-identifier 'boy)) :giveables) 9)
-- Add in points system.
+  - Remove drop-check for porno, etc.
 
 - Think about implementing a fighting system like that of Fighting Fantasy books.
   - OR Design/implement a simple scoring system
