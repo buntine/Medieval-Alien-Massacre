@@ -1,9 +1,6 @@
 - Encrypt/compress savedata file.
-- Add giveables and puttables into object-details.
-  - Allows for "give porno to boy" to:
-    * Translate porno into objnum (9)
-    * Execute fn given by: (((object-details (object-identifier 'boy)) :giveables) 9)
-  - Remove drop-check for porno, etc.
+- Add puttables into object-details.
+  - Allows for "put dildo in hole", etc
 
 - Think about implementing a fighting system like that of Fighting Fantasy books.
   - OR Design/implement a simple scoring system

@@ -161,10 +161,22 @@
         (drop-object-in-room! @current-room objnum)
         (mam-pr "Dropped...")))))
 
-(defn give-object! [x-obj y-obj]
+(defn give-object! [x y]
   "Attempts to give x-obj to y-obj. E.g: give dildo to wizard"
   ; TODO: Implement (note: this function needs to remove-object-from-inventory!)
-  )
+  (let [x-obj (object-identifier x) y-obj (object-identifier y)]
+    (cond
+      (or (not x-obj) (not (in-inventory? x-obj)))
+        (mam-pr "Sorry, you don't have that item.")
+      (or (not y-obj) (not (room-has-object? @current-room y-obj)))
+        (mam-pr (str "I don't see " y " here."))
+      :else
+        (let [give-fn (((object-details y-obj) :giveables) x-obj)]
+          (if (nil? give-fn)
+            (mam-pr (str "The " y " cannot accept this item."))
+            (dosync
+              (give-fn)
+              (remove-object-from-inventory! x)))))))
 
 (defn inspect-object [obj]
   "Attempts to inspect an object in the current room"

@@ -127,7 +127,7 @@
 (defn make-dets [details]
   "A helper function to merge in some sane defaults for object details"
   (let [defaults {:inv nil, :weight nil, :edible false, :permanent false :living false
-                  :speech nil}]
+                  :speech nil :giveables {}}]
     (merge defaults details)))
 
 ; The details of all objects. Each object is assigned a number in object-identifiers, which
