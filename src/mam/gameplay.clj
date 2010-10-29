@@ -39,7 +39,7 @@
    'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
    'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat 'fuck cmd-fuck
    'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
-   'save cmd-save 'load cmd-load})
+   'save cmd-save 'load cmd-load 'give cmd-give})
    
 ; Declarations for some procedures I mention before they have been
 ; defined.

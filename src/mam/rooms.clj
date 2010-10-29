@@ -110,9 +110,19 @@
         :else
           (mam-pr "The man says 'Oky doke, matey, lets get your punk ass outta' here. I hope Syndal City on Jupiter 4 is alright'.")),
    :repairs-captain
-     #(do
-        (mam-pr "Long schpiel about welcoming, future, exit pod, etc...")
-        (add-milestone! :speak-to-captain))})
+     #(if (hit-milestone? :speak-to-captain)
+        (mam-pr "The captain says 'That is all the information I have. Now, fuck off before I get mad'.")
+        (do
+          (mam-pr "Long schpiel about welcoming, future, exit pod, etc...")
+          (add-milestone! :speak-to-captain)))})
+
+; Giving a certain x to a certain y will cause special things to happen.
+(def give-fn-for
+  {:porno-to-boy
+     #(dosync
+        (mam-pr "The teenagers eyes explode!! He quickly picks up the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room.")
+        (take-object-from-room! @current-room 7)
+        (drop-object-in-room! @current-room 4))})
 
 (defn make-dets [details]
   "A helper function to merge in some sane defaults for object details"
@@ -157,6 +167,7 @@
                 :inspect "He is excitedly looking for something..."
                 :permanent true
                 :speech "He mentions that he's looking for 'some ill pronz with Sasha Grey'. You nod, knowingly"
+                :giveables {3 (give-fn-for :porno-to-boy)}
                 :living true}),
     (make-dets {:game "There is an Alien man here"
                 :inspect "He is wearing a nice uniform and has a tag that says 'Pod manager'"

@@ -10,7 +10,7 @@
          display-inventory drop-object! inspect-object parse-input
          describe-room room-has-object? drop-object-in-room!
          take-object-from-room! eat-object fuck-object talk-to-object
-         save-game! load-game! mam-pr)
+         save-game! load-game! give-object! mam-pr)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -76,21 +76,6 @@
    "Prints a long description of a room"
    (describe-room @current-room true)))
 
-(defn drop-check [verbs]
-  "Checks if the conditions are right for a special occurrence"
-  (letfn
-    [(teen-takes-porno []
-       "Occurs when the player drops the porno in the teenagers room"
-       (newline)
-       (mam-pr "The teenagers eyes explode!! He quickly picks up the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room.")
-       (dosync
-         (take-object-from-room! @current-room 'porno)
-         (take-object-from-room! @current-room 'teenager)
-         (drop-object-in-room! @current-room 'keycard)))]
-
-    (if (and (= @current-room 7) (room-has-object? @current-room 'porno))
-      (teen-takes-porno))))
-
 (letfn
   [(try-interact
      [verbs no-verb not-here mod-fn]
@@ -113,8 +98,7 @@
     (try-interact verbs
                   "You must supply an item to drop!"
                   "You can't drop that item..."
-                  drop-object!)
-    (drop-check verbs))
+                  drop-object!))
 
   (defn cmd-inspect [verbs]
     (if (empty? verbs)
@@ -164,7 +148,7 @@
     (mam-pr "There is no bed here. You try to sleep standing up and just get bored.")))
 
 (defn cmd-pull [verbs]
-  "Attempts to pull something."
+  "Attempts to pull something. It's a pretty ugly little hack."
   (if (and (= (first verbs) 'lever) (= @current-room 2) (room-has-object? @current-room 'lever))
     (dosync
       (mam-pr "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You notice that one of the creatures drops something. You now find yourself back in the small room you started in.")
@@ -172,6 +156,12 @@
       (drop-object-in-room! @current-room 'porno)
       (set-current-room! 0))
     (mam-pr "I don't see that here.")))
+
+(defn cmd-give [verbs]
+  "Attempts to give x to y. Expects format of: '(give x y) as 'to' would have been filtered out"
+  (if (not (= 2 (count verbs)))
+    (mam-pr "Sorry, I only understand the format: give x to y")
+    (apply give-object! verbs)))
 
 (defn cmd-save [verbs]
   (save-game!)
