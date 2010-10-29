@@ -10,7 +10,7 @@
          display-inventory drop-object! inspect-object parse-input
          describe-room room-has-object? drop-object-in-room!
          take-object-from-room! eat-object fuck-object talk-to-object
-         save-game! load-game! give-object! mam-pr)
+         save-game! load-game! give-object! put-object! mam-pr)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -163,6 +163,12 @@
   (if (not (= 2 (count verbs)))
     (mam-pr "Sorry, I only understand the format: give x to y")
     (apply give-object! verbs)))
+
+(defn cmd-put [verbs]
+  "Attempts to put x in y. Expects format of: '(put x y) as 'in' would have been filtered out"
+  (if (not (= 2 (count verbs)))
+    (mam-pr "Sorry, I only understand the format: put x in y")
+    (apply put-object! verbs)))
 
 (defn cmd-save [verbs]
   (save-game!)

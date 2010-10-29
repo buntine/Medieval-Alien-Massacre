@@ -16,7 +16,7 @@
 (def credits (ref 0))              ; The players credits (aka $$$$).
 (def milestones (ref #{}))         ; The players milestones. Used to track and manipulate story.
 (def ignore-words '(the that is to ; Words that should be ignored in commands.
-                    fucking damn)) 
+                    fucking damn in)) 
 
 (defn mam-pr [s]
   "Prints a string per-character like the ancient terminals used to"
@@ -39,7 +39,7 @@
    'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
    'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat 'fuck cmd-fuck
    'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
-   'save cmd-save 'load cmd-load 'give cmd-give})
+   'save cmd-save 'load cmd-load 'give cmd-give 'put cmd-put})
    
 ; Declarations for some procedures I mention before they have been
 ; defined.
@@ -161,22 +161,28 @@
         (drop-object-in-room! @current-room objnum)
         (mam-pr "Dropped...")))))
 
-(defn give-object! [x y]
-  "Attempts to give x-obj to y-obj. E.g: give dildo to wizard"
-  ; TODO: Implement (note: this function needs to remove-object-from-inventory!)
-  (let [x-obj (object-identifier x) y-obj (object-identifier y)]
-    (cond
-      (or (not x-obj) (not (in-inventory? x-obj)))
-        (mam-pr "Sorry, you don't have that item.")
-      (or (not y-obj) (not (room-has-object? @current-room y-obj)))
-        (mam-pr (str "I don't see " y " here."))
-      :else
-        (let [give-fn (((object-details y-obj) :giveables) x-obj)]
-          (if (nil? give-fn)
-            (mam-pr (str "The " y " cannot accept this item."))
-            (dosync
-              (give-fn)
-              (remove-object-from-inventory! x)))))))
+(letfn
+  [(do-x-with-y [x y action err-msg]
+     "Attempts to do something with x for y. E.g: give dildo to wizard, put dildo in wizard"
+     (let [x-obj (object-identifier x) y-obj (object-identifier y)]
+       (cond
+         (or (not x-obj) (not (in-inventory? x-obj)))
+           (mam-pr "Sorry, you don't have that item.")
+         (or (not y-obj) (not (room-has-object? @current-room y-obj)))
+           (mam-pr (str "I don't see " y " here."))
+         :else
+           (let [action-fn (((object-details y-obj) action) x-obj)]
+             (if (nil? action-fn)
+               (mam-pr err-msg)
+               (dosync
+                 (action-fn)
+                 (remove-object-from-inventory! x)))))))]
+
+  (defn give-object! [x y]
+    (do-x-with-y x y :giveables (str "The " y " cannot accept this item.")))
+
+  (defn put-object! [x y]
+    (do-x-with-y x y :putables (str "You cannot put the " y " here."))))
 
 (defn inspect-object [obj]
   "Attempts to inspect an object in the current room"
