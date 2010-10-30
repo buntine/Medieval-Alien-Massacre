@@ -37,7 +37,7 @@
     '("You walk into a hallway with doors to your west and south. The door to the west has a sign reading 'Repairs deck'. The hallway is leading north."
       "Hallway. Doors to the west and south. Passage leads north.")
     '("You continue along the passage and pass more broken machines. Passage leads east or west."
-      "Repairs desk, center. Passage leads west/east.")
+      "Repairs deck, center. Passage leads west/east.")
     '("You are at the end of the hallway. There is a large, sliding door to the north."
       "End of hallway. Large door to north.")
     '("There are a bunch broken machines lying around on the repairs deck. There is a door to the east or a passage south."
