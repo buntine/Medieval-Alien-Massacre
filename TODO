@@ -1,11 +1,13 @@
 - Encrypt/compress savedata file.
-- Inventory translated to list on mutation. Fix...
 - Multi-select objects fucks up the ability to eat a keycard.
   - Player has object 4, but the identifiers say 'key only maps to 4 in room 7.
   - Fix by having override to see if any of (vals x) is 4, etc.
 
 - Maybe move edible side-effects into object-details
   - :edible is either false or a string or a function.
+  - Or setup a general events framework.
+    - :events { :eat       (fn [] "bleh"),
+                :giveables { 7 (fn [] "blah") }}
 
 - Think about implementing a fighting system like that of Fighting Fantasy books.
   - OR Design/implement a simple scoring system

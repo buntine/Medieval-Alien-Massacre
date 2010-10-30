@@ -82,7 +82,7 @@
   "Returns the current weight of the players inventory"
   (if (empty? @inventory)
     0
-    (reduce + (map #(obj-weight %) @inventory))))
+    (reduce + (map obj-weight @inventory))))
 
 (defn kill-player [reason]
   "Kills the player and ends the game"
@@ -134,7 +134,7 @@
    within a dosync form"
   (if (symbol? obj)
     (remove-object-from-inventory! (object-identifier obj))
-    (alter inventory (fn [i] (filter #(not (= % obj)) i)))))
+    (ref-set inventory (vec (remove #(= % obj) @inventory)))))
  
 (defn take-object! [obj]
   "Attempts to take an object from the current room"
