@@ -9,7 +9,7 @@
 (declare set-current-room! current-room take-object! inventory
          display-inventory drop-object! inspect-object parse-input
          describe-room room-has-object? drop-object-in-room!
-         take-object-from-room! eat-object fuck-object talk-to-object
+         take-object-from-room! eat-object! fuck-object talk-to-object
          save-game! load-game! give-object! put-object! mam-pr)
 
 (ns mam.commands
@@ -113,7 +113,7 @@
     (try-interact verbs
                   "You must supply an item to eat!"
                   "You don't have that item..."
-                  eat-object))
+                  eat-object!))
 
   (defn cmd-fuck [verbs]
     (cond

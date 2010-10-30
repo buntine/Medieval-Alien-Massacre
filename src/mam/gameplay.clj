@@ -82,12 +82,12 @@
   "Returns the current weight of the players inventory"
   (if (empty? @inventory)
     0
-    (reduce #(+ %1 (obj-weight %2)) @inventory)))
+    (reduce + (map #(obj-weight %) @inventory))))
 
-(defn kill-player []
+(defn kill-player [reason]
   "Kills the player and ends the game"
-  ; TODO: Implement.
-  true)
+  (mam-pr (str "You were killed by: " reason))
+  (cmd-quit false))
 
 (defn is-same-object? [objnum obj-sym]
   (= objnum (object-identifier obj-sym)))
@@ -220,7 +220,7 @@
            (mam-pr "Hmm... I bet that felt pretty good!")))))
   {:ridiculous true})
 
-(defn eat-object [obj]
+(defn eat-object! [obj]
   "Attempts to eat the given object"
   (let [objnum (object-identifier obj)]
     (cond
@@ -229,7 +229,7 @@
       (not (object-is? objnum :edible))
         (do
           (mam-pr (str "You force the " obj " into your throat and fucking die in pain."))
-          (kill-player))
+          (kill-player (str "Trying to eat a " obj)))
       :else
         (dosync-true
           (if (is-same-object? objnum 'candy)
