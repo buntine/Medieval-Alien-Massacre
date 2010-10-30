@@ -30,7 +30,7 @@
       "Empty room with a bed. Doors to north and east.")
     '("You are in another small, featureless room. There is nothing of interest here except doors to the north and west."
       "Small, featureless room. Doors to north and west.")
-    '("You enter a larger room with a few blank screens. There are doors to the east and west."
+    '("You enter a control room with a few blank screens. There are doors to the east and west."
       "Control room with doors to east and west")
     '("There is a long row of broken flying machines here. A large sign reads 'Repairs deck: West end'. 'Where the fuck am I?' you think to yourself. The passage leads east. There is a door to the south."
       "West-end of the repairs deck. Passage leads east. Door to the south.")
@@ -42,8 +42,8 @@
       "End of hallway. Large door to north.")
     '("There are a bunch broken machines lying around on the repairs deck. There is a door to the east or a passage south."
       "Repairs deck. Door to the east and passage south.")
-    '("You are in a large room with space age decor. It seems to be the central control room. The walls are lined with pictures of the late comedian, Bill Hicks. There are walkways to the west and northwest and a door to the south."
-      "Central control room, walkways to west and northwest, door to south.")
+    '("You are in a large room with space age decor. It seems to be the central living quarters. The walls are lined with pictures of the late comedian, Bill Hicks. There are walkways to the west and northwest and a door to the south."
+      "Central living quarters, walkways to west and northwest, door to south.")
      '("You can see some more framed pictures of Bill Hicks here. As you walk past them, Bills eyes seem to follow you. The passage goes west or east."
        "Passage with more creepy Bill Hicks pictures. Passage leads east/west.")
      '("You are at the west-end of the room. Here you can see sealed entrance and a sign saying 'Exit pod'."
@@ -111,16 +111,19 @@
           (mam-pr "The man says 'Oky doke, matey, lets get your punk ass outta' here. I hope Syndal City on Jupiter 4 is alright'.")),
    :repairs-captain
      #(if (hit-milestone? :speak-to-captain)
-        (mam-pr "The captain says 'That is all the information I have. Now, fuck off before I get mad'.")
+        (mam-pr "The captain says 'That is all the information I have. Now, fuck off before I get mad.'.")
         (do
-          (mam-pr "Long schpiel about welcoming, future, exit pod, etc...")
+          (mam-pr "The man says 'Ahh, you're up! I am Bob Benson, the captain of this grand model T102 repairs vessel. We found you floating out there on the oxygenated stretch of galactic highway 7. Anyway, you look a tad confused, so let me refresh your memory:")
+          (mam-pr "It is the year 2843, you're currently travelling on a highway between two of the moons of Jupiter.")
+          (mam-pr "\n** At this point you explain that you are infact from the year 2010 and the last thing you remember is driking coffee at home and writing some Lisp code **\n")
+          (mam-pr "The captain says 'Oh, yes, it makes sense now. A true Lisp hacker and drinker of the finest bean can transcend both space and time. We've seen your type before. You should head over to see the Pod Manager to our southwest in order to get yourself off this ship'")
           (add-milestone! :speak-to-captain)))})
 
 ; Giving a certain x to a certain y will cause special things to happen.
 (def give-fn-for
   {:porno-to-boy
      #(dosync
-        (mam-pr "The teenagers eyes explode!! He quickly picks up the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room.")
+        (mam-pr "The teenagers eyes explode!! He quickly accepts the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room.")
         (take-object-from-room! @current-room 7)
         (drop-object-in-room! @current-room 4))})
 

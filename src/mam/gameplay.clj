@@ -13,7 +13,7 @@
 (def current-room (ref 0))         ; The current room the player is in.
 (def visited-rooms (ref []))       ; The rooms that the player has visited.
 (def inventory (ref []))           ; The players inventory of items.
-(def credits (ref 0))              ; The players credits (aka $$$$).
+(def credits (ref 0))              ; The players credits (aka $$$).
 (def milestones (ref #{}))         ; The players milestones. Used to track and manipulate story.
 (def ignore-words '(the that is to ; Words that should be ignored in commands.
                     fucking damn in)) 

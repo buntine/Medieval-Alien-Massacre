@@ -1,4 +1,5 @@
 - Encrypt/compress savedata file.
+- Inventory translated to list on mutation. Fix...
 
 - Think about implementing a fighting system like that of Fighting Fantasy books.
   - OR Design/implement a simple scoring system
