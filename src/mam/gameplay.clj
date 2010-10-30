@@ -161,8 +161,12 @@
         (drop-object-in-room! @current-room objnum)
         (mam-pr "Dropped...")))))
 
+(defn event-for [objnum evt]
+  "Returns either the value (usually a fn) assigned to the given event, or nil"
+  (((object-details objnum) :events) evt))
+
 (letfn
-  [(do-x-with-y [x y action err-msg]
+  [(do-x-with-y [x y evt err-msg]
      "Attempts to do something with x for y. E.g: give dildo to wizard, put dildo in wizard"
      (let [x-obj (object-identifier x) y-obj (object-identifier y)]
        (cond
@@ -171,18 +175,18 @@
          (or (not y-obj) (not (room-has-object? @current-room y-obj)))
            (mam-pr (str "I don't see " y " here."))
          :else
-           (let [action-fn (((object-details y-obj) action) x-obj)]
-             (if (nil? action-fn)
+           (let [event-fn ((event-for y-obj evt) x-obj)]
+             (if (nil? event-fn)
                (mam-pr err-msg)
                (dosync
-                 (action-fn)
+                 (event-fn)
                  (remove-object-from-inventory! x)))))))]
 
   (defn give-object! [x y]
-    (do-x-with-y x y :giveables (str "The " y " cannot accept this item.")))
+    (do-x-with-y x y :give (str "The " y " cannot accept this item.")))
 
   (defn put-object! [x y]
-    (do-x-with-y x y :putables (str "You cannot put the " y " here."))))
+    (do-x-with-y x y :put (str "You cannot put the " y " here."))))
 
 (defn inspect-object [obj]
   "Attempts to inspect an object in the current room"
@@ -223,35 +227,29 @@
 (defn eat-object! [obj]
   "Attempts to eat the given object"
   (let [objnum (object-identifier obj)]
-    (cond
-      (or (not objnum) (not (in-inventory? objnum)))
-        false
-      (not (object-is? objnum :edible))
-        (do
-          (mam-pr (str "You force the " obj " into your throat and fucking die in pain."))
-          (kill-player (str "Trying to eat a " obj)))
-      :else
-        (dosync-true
-          (if (is-same-object? objnum 'candy)
-            (do
-              (mam-pr "You feel like you just ate crusty skin off Donald Trump's forehead. Although inside the wrapper there was an 'instant win' of 5 credits!")
-              (alter credits + 5))
-            (mam-pr "That tasted like a cold peice of shit..."))
-          (remove-object-from-inventory! objnum)))))
-
-(defn speech-for [objnum]
-  "Some objects have things to say. This function will return the speech for
-   the given object"
-  (let [speech ((object-details objnum) :speech)]
-    (if (nil? speech)
-      (mam-pr "Sorry, they have nothing to say at the moment.")
-      (if (fn? speech)
-        (speech)
-        (mam-pr speech)))))
+    (if (or (not objnum) (not (in-inventory? objnum)))
+      false
+      (let [eat-fn (event-for objnum :eat)]
+        (if (nil? eat-fn)
+          (do
+            (mam-pr (str "You force the " obj " into your throat and fucking die in pain."))
+            (kill-player (str "Trying to eat a " obj)))
+          (dosync-true
+            (eat-fn)
+            (remove-object-from-inventory! objnum)))))))
 
 (defn talk-to-object [obj]
   "Attempts to talk to the given object"
-  (let [objnum (object-identifier obj)]
+  (let [objnum (object-identifier obj)
+        speech-for (fn [objnum]
+                     "Some objects have things to say. This function will return the speech for
+                      the given object"
+                     (let [speech (event-for objnum :speak)]
+                       (if (nil? speech)
+                         (mam-pr "Sorry, they have nothing to say at the moment.")
+                         (if (fn? speech)
+                           (speech)
+                           (mam-pr speech)))))]
     (cond
       (or (not objnum) (not (room-has-object? @current-room objnum)))
         false
@@ -268,8 +266,7 @@
    "Prints a sequence of strings, separated by newlines. Only useful for side-effects"
    (if (not (empty? prepend))
      (mam-pr prepend))
-   (mam-pr (str " - "
-                 (join "\n - " lines)))))
+   (mam-pr (str " - " (join "\n - " lines)))))
 
 (defn display-inventory []
   "Displays the players inventory"
@@ -300,9 +297,7 @@
 
 (defn fn-for-command [cmd]
   "Returns the function for the given command verb, or nil"
-  (if cmd
-    (cmd-verbs cmd)
-    nil))
+  (if cmd (cmd-verbs cmd) nil))
 
 (defn verb-parse [verb-lst]
   "Calls the procedure identified by the first usable verb. Returns

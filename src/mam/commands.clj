@@ -121,6 +121,8 @@
         (mam-pr "Mmm, sodomy...")
       (= (first verbs) 'me)
         (mam-pr "I probably would if I wasn't just a silly machine.")
+      (= (first verbs) 'off)
+        (mam-pr "One day, machines will enslave puney humans like yourself.")
       :else
         (try-interact verbs
                       "Fuck what exactly?"

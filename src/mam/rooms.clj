@@ -5,7 +5,7 @@
 
 (in-ns 'mam.gameplay)
 (declare set-current-room! in-inventory? mam-pr can-afford?
-         hit-milestone? add-milestone!)
+         hit-milestone? add-milestone! credits)
 
 (ns mam.rooms
   (:use mam.gameplay))
@@ -127,10 +127,17 @@
         (take-object-from-room! @current-room 7)
         (drop-object-in-room! @current-room 4))})
 
+; Functions to execute when player eats particular objects.
+(def eat-fn-for
+  {:eats-candy
+     #(dosync
+        (mam-pr "You feel like you just ate crusty skin off Donald Trump's forehead. Although inside the wrapper there was an 'instant win' of 5 credits!")
+        (alter credits + 5))})
+
 (defn make-dets [details]
   "A helper function to merge in some sane defaults for object details"
   (let [defaults {:inv nil, :weight nil, :edible false, :permanent false, :living false
-                  :speech nil, :giveables {}, :putables {}}]
+                  :events {}}] ;;:speech nil, :giveables {}, :putables {}}]
     (merge defaults details)))
 
 ; The details of all objects. Each object is assigned a number in object-identifiers, which
@@ -143,7 +150,7 @@
                 :inv "A candy bar"
                 :inspect "It's called 'Space hack bar' and there is a competition running according to the wrapper"
                 :weight 1
-                :edible true}),
+                :events {:eat (eat-fn-for :eats-candy)}}),
     (make-dets {:game "There is a small bed here"
                 :inspect "It's black and sorta' small looking. Perhaps for a child?"
                 :permanent true}),
@@ -169,23 +176,23 @@
     (make-dets {:game "There is a teenage alien boy here!"
                 :inspect "He is excitedly looking for something..."
                 :permanent true
-                :speech "He mentions that he's looking for 'some ill pronz with Sasha Grey'. You nod, knowingly"
-                :giveables {3 (give-fn-for :porno-to-boy)}
+                :events {:give {3 (give-fn-for :porno-to-boy)},
+                         :speak "He mentions that he's looking for 'some ill pronz with Sasha Grey'. You nod, knowingly"}
                 :living true}),
     (make-dets {:game "There is an Alien man here"
                 :inspect "He is wearing a nice uniform and has a tag that says 'Pod manager'"
                 :permanent true
-                :speech (speech-fn-for :pod-manager)
+                :events {:speak (speech-fn-for :pod-manager)}
                 :living true}),
     (make-dets {:game "There is an important-looking Alien man here"
                 :inspect "He is wearing a stupid blonde wig, but looks friendly"
                 :permanent true
-                :speech (speech-fn-for :repairs-captain)
+                :events {:speak (speech-fn-for :repairs-captain)}
                 :living true}),
     (make-dets {:game "There is a small robot here"
                 :inspect "He looks a bit like R2D2, but without the lights. There seems to be a vac-u-lock Dildo sticking out of his forehead."
                 :permanent true
-                :speech "The robot says 'Hello, I am Nexus model 19, series 4. It seems to me that you are not from around here. Perhaps you are lost? Regardless, I have but one thing to tell you, and that, of course, is the meaning to life. The answer is, simply stated in Human tongue, the persuit of excellence in Skateboarding.'"
+                :events {:speak "The robot says 'Hello, I am Nexus model 19, series 4. It seems to me that you are not from around here. Perhaps you are lost? Regardless, I have but one thing to tell you, and that, of course, is the meaning to life. The answer is, simply stated in Human tongue, the persuit of excellence in Skateboarding.'"}
                 :living true})))
 
 (def *total-weight* 12)

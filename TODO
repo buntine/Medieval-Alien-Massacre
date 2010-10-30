@@ -16,8 +16,8 @@
 - Maybe move edible side-effects into object-details
   - :edible is either false or a string or a function.
   - Or setup a general events framework.
-    - :events { :eat       (fn [] "bleh"),
-                :giveables { 7 (fn [] "blah") }}
+    - :events { :eat  (fn [] "bleh"),
+                :give { 7 (fn [] "blah") }}
 
 - Think about implementing a fighting system like that of Fighting Fantasy books.
   - OR Design/implement a simple scoring system
