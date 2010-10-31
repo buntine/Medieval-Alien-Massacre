@@ -46,19 +46,11 @@
 (declare messages)
 
 
-(defmacro do-true [& body]
-  "Executes body in a do form and returns true"
-  (cons 'do (into '(true) body)))
-
-(defmacro dosync-true [& body]
-  "Executes body in a dosync form and returns true"
-  (cons 'dosync (into '(true) body)))
-
-
 (defn set-current-room! [room]
   (dosync
     (ref-set current-room room)))
 
+; TODO: Remove after reimplementing give/put funtionality.
 (defn object-identifier [obj]
   "Returns the number that identifies the given object symbol. Some objects
    can be identified differently depending on which room the player is in"
@@ -71,26 +63,18 @@
   "Returns true if object assigned to 'objnum' is in players inventory"
   (boolean (some #{objnum} @inventory)))
 
-(defn is-keycard? [objnum]
-  (boolean (some #{objnum} (vals keycards))))
-
 (defn obj-weight [objnum]
   "Returns the weight assigned to the given object"
   ((object-details objnum) :weight))
 
 (defn inventory-weight []
   "Returns the current weight of the players inventory"
-  (if (empty? @inventory)
-    0
-    (reduce + (map obj-weight @inventory))))
+  (reduce + 0 (map obj-weight @inventory)))
 
 (defn kill-player [reason]
   "Kills the player and ends the game"
   (mam-pr (str "You were killed by: " reason))
   (cmd-quit false))
-
-(defn is-same-object? [objnum obj-sym]
-  (= objnum (object-identifier obj-sym)))
 
 (defn describe-object ([objnum] (describe-object objnum :game))
   ([objnum context]
@@ -105,36 +89,29 @@
   ([room]
    (nth @room-objects room)))
 
-(defn room-has-object? [room obj]
+(defn room-has-object? [room objnum]
   "Returns true if the gien room currently houses the given object"
-  (if (symbol? obj)
-    (room-has-object? room (object-identifier obj))
-    (boolean (some #{obj} (objects-in-room room)))))
+  (boolean (some #{objnum} (objects-in-room room))))
 
-(defn take-object-from-room! [room obj]
+(defn take-object-from-room! [room objnum]
   "Physically removes an object from the given room. Must be called from within
    a dosync form"
-  (if (symbol? obj)
-    (take-object-from-room! room (object-identifier obj))
-    (alter room-objects (fn [objs]
-                          (assoc-in objs [room]
-                                    (vec (remove #(= obj %) (objects-in-room room))))))))
+  (alter room-objects (fn [objs]
+                        (assoc-in objs [room]
+                                  (vec (remove #(= objnum %) (objects-in-room room)))))))
 
-(defn drop-object-in-room! [room obj]
+(defn drop-object-in-room! [room objnum]
   "Physically adds an object to the given room. Must be called from within
    a dosync form"
-  (if (symbol? obj)
-    (drop-object-in-room! room (object-identifier obj))
-    (alter room-objects (fn [objs]
-                          (assoc-in objs [room]
-                                    (conj (objects-in-room room) obj))))))
+  (alter room-objects
+         (fn [objs]
+           (assoc-in objs [room]
+             (conj (objects-in-room room) objnum)))))
 
-(defn remove-object-from-inventory! [obj]
+(defn remove-object-from-inventory! [objnum]
   "Physically removes an object from the players inventory. Must be called
    within a dosync form"
-  (if (symbol? obj)
-    (remove-object-from-inventory! (object-identifier obj))
-    (ref-set inventory (vec (remove #(= % obj) @inventory)))))
+  (ref-set inventory (vec (remove #(= % objnum) @inventory))))
  
 (defn take-object! [objnum]
   "Attempts to take an object from the current room"
@@ -332,8 +309,9 @@
     (if (empty? verb-lst)
       false
       (if f
-        (do-true
-          (f (rest verb-lst)))
+        (do
+          (f (rest verb-lst))
+          true)
         (verb-parse (rest verb-lst))))))
 
 (defn command->seq [s]

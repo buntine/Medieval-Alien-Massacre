@@ -87,6 +87,7 @@
          (cond
            (nil? objnum)
              (mam-pr on-nil)
+           ; Specific object cannot be deduced, so ask for more info.
            (seq? objnum)
              (mam-pr "Please be more specific...")
            :else
@@ -144,7 +145,7 @@
               talk-to-object
               :room))
 
-  (defn cmd-talk [verbs]
+  (defn cmd-pull [verbs]
     (interact verbs
               "I don't know what to pull."
               "I don't see that here..."
