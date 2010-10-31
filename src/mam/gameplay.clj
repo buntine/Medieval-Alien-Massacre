@@ -318,8 +318,8 @@
 
 (defn highest-val [obj-counts]
   "Returns the key of the highest value in the given map. If no
-   single highest value is available, returns a list of keys of
-   the tied-highest"
+   single highest value is available, returns a lazy seq of keys
+   of the tied-highest"
   (if (not (empty? obj-counts))
     (let [highest (apply max (vals obj-counts))
           matches (filter #(= highest (second %)) obj-counts)]

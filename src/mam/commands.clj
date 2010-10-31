@@ -84,7 +84,7 @@
       (cond
         (nil? objnum)
           (mam-pr "I don't see that here...")
-        (list? objnum)
+        (seq? objnum)
           (mam-pr "Please be more specific...")
         :else
           (take-object! objnum)))))
