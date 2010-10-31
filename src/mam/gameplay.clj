@@ -118,7 +118,7 @@
     (take-object-from-room! room (object-identifier obj))
     (alter room-objects (fn [objs]
                           (assoc-in objs [room]
-                                    (vec (filter #(not (= obj %)) (objects-in-room room))))))))
+                                    (vec (remove #(= obj %) (objects-in-room room))))))))
 
 (defn drop-object-in-room! [room obj]
   "Physically adds an object to the given room. Must be called from within
@@ -136,20 +136,18 @@
     (remove-object-from-inventory! (object-identifier obj))
     (ref-set inventory (vec (remove #(= % obj) @inventory)))))
  
-(defn take-object! [obj]
+(defn take-object! [objnum]
   "Attempts to take an object from the current room"
-  (let [objnum (object-identifier obj)]
-    (if (or (not objnum) (not (room-has-object? @current-room objnum)))
-      false
-      (do-true
-        (if (object-is? objnum :permanent)
-          (mam-pr "You can't take that.")
-          (if (> (+ (inventory-weight) (obj-weight objnum)) *total-weight*)
-            (mam-pr "You cannot carry that much weight.")
-            (dosync
-              (alter inventory conj objnum)
-              (take-object-from-room! @current-room objnum)
-              (mam-pr "Taken..."))))))))
+  (cond
+    (object-is? objnum :permanent)
+      (mam-pr "You can't take that.")
+    (> (+ (inventory-weight) (obj-weight objnum)) *total-weight*)
+      (mam-pr "You cannot carry that much weight.")
+    :else
+      (dosync
+        (alter inventory conj objnum)
+        (take-object-from-room! @current-room objnum)
+        (mam-pr "Taken..."))))
 
 (defn drop-object! [obj]
   "Attempts to drop an object into the current room"
@@ -305,6 +303,53 @@
          (alter visited-rooms conj room)
          (mam-pr (first descs))))
      (describe-objects-for-room room))))
+
+(defn prospects-for [verb context]
+  (let [objnums (object-identifiers verb)
+        fns {:room #(room-has-object? @current-room %)
+             :inventory in-inventory?}]
+    (cond
+      (nil? objnums)
+        '()
+      (integer? objnums)
+        (list objnums)
+      :else
+        (filter (fns context) objnums))))
+
+(defn highest-val [obj-counts]
+  "Returns the key of the highest value in the given map. If no
+   single highest value is available, returns a list of keys of
+   the tied-highest"
+  (if (not (empty? obj-counts))
+    (let [highest (apply max (vals obj-counts))
+          matches (filter #(= highest (second %)) obj-counts)]
+      (if (= (count matches) 1)
+        (first (first matches))
+        (keys matches)))))
+
+(defn add-or-inc [m k]
+  "Either increments a keys value in m or create a key/value pair for it"
+  (let [new-val (or (m k) 0)]
+    (merge m {k (+ 1 new-val)})))
+
+(defn most-popular ([objnums] (most-popular objnums {}))
+  ([objnums obj-counts]
+   "Given a list of object numbers, returns the one that occurs the most"
+   (if (empty? objnums)
+     (highest-val obj-counts)
+     (recur (rest objnums)
+            (add-or-inc obj-counts (first objnums))))))
+    
+(defn deduce-object ([verbs context] (deduce-object verbs '() context))
+  ([verbs realised context]
+   "Attempts to realise a single object given a sequence of verbs and
+    a context. This allows for the same term to identify multiple objects.
+    Context must be either :room or :inventory"
+   (if (empty? verbs)
+     (most-popular realised)
+     (recur (rest verbs)
+            (concat (prospects-for (first verbs) context) realised)
+            context))))
 
 (defn fn-for-command [cmd]
   "Returns the function for the given command verb, or nil"

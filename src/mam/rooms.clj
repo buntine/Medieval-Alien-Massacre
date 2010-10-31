@@ -79,7 +79,7 @@
 ; by the same word depending on the room (in room 1, "bed" means object 2, but in
 ; room 42, it means object 8). Each index corresponds to the same index in room-objects.
 (def object-identifiers
-    {'candy 0 'bar 0 'bed {0 1} 'lever {2 2} 'mag 3 'magazine 3 'porno 3 'boy {7 7}
+    {'candy 0 'bar 0 'bed 1 'lever {2 2} 'mag 3 'magazine 3 'porno 3 'boy {7 7}
      'teenager {7 7} 'keycard {7 4} 'key {7 4} 'man {10 8, 11 9} 'robot {11 10}})
 
 ; A vector containing the objects that each room contains when the game starts. Each index

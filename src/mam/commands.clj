@@ -10,7 +10,7 @@
          display-inventory drop-object! inspect-object parse-input
          describe-room room-has-object?  eat-object! fuck-object
          talk-to-object save-game! load-game! give-object! put-object!
-         mam-pr pull-object)
+         mam-pr pull-object deduce-object)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -77,6 +77,18 @@
    "Prints a long description of a room"
    (describe-room @current-room true)))
 
+(defn cmd-take [verbs]
+  (if (empty? verbs)
+    (mam-pr "You must supply an item to to take!")
+    (let [objnum (deduce-object verbs :room)]
+      (cond
+        (nil? objnum)
+          (mam-pr "I don't see that here...")
+        (list? objnum)
+          (mam-pr "Please be more specific...")
+        :else
+          (take-object! objnum)))))
+
 (letfn
   [(try-interact
      [verbs no-verb not-here mod-fn]
@@ -88,12 +100,6 @@
            (mam-pr not-here)
            (if (not (mod-fn (first objs)))
              (recur (rest objs)))))))]
-
-  (defn cmd-take [verbs]
-    (try-interact verbs
-                  "You must supply an item to take!"
-                  "I don't see that here..."
-                  take-object!))
 
  (defn cmd-drop [verbs]
     (try-interact verbs
