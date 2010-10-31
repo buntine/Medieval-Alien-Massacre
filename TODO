@@ -1,17 +1,10 @@
 - Encrypt/compress savedata file.
-- Multi-select objects fucks up the ability to eat a keycard.
-  - Player has object 4, but the identifiers say 'key only maps to c4 in room 7.
-  - Fix by having override to see if any of (vals x) is 4, etc.
-
-  - No! Rewrite the object mapping functionality so each verb/noun can have a set of mappings.
-  - The system will try to intelligently map the terms to a single object
-  - If it cannot, it will say "Please be more specific".
-  - green may map to #{1 4 23}
-  - blue may map to #{6 43}
-  - potion may map to #{6 4}
-  - If player is in a room with two potions, then "drink potion" then the system will ask for more info
-    because both objects 4 and 6 are in the current room.
-  - "drink blue potion" will be sufficient there will now be two 6's and one 4.
+  - Implement all object-related commands in new deduction logic
+  - Also for give and put:
+    - Don't ignore 'to' or 'in'.
+    - Try deduce object from sublist before 'to'.
+    - And deduce another from sublist after 'to'.
+    - E.g: give green potion to young man (assuming player has green potion and red potion and room has young and old men)
 
 - Think about implementing a fighting system like that of Fighting Fantasy books.
   - OR Design/implement a simple scoring system

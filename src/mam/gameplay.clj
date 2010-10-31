@@ -183,13 +183,9 @@
   (defn put-object! [x y]
     (do-x-with-y x y :put (str "You cannot put the " y " here."))))
 
-(defn inspect-object [obj]
-  "Attempts to inspect an object in the current room"
-  (let [objnum (object-identifier obj)]
-    (if (or (not objnum) (not (room-has-object? @current-room objnum)))
-      false
-      (do-true
-        (mam-pr (describe-object objnum :inspect))))))
+(defn inspect-object [objnum]
+  "Inspects an object in the current room"
+  (mam-pr (describe-object objnum :inspect)))
 
 (defn can-afford? [n]
   "Returns true if the player can afford the given price"

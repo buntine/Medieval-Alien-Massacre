@@ -104,7 +104,16 @@
               "You must supply an item to drop!"
               "You don't have that item..."
               drop-object!
-              :inventory)))
+              :inventory))
+
+  (defn cmd-inspect [verbs]
+    (if (empty? verbs)
+      (cmd-look)
+      (interact verbs
+                "You must supply and item to inspect!"
+                "I don't see that here..."
+                inspect-object
+                :room))))
 
 (letfn
   [(try-interact
@@ -117,14 +126,6 @@
            (mam-pr not-here)
            (if (not (mod-fn (first objs)))
              (recur (rest objs)))))))]
-
-  (defn cmd-inspect [verbs]
-    (if (empty? verbs)
-      (cmd-look)
-      (try-interact verbs
-                    "You must supply and item to inspect!"
-                    "I don't see that here..."
-                    inspect-object)))
 
   (defn cmd-eat [verbs]
     (try-interact verbs
