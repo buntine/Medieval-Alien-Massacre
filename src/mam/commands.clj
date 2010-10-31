@@ -77,29 +77,34 @@
    "Prints a long description of a room"
    (describe-room @current-room true)))
 
-(defn cmd-take [verbs]
-  (if (empty? verbs)
-    (mam-pr "You must supply an item to to take!")
-    (let [objnum (deduce-object verbs :room)]
-      (cond
-        (nil? objnum)
-          (mam-pr "I don't see that here...")
-        (seq? objnum)
-          (mam-pr "Please be more specific...")
-        :else
-          (take-object! objnum)))))
+(letfn
+  [(interact [verbs on-empty on-nil mod-fn context]
+     "Attempts to interact by realising an explicit object
+      and doing something (mod-fn) with it"
+     (if (empty? verbs)
+       (mam-pr on-empty)
+       (let [objnum (deduce-object verbs context)]
+         (cond
+           (nil? objnum)
+             (mam-pr on-nil)
+           (seq? objnum)
+             (mam-pr "Please be more specific...")
+           :else
+             (mod-fn objnum)))))]
 
-(defn cmd-drop [verbs]
-  (if (empty? verbs)
-    (mam-pr "You must supply an item to to drop!")
-    (let [objnum (deduce-object verbs :inventory)]
-      (cond
-        (nil? objnum)
-          (mam-pr "You don't have that item...")
-        (seq? objnum)
-          (mam-pr "Please be more specific...")
-        :else
-          (drop-object! objnum)))))
+  (defn cmd-take [verbs]
+    (interact verbs
+              "You must supply an item to take!"
+              "I don't see that here..."
+              take-object!
+              :room))
+
+  (defn cmd-drop [verbs]
+    (interact verbs
+              "You must supply an item to drop!"
+              "You don't have that item..."
+              drop-object!
+              :inventory)))
 
 (letfn
   [(try-interact
