@@ -8,9 +8,9 @@
 (in-ns 'mam.gameplay)
 (declare set-current-room! current-room take-object! inventory
          display-inventory drop-object! inspect-object parse-input
-         describe-room room-has-object? drop-object-in-room!
-         take-object-from-room! eat-object! fuck-object talk-to-object
-         save-game! load-game! give-object! put-object! mam-pr)
+         describe-room room-has-object?  eat-object! fuck-object
+         talk-to-object save-game! load-game! give-object! put-object!
+         mam-pr pull-object)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -133,7 +133,13 @@
     (try-interact verbs
                   "Talk to who exactly, dumbass?"
                   "I don't see him/her/it here..."
-                  talk-to-object)))
+                  talk-to-object))
+
+  (defn cmd-pull [verbs]
+    (try-interact verbs
+                  "I don't know what to pull."
+                  "I don't see that here..."
+                  pull-object)))
 
 (defn cmd-inventory [verbs]
   "Displays the players inventory"
@@ -149,16 +155,6 @@
   (if (= @current-room 0)
     (mam-pr "You get into bed and slowly fall to sleep. You begin dreaming of a cruel medical examination. You wake up in a pool of sweat, feeling violated.")
     (mam-pr "There is no bed here. You try to sleep standing up and just get bored.")))
-
-(defn cmd-pull [verbs]
-  "Attempts to pull something. It's a pretty ugly little hack."
-  (if (and (= (first verbs) 'lever) (= @current-room 2) (room-has-object? @current-room 'lever))
-    (dosync
-      (mam-pr "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You notice that one of the creatures drops something. You now find yourself back in the small room you started in.")
-      (take-object-from-room! @current-room 'lever)
-      (drop-object-in-room! @current-room 'porno)
-      (set-current-room! 0))
-    (mam-pr "I don't see that here.")))
 
 (defn cmd-give [verbs]
   "Attempts to give x to y. Expects format of: '(give x y) as 'to' would have been filtered out"

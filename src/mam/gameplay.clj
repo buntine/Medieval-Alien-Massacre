@@ -260,6 +260,17 @@
         (do-true
           (speech-for objnum)))))
 
+(defn pull-object [obj]
+  "Attempts to pull the given object (probably a lever)"
+  (let [objnum (object-identifier obj)]
+    (if (or (not objnum) (not (room-has-object? @current-room objnum)))
+      false
+      (let [pull-evt (event-for objnum :pull)]
+        (do-true
+          (if (nil? pull-evt)
+            (mam-pr "Nothing much seemed to happen.")
+            (pull-evt)))))))
+
 (defn print-with-newlines
   ([lines] (print-with-newlines lines ""))
   ([lines prepend]

@@ -4,8 +4,9 @@
 ; maps, objects and inventories.
 
 (in-ns 'mam.gameplay)
-(declare set-current-room! in-inventory? mam-pr can-afford?
-         hit-milestone? add-milestone! credits)
+(declare set-current-room! current-room in-inventory? mam-pr can-afford?
+         hit-milestone? add-milestone! credits take-object-from-room!
+         drop-object-in-room!)
 
 (ns mam.rooms
   (:use mam.gameplay))
@@ -134,10 +135,19 @@
         (mam-pr "You feel like you just ate crusty skin off Donald Trump's forehead. Although inside the wrapper there was an 'instant win' of 5 credits!")
         (alter credits + 5))})
 
+; Functions to execute when player pulls particular objects.
+(def pull-fn-for
+  {:control-lever
+     #(dosync
+        (mam-pr "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You notice that one of the creatures drops something. You now find yourself back in the small room you started in.")
+        (take-object-from-room! @current-room 2)
+        (drop-object-in-room! @current-room 3)
+        (set-current-room! 0))})
+
 (defn make-dets [details]
   "A helper function to merge in some sane defaults for object details"
   (let [defaults {:inv nil, :weight nil, :edible false, :permanent false, :living false
-                  :events {}}] ;;:speech nil, :giveables {}, :putables {}}]
+                  :events {}}]
     (merge defaults details)))
 
 ; The details of all objects. Each object is assigned a number in object-identifiers, which
@@ -156,6 +166,7 @@
                 :permanent true}),
     (make-dets {:game "There is a large metal lever here"
                 :inspect "There is no label, but it seems to have some wear from usage"
+                :events {:pull (pull-fn-for :control-lever)}
                 :permanent true}),
     (make-dets {:game "There is a porno mag here"
                 :inv "A porno mag"

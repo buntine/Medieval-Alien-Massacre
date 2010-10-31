@@ -13,7 +13,5 @@
     because both objects 4 and 6 are in the current room.
   - "drink blue potion" will be sufficient there will now be two 6's and one 4.
 
-- Move remaining side-effects into events (pull, sleep)
-
 - Think about implementing a fighting system like that of Fighting Fantasy books.
   - OR Design/implement a simple scoring system
