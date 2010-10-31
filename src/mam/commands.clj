@@ -89,6 +89,18 @@
         :else
           (take-object! objnum)))))
 
+(defn cmd-drop [verbs]
+  (if (empty? verbs)
+    (mam-pr "You must supply an item to to drop!")
+    (let [objnum (deduce-object verbs :inventory)]
+      (cond
+        (nil? objnum)
+          (mam-pr "You don't have that item...")
+        (seq? objnum)
+          (mam-pr "Please be more specific...")
+        :else
+          (drop-object! objnum)))))
+
 (letfn
   [(try-interact
      [verbs no-verb not-here mod-fn]
@@ -100,12 +112,6 @@
            (mam-pr not-here)
            (if (not (mod-fn (first objs)))
              (recur (rest objs)))))))]
-
- (defn cmd-drop [verbs]
-    (try-interact verbs
-                  "You must supply an item to drop!"
-                  "You can't drop that item..."
-                  drop-object!))
 
   (defn cmd-inspect [verbs]
     (if (empty? verbs)

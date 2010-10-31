@@ -149,15 +149,12 @@
         (take-object-from-room! @current-room objnum)
         (mam-pr "Taken..."))))
 
-(defn drop-object! [obj]
+(defn drop-object! [objnum]
   "Attempts to drop an object into the current room"
-  (let [objnum (object-identifier obj)]
-    (if (or (not objnum) (is-keycard? objnum) (not (in-inventory? objnum)))
-      false
-      (dosync-true
-        (remove-object-from-inventory! objnum)
-        (drop-object-in-room! @current-room objnum)
-        (mam-pr "Dropped...")))))
+  (dosync
+    (remove-object-from-inventory! objnum)
+    (drop-object-in-room! @current-room objnum)
+    (mam-pr "Dropped...")))
 
 (defn event-for [objnum evt]
   "Returns either the value (usually a fn) assigned to the given event, or nil"

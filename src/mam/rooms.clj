@@ -28,7 +28,7 @@
 (def rooms
   (vector
     '("You are in a small, silver-walled room with no windows. There is a door to the north labelled 'Repairs deck' and another door to the east."
-      "Empty room with a bed. Doors to north and east.")
+      "Small, featureless room. Doors to north and east.")
     '("You are in another small, featureless room. There is nothing of interest here except doors to the north and west."
       "Small, featureless room. Doors to north and west.")
     '("You enter a control room with a few blank screens. There are doors to the east and west."
@@ -79,8 +79,8 @@
 ; by the same word depending on the room (in room 1, "bed" means object 2, but in
 ; room 42, it means object 8). Each index corresponds to the same index in room-objects.
 (def object-identifiers
-    {'candy 0 'bar 0 'bed 1 'lever {2 2} 'mag 3 'magazine 3 'porno 3 'boy {7 7}
-     'teenager {7 7} 'keycard {7 4} 'key {7 4} 'man {10 8, 11 9} 'robot {11 10}})
+    {'candy 0 'bar 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3 'boy 7
+     'teenager 7 'keycard #{4 5 6} 'key #{4 5 6} 'man #{8 9} 'robot 10})
 
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
