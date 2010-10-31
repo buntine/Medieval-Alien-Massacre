@@ -201,66 +201,43 @@
     (alter milestones conj m)))
 
 (defn fuck-object
-  ([obj]
+  ([objnum]
    "Attempts to fuck the given object."
-   (let [objnum (object-identifier obj)]
-     (cond
-       (or (not objnum) (not (room-has-object? @current-room objnum)))
-         false
-       (not (object-is? objnum :living))
-         (do-true 
-           (mam-pr (str "You start fucking the " obj " but it just feels painful.")))
-       :else
-         (do-true
-           (mam-pr "Hmm... I bet that felt pretty good!")))))
+   (if (not (object-is? objnum :living))
+     (mam-pr (str "You start fucking away but it just feels painful."))
+     (mam-pr "Hmm... I bet that felt pretty good!")))
   {:ridiculous true})
 
-(defn eat-object! [obj]
+(defn eat-object! [objnum]
   "Attempts to eat the given object"
-  (let [objnum (object-identifier obj)]
-    (if (or (not objnum) (not (in-inventory? objnum)))
-      false
-      (let [eat-fn (event-for objnum :eat)]
-        (if (nil? eat-fn)
-          (do
-            (mam-pr (str "You force the " obj " into your throat and fucking die in pain."))
-            (kill-player (str "Trying to eat a " obj)))
-          (dosync-true
-            (eat-fn)
-            (remove-object-from-inventory! objnum)))))))
+  (let [eat-fn (event-for objnum :eat)]
+    (if (nil? eat-fn)
+      (do
+        (mam-pr (str "You force it into your throat and fucking die in pain."))
+        (kill-player (str "Trying to eat: " ((object-details objnum) :inv))))
+      (dosync
+        (eat-fn)
+        (remove-object-from-inventory! objnum)))))
 
-(defn talk-to-object [obj]
+(defn talk-to-object [objnum]
   "Attempts to talk to the given object"
-  (let [objnum (object-identifier obj)
-        speech-for (fn [objnum]
-                     "Some objects have things to say. This function will return the speech for
-                      the given object"
-                     (let [speech (event-for objnum :speak)]
-                       (if (nil? speech)
-                         (mam-pr "Sorry, they have nothing to say at the moment.")
-                         (if (fn? speech)
-                           (speech)
-                           (mam-pr speech)))))]
-    (cond
-      (or (not objnum) (not (room-has-object? @current-room objnum)))
-        false
-      (not (object-is? objnum :living))
-        (do-true
-          (mam-pr (str "The " obj " does not possess the ability to talk.")))
-      :else
-        (do-true
-          (speech-for objnum)))))
+  (if (not (object-is? objnum :living))
+    (mam-pr (str "That item does not possess the ability to talk."))
+    (let [speech (event-for objnum :speak)]
+      (cond
+        (nil? speech)
+          (mam-pr "Sorry, they have nothing to say at the moment.")
+        (fn? speech)
+          (speech)
+        :else
+          (mam-pr speech)))))
 
-(defn pull-object [obj]
+(defn pull-object [objnum]
   "Attempts to pull the given object (probably a lever)"
-  (let [objnum (object-identifier obj)]
-    (if (or (not objnum) (not (room-has-object? @current-room objnum)))
-      false
-      (let [pull-evt (event-for objnum :pull)]
-        (do-true
-          (if (nil? pull-evt)
-            (mam-pr "Nothing much seemed to happen.")
-            (pull-evt)))))))
+  (let [pull-evt (event-for objnum :pull)]
+    (if (nil? pull-evt)
+      (mam-pr "Nothing much seemed to happen.")
+      (pull-evt))))
 
 (defn print-with-newlines
   ([lines] (print-with-newlines lines ""))

@@ -113,25 +113,14 @@
                 "You must supply and item to inspect!"
                 "I don't see that here..."
                 inspect-object
-                :room))))
-
-(letfn
-  [(try-interact
-     [verbs no-verb not-here mod-fn]
-     "Loops through the verbs trying to match one to a interactable object"
-     (if (empty? verbs)
-       (mam-pr no-verb)
-       (loop [objs verbs]
-         (if (empty? objs)
-           (mam-pr not-here)
-           (if (not (mod-fn (first objs)))
-             (recur (rest objs)))))))]
+                :room)))
 
   (defn cmd-eat [verbs]
-    (try-interact verbs
-                  "You must supply an item to eat!"
-                  "You don't have that item..."
-                  eat-object!))
+    (interact verbs
+              "You must supply an item to eat!"
+              "You don't have that item..."
+              eat-object!
+              :inventory))
 
   (defn cmd-fuck [verbs]
     (cond
@@ -142,22 +131,25 @@
       (= (first verbs) 'off)
         (mam-pr "One day, machines will enslave puney humans like yourself.")
       :else
-        (try-interact verbs
-                      "Fuck what exactly?"
-                      "I don't see him/her/it here..."
-                      fuck-object)))
+        (interact verbs
+                  "Fuck what exactly?"
+                  "I don't see him/her/it here..."
+                  fuck-object
+                  :room)))
 
   (defn cmd-talk [verbs]
-    (try-interact verbs
-                  "Talk to who exactly, dumbass?"
-                  "I don't see him/her/it here..."
-                  talk-to-object))
+    (interact verbs
+              "Talk to who exactly, dumbass?"
+              "I don't see him/her/it here..."
+              talk-to-object
+              :room))
 
-  (defn cmd-pull [verbs]
-    (try-interact verbs
-                  "I don't know what to pull."
-                  "I don't see that here..."
-                  pull-object)))
+  (defn cmd-talk [verbs]
+    (interact verbs
+              "I don't know what to pull."
+              "I don't see that here..."
+              pull-object
+              :room)))
 
 (defn cmd-inventory [verbs]
   "Displays the players inventory"
