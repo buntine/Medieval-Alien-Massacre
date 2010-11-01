@@ -2,6 +2,8 @@
 
 A sadistic and pro-death text-based adventure for (bastard) children.
 
+A hobby project, written in Clojure (A Lisp for the JVM) during Oct/Nov 2010.
+
 
 ## Usage
 
@@ -18,7 +20,7 @@ $ lein deps
 $ lein uberjar
 
 
-# Notes
+## Notes
 
  - Type the 'help' command in gameplay for some tips and instructions.
  - Inspired by Dunnet, by Rob Schnell ($ emacs -batch -l dunnet).
@@ -27,5 +29,8 @@ $ lein uberjar
 ## License
 
 Copyright (C) 2010 Andrew Buntine
+
+info@andrewbuntine.com
+http://www.andrewbuntine.com
 
 Distributed under the Eclipse Public License, the same as Clojure.
