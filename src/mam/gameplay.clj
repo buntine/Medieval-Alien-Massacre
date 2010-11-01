@@ -253,16 +253,15 @@
      (describe-objects-for-room room))))
 
 (defn prospects-for [verb context]
+  "Returns the prospective objects for the given verb.
+   E.g: 'cheese' might mean objects 6 and 12 or object 9 or nothing."
   (let [objnums (object-identifiers verb)
         fns {:room #(room-has-object? @current-room %)
              :inventory in-inventory?}]
-    (cond
-      (nil? objnums)
-        '()
-      (integer? objnums)
-        (list objnums)
-      :else
-        (filter (fns context) objnums))))
+    (if (nil? objnums)
+      '()
+      (filter (fns context)
+              (if (integer? objnums) #{objnums} objnums)))))
 
 (defn highest-val [obj-counts]
   "Returns the key of the highest value in the given map. If no
