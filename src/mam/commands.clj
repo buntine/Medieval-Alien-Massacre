@@ -14,7 +14,8 @@
 
 (ns mam.commands
   (:use mam.gameplay)
-  (:use mam.rooms))
+  (:use mam.rooms)
+  (:use [clojure.contrib.str-utils :only (str-join)]))
 
 (declare cmd-inspect)
 
@@ -39,13 +40,13 @@
                (set-current-room! room)))))))]
 
   (defn cmd-go [verbs]
-    "Expects to be given direction. Dispatches to the 'move' command"
+    "Expects to be given a direction. Dispatches to the 'move' command"
     (if (empty? verbs)
       (mam-pr "You need to supply a direction!")
       ; Catch commands like "go to bed", etc.
       (if (direction? (first verbs))
         (move-room (first verbs))
-        (parse-input (reduce #(str %1 " " %2) "" verbs)))))
+        (parse-input (str-join " " (map name verbs))))))
 
   (defn cmd-north [verbs] (move-room 'north))
   (defn cmd-east [verbs] (move-room 'east))
