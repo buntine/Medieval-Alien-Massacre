@@ -269,9 +269,11 @@
    of the tied-highest"
   (if (not (empty? obj-counts))
     (let [highest (apply max (vals obj-counts))
-          matches (filter #(= highest (second %)) obj-counts)]
+          matches (into {}
+                        (filter #(-> % val (= highest))
+                                obj-counts))]
       (if (= (count matches) 1)
-        (first (first matches))
+        (key (first matches))
         (keys matches)))))
 
 (defn add-or-inc [m k]
