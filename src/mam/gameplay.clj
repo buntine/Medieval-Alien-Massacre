@@ -8,7 +8,6 @@
   (:use mam.rooms)
   (:use mam.compression)
   (:use [clojure.contrib.string :only (split join)]))
-  ;(:use [clojure.contrib.duck-streams :only (spit)]))
 
 
 (def current-room (ref 0))         ; The current room the player is in.
