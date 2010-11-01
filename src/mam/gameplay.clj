@@ -6,8 +6,9 @@
 (ns mam.gameplay
   (:use mam.commands)
   (:use mam.rooms)
-  (:use [clojure.contrib.string :only (split join)])
-  (:use [clojure.contrib.duck-streams :only (spit)]))
+  (:use mam.compression)
+  (:use [clojure.contrib.string :only (split join)]))
+  ;(:use [clojure.contrib.duck-streams :only (spit)]))
 
 
 (def current-room (ref 0))         ; The current room the player is in.
@@ -358,12 +359,12 @@
                     :credits @credits
                     :milestones @milestones
                     :room-objects @room-objects}]
-    (spit "savedata", game-state)))
+    (spit "savedata", (compress (str game-state)))))
 
 (defn load-game! []
   "Loads all previously saved game data"
   (if (. (java.io.File. "savedata") exists)
-    (let [game-state (load-file "savedata")]
+    (let [game-state (load-string (decompress (slurp "savedata")))]
       (dosync
         (ref-set current-room (game-state :current-room))
         (ref-set inventory (game-state :inventory))
@@ -371,4 +372,4 @@
         (ref-set credits (game-state :credits))
         (ref-set milestones (game-state :milestones))
         (ref-set room-objects (game-state :room-objects))))
-    (mam-pr "No saved data data!")))
+    (mam-pr "No saved game data!")))
