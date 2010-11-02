@@ -9,6 +9,10 @@
   (:use mam.compression)
   (:use [clojure.contrib.string :only (split join)]))
 
+; Declarations for some procedures I mention before they have been
+; defined.
+(declare messages)
+
 
 (def current-room (ref 0))        ; The current room the player is in.
 (def visited-rooms (ref []))      ; The rooms that the player has visited.
@@ -39,13 +43,10 @@
    'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
    'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat 'fuck cmd-fuck
    'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
-   'save cmd-save 'load cmd-load 'give cmd-give 'put cmd-put})
+   'save cmd-save 'load cmd-load 'give cmd-give 'put cmd-put 'in cmd-in
+   'out cmd-out 'up cmd-up 'down cmd-down 'i cmd-in 'o cmd-out 'u cmd-up
+   'd cmd-down})
    
-; Declarations for some procedures I mention before they have been
-; defined.
-(declare messages)
-
-
 (defn set-current-room! [room]
   (dosync
     (ref-set current-room room)))
@@ -130,7 +131,7 @@
 
 (letfn
   [(give-or-put [evt objx objy err-msg]
-     "Does give/put with object x and object y. E.g: give cheese to old man"
+     "Does give/put with objects x and y. E.g: give cheese to old man"
      (let [event-fn ((event-for objy evt) objx)]
        (if (nil? event-fn)
          (mam-pr err-msg)

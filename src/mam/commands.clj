@@ -23,8 +23,8 @@
 (defn direction? [verb]
   (boolean
     (some #{verb}
-          '(n e s w ne se sw nw north east south west
-            northeast southeast southwest northwest))))
+          '(n e s w ne se sw nw i o u d north east south west
+            northeast southeast southwest northwest in out up down))))
 
 (letfn
   [(move-room [dir]
@@ -55,14 +55,19 @@
   (defn cmd-northeast [verbs] (move-room 'northeast))
   (defn cmd-southeast [verbs] (move-room 'southeast))
   (defn cmd-southwest [verbs] (move-room 'southwest))
-  (defn cmd-northwest [verbs] (move-room 'northwest)))
+  (defn cmd-northwest [verbs] (move-room 'northwest))
+  (defn cmd-in [verbs] (move-room 'in))
+  (defn cmd-out [verbs] (move-room 'out))
+  (defn cmd-up [verbs] (move-room 'up))
+  (defn cmd-down [verbs] (move-room 'down)))
 
 (defn cmd-help [verbs]
   (println "  M-A-M HELP")
   (println "  ------------------------------")
-  (println "   * Directions are north, east, south, west, northeaast, southeast, southwest, northeast.")
-  (println "   * Or abbreviated n, e, s, w, ne, se, sw, nw.")
+  (println "   * Directions are north, east, south, west, northeaast, southeast, southwest, northeast, in, out, up, down.")
+  (println "   * Or abbreviated n, e, s, w, ne, se, sw, nw, i, o, u, d.")
   (println "   * Keys automatically open the appropriate doors, so just walk in their direction.")
+  (println "   * You can go 'in' and 'out' of buildings if the action is appropriate.")
   (println "   * Credit is equivalent to our concept of money. Use it wisely!")
   (println "   * Check your items and credit with 'inventory' or 'inv'")
   (println "   * You can 'speak' to humans, aliens and robots, but some may be a tad vulgar...")
