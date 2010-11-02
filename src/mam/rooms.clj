@@ -11,14 +11,16 @@
 (ns mam.rooms
   (:use mam.gameplay))
 
+(declare object-details)
 
-(defn key [keynum room]
+
+(defn k [keynum room]
   "Checks if the player has the given type of security card. If they do, set the current
    room to 'room'. Otherwise, let them know"
   (if (in-inventory? keynum)
     (let [key-name (. ((object-details keynum) :inv) toLowerCase)]
       (set-current-room! room)
-      (mam-pr (str " * Door unlocked with " key-name ". *")))
+      (mam-pr (str " * Door unlocked with " key-name " *")))
     (mam-pr "You don't have security clearance for this door!")))
 
 ; A vector of rooms. Each index contains both a large description (first visit) and a brief
@@ -61,7 +63,7 @@
     [nil        5         0         nil       nil       nil       nil       nil]   ;3
     [6          nil       1         7         nil       nil       nil       nil]   ;4
     [nil        7         nil       3         nil       nil       nil       nil]   ;5
-    [#(key 4 8) nil       4         nil       nil       nil       nil       nil]   ;6
+    [#(k 4 8)   nil       4         nil       nil       nil       nil       nil]   ;6
     [nil        4         nil       5         nil       nil       nil       nil]   ;7
     [nil        nil       6         9         nil       nil       nil       11]    ;8
     [nil        8         nil       10        nil       nil       nil       nil]   ;9
@@ -77,7 +79,8 @@
 ; room 42, it means object 8). Each index corresponds to the same index in room-objects.
 (def object-identifiers
     {'candy 0 'bar 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3 'boy 7
-     'teenager 7 'keycard #{4 5 6} 'key #{4 5 6} 'man #{8 9} 'robot 10})
+     'teenager 7 'keycard #{4 5 6} 'key #{4 5 6} 'man #{8 9} 'robot 10
+     'green 4 'red 5 'silver 6})
 
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
