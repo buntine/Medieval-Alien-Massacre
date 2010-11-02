@@ -10,13 +10,13 @@
   (:use [clojure.contrib.string :only (split join)]))
 
 
-(def current-room (ref 0))         ; The current room the player is in.
-(def visited-rooms (ref []))       ; The rooms that the player has visited.
-(def inventory (ref []))           ; The players inventory of items.
-(def credits (ref 0))              ; The players credits (aka $$$).
-(def milestones (ref #{}))         ; The players milestones. Used to track and manipulate story.
-(def ignore-words '(the that is to ; Words that should be ignored in commands.
-                    fucking damn in)) 
+(def current-room (ref 0))        ; The current room the player is in.
+(def visited-rooms (ref []))      ; The rooms that the player has visited.
+(def inventory (ref []))          ; The players inventory of items.
+(def credits (ref 0))             ; The players credits (aka $$$).
+(def milestones (ref #{}))        ; The players milestones. Used to track and manipulate story.
+(def ignore-words '(the that is   ; Words that should be ignored in commands.
+                    fucking damn)) 
 
 (defn mam-pr [s]
   "Prints a string per-character like the ancient terminals used to"
@@ -137,6 +137,15 @@
   "Returns either the value (usually a fn) assigned to the given event, or nil"
   (((object-details objnum) :events) evt))
 
+(defn give-object! [objx objy]
+  "Gives object x to object y. E.g: give cheese to old man"
+  (let [event-fn ((event-for objy :give) objx)]
+    (if (nil? event-fn)
+      (mam-pr "He/she/it cannot accept this item.")
+      (dosync
+        (event-fn)
+        (remove-object-from-inventory! objx)))))
+
 (letfn
   [(do-x-with-y [x y evt err-msg]
      "Attempts to do something with x for y. E.g: give dildo to wizard, put dildo in wizard"
@@ -154,8 +163,8 @@
                  (event-fn)
                  (remove-object-from-inventory! x)))))))]
 
-  (defn give-object! [x y]
-    (do-x-with-y x y :give (str "The " y " cannot accept this item.")))
+ ; (defn give-object! [x y]
+  ;  (do-x-with-y x y :give (str "The " y " cannot accept this item.")))
 
   (defn put-object! [x y]
     (do-x-with-y x y :put (str "You cannot put the " y " here."))))

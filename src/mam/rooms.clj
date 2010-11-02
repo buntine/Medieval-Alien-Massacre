@@ -12,15 +12,13 @@
   (:use mam.gameplay))
 
 
-(def keycards {:green 4 :red 5 :silver 6})
-
-(defn check-key [key-type room]
+(defn key [keynum room]
   "Checks if the player has the given type of security card. If they do, set the current
    room to 'room'. Otherwise, let them know"
-  (if (in-inventory? (keycards key-type))
-    (let [key-name (apply str (rest (str key-type)))]
+  (if (in-inventory? keynum)
+    (let [key-name (. ((object-details keynum) :inv) toLowerCase)]
       (set-current-room! room)
-      (mam-pr (str " * Door unlocked with " key-name " keycard. *")))
+      (mam-pr (str " * Door unlocked with " key-name ". *")))
     (mam-pr "You don't have security clearance for this door!")))
 
 ; A vector of rooms. Each index contains both a large description (first visit) and a brief
@@ -56,20 +54,19 @@
 ; A function indicates that something special needs to be done (check conditions, etc).
 (def world-map
   (vector
-;    north         east         south        west         northeast    southeast    southwest    northwest
-    [3             2            nil          nil          nil          nil          nil          nil]   ;0
-    [4             nil          nil          2            nil          nil          nil          nil]   ;1
-    [nil           1            nil          0            nil          nil          nil          nil]   ;2
-    [nil           5            0            nil          nil          nil          nil          nil]   ;3
-    [6             nil          1            7            nil          nil          nil          nil]   ;4
-    [nil           7            nil          3            nil          nil          nil          nil]   ;5
-    [#(check-key
-       :green 8)   nil          4            nil          nil          nil          nil          nil]   ;6
-    [nil           4            nil          5            nil          nil          nil          nil]   ;7
-    [nil           nil          6            9            nil          nil          nil          11]    ;8
-    [nil           8            nil          10           nil          nil          nil          nil]   ;9
-    [nil           9            nil          nil          11           nil          nil          nil]   ;10
-    [nil           nil          nil          nil          nil          8            10           nil])) ;11
+;    north      east      south     west      northeast southeast southwest northwest
+    [3          2         nil       nil       nil       nil       nil       nil]   ;0
+    [4          nil       nil       2         nil       nil       nil       nil]   ;1
+    [nil        1         nil       0         nil       nil       nil       nil]   ;2
+    [nil        5         0         nil       nil       nil       nil       nil]   ;3
+    [6          nil       1         7         nil       nil       nil       nil]   ;4
+    [nil        7         nil       3         nil       nil       nil       nil]   ;5
+    [#(key 4 8) nil       4         nil       nil       nil       nil       nil]   ;6
+    [nil        4         nil       5         nil       nil       nil       nil]   ;7
+    [nil        nil       6         9         nil       nil       nil       11]    ;8
+    [nil        8         nil       10        nil       nil       nil       nil]   ;9
+    [nil        9         nil       nil       11        nil       nil       nil]   ;10
+    [nil        nil       nil       nil       nil       8         10        nil])) ;11
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7})

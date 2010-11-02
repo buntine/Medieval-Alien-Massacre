@@ -169,10 +169,23 @@
     (mam-pr "There is no bed here. You try to sleep standing up and just get bored.")))
 
 (defn cmd-give [verbs]
-  "Attempts to give x to y. Expects format of: '(give x y) as 'to' would have been filtered out"
-  (if (not (= 2 (count verbs)))
-    (mam-pr "Sorry, I only understand the format: give x to y")
-    (apply give-object! verbs)))
+  "Attempts to give x to y. Expects format of: '(give x to y). x and y may contain adjectives, etc"
+  (let [[x y] (split-with #(not (= % 'to)) verbs)]
+    (if (or (empty? x) (<= (count y) 1))
+      (mam-pr "Sorry, I only understand the format: give x to y")
+      (let [objx (deduce-object x :inventory)
+            objy (deduce-object (rest y) :room)]
+        (cond
+          (nil? objx)
+            (mam-pr "You don't have that item.")
+          (seq? objx)
+            (mam-pr "Please be more specific about the item you want to give.")
+          (nil? objy)
+            (mam-pr "I don't see him/her/it here.")
+          (seq? objy)
+            (mam-pr "Please be more specific about who you want to give it to.")
+          :else 
+            (give-object! objx objy))))))
 
 (defn cmd-put [verbs]
   "Attempts to put x in y. Expects format of: '(put x y) as 'in' would have been filtered out"
