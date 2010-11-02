@@ -40,8 +40,8 @@
       "Hallway. Doors to the west and south. Passage leads north.")
     '("You continue along the passage and pass more broken machines. Passage leads east or west."
       "Repairs deck, center. Passage leads west/east.")
-    '("You are at the end of the hallway. There is a large, sliding door to the north."
-      "End of hallway. Large door to north.")
+    '("You are at the end of the hallway. There is a large, sliding door in front of you."
+      "End of hallway. Large door here.")
     '("There are a bunch broken machines lying around on the repairs deck. There is a door to the east or a passage south."
       "Repairs deck. Door to the east and passage south.")
     '("You are in a large room with space age decor. It seems to be the central living quarters. The walls are lined with pictures of the late comedian, Bill Hicks. There are walkways to the west and northwest and a door to the south."
@@ -64,7 +64,7 @@
     [nil      5        0        nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;3
     [6        nil      1        7        nil      nil      nil      nil      nil      nil      nil      nil]   ;4
     [nil      7        nil      3        nil      nil      nil      nil      nil      nil      nil      nil]   ;5
-    [(k 4 8)  nil      4        nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;6
+    [(k 4 8)  nil      4        nil      nil      nil      nil      nil      nil      nil      (k 4 8)  nil]   ;6
     [nil      4        nil      5        nil      nil      nil      nil      nil      nil      nil      nil]   ;7
     [nil      nil      6        9        nil      nil      nil      11       nil      nil      nil      nil]   ;8
     [nil      8        nil      10       nil      nil      nil      nil      nil      nil      nil      nil]   ;9
