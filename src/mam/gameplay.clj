@@ -132,11 +132,11 @@
 (letfn
   [(give-or-put [evt objx objy err-msg]
      "Does give/put with objects x and y. E.g: give cheese to old man"
-     (let [event-fn ((event-for objy evt) objx)]
-       (if (nil? event-fn)
+     (let [events (event-for objy evt)]
+       (if (or (nil? events) (not (some #{objx} events)))
          (mam-pr err-msg)
          (dosync
-           (event-fn)
+           ((events objx))
            (remove-object-from-inventory! objx)))))]
 
   (defn give-object! [objx objy]
