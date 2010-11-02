@@ -50,15 +50,6 @@
   (dosync
     (ref-set current-room room)))
 
-; TODO: Remove after reimplementing give/put funtionality.
-(defn object-identifier [obj]
-  "Returns the number that identifies the given object symbol. Some objects
-   can be identified differently depending on which room the player is in"
-  (let [ident (object-identifiers obj)]
-    (if (map? ident)
-      (ident @current-room)
-      ident)))
-
 (defn in-inventory? [objnum]
   "Returns true if object assigned to 'objnum' is in players inventory"
   (boolean (some #{objnum} @inventory)))
@@ -137,37 +128,21 @@
   "Returns either the value (usually a fn) assigned to the given event, or nil"
   (((object-details objnum) :events) evt))
 
-(defn give-object! [objx objy]
-  "Gives object x to object y. E.g: give cheese to old man"
-  (let [event-fn ((event-for objy :give) objx)]
-    (if (nil? event-fn)
-      (mam-pr "He/she/it cannot accept this item.")
-      (dosync
-        (event-fn)
-        (remove-object-from-inventory! objx)))))
-
 (letfn
-  [(do-x-with-y [x y evt err-msg]
-     "Attempts to do something with x for y. E.g: give dildo to wizard, put dildo in wizard"
-     (let [x-obj (object-identifier x) y-obj (object-identifier y)]
-       (cond
-         (or (not x-obj) (not (in-inventory? x-obj)))
-           (mam-pr "Sorry, you don't have that item.")
-         (or (not y-obj) (not (room-has-object? @current-room y-obj)))
-           (mam-pr (str "I don't see " y " here."))
-         :else
-           (let [event-fn ((event-for y-obj evt) x-obj)]
-             (if (nil? event-fn)
-               (mam-pr err-msg)
-               (dosync
-                 (event-fn)
-                 (remove-object-from-inventory! x)))))))]
+  [(give-or-put [evt objx objy err-msg]
+     "Does give/put with object x and object y. E.g: give cheese to old man"
+     (let [event-fn ((event-for objy evt) objx)]
+       (if (nil? event-fn)
+         (mam-pr err-msg)
+         (dosync
+           (event-fn)
+           (remove-object-from-inventory! objx)))))]
 
- ; (defn give-object! [x y]
-  ;  (do-x-with-y x y :give (str "The " y " cannot accept this item.")))
+  (defn give-object! [objx objy]
+    (give-or-put :give objx objy "He/she/it cannot accept this item."))
 
-  (defn put-object! [x y]
-    (do-x-with-y x y :put (str "You cannot put the " y " here."))))
+  (defn put-object! [objx objy]
+    (give-or-put :put objx objy "You cannot put this item here.")))
 
 (defn inspect-object [objnum]
   "Inspects an object in the current room"

@@ -1,9 +1,2 @@
-- Implement all object-related commands in new deduction logic
-- Also for give and put:
-  - Don't ignore 'to' or 'in'.
-  - Try deduce object from sublist before 'to'.
-  - And deduce another from sublist after 'to'.
-  - E.g: give green potion to young man (assuming player has green potion and red potion and room has young and old men)
-
 - Think about implementing a fighting system like that of Fighting Fantasy books.
   - OR Design/implement a simple scoring system
