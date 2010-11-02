@@ -12,17 +12,17 @@
   (:use mam.gameplay))
 
 (defn print-welcome-message []
-  (println "|---------------------------------------------------------|")
-  (println "|                MEDIEVAL ALIEN MASSACRE                  |")
-  (println "|---------------------------------------------------------|")
-  (println "| A sadistic, pro-death text-based adventure for children |")
-  (println "| By Andrew Buntine (http://www.andrewbuntine.com)        |")
-  (println "|                                                         |")
-  (println "| Rated X^3 (18+) for:                                    |")
-  (println "|   * grotesque sexual violence                           |")
-  (println "|   * murder without end                                  |")
-  (println "|   * zombie goat sodomy                                  |")
-  (println "|---------------------------------------------------------|\n"))
+  (println "\033[31m|---------------------------------------------------------|\033[0m")
+  (println "\033[31m|\033[0m                \033[4;33mMEDIEVAL ALIEN MASSACRE\033[0m                  \033[31m|\033[0m")
+  (println "\033[31m|---------------------------------------------------------|\033[0m")
+  (println "\033[31m|\033[0m \033[33mA sadistic, pro-death text-based adventure for children\033[0m \033[31m|\033[0m")
+  (println "\033[31m|\033[0m \033[33mBy Andrew Buntine (http://www.andrewbuntine.com)\033[0m        \033[31m|\033[0m")
+  (println "\033[31m|\033[0m                                                         \033[31m|\033[0m")
+  (println "\033[31m|\033[0m \033[33mRated X^3 (18+) for:\033[0m                                    \033[31m|\033[0m")
+  (println "\033[31m|\033[0m   \033[33m* grotesque sexual violence\033[0m                           \033[31m|\033[0m")
+  (println "\033[31m|\033[0m   \033[33m* murder without end\033[0m                                  \033[31m|\033[0m")
+  (println "\033[31m|\033[0m   \033[33m* zombie goat sodomy\033[0m                                  \033[31m|\033[0m")
+  (println "\033[31m|---------------------------------------------------------|\033[0m\n"))
 
 (defn -main []
   "Game initializer. Welcomes user and starts loop."
