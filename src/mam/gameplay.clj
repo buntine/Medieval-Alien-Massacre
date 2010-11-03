@@ -133,7 +133,7 @@
   [(give-or-put [evt objx objy err-msg]
      "Does give/put with objects x and y. E.g: give cheese to old man"
      (let [events (event-for objy evt)]
-       (if (or (nil? events) (not (some #{objx} events)))
+       (if (or (nil? events) (not (events objx)))
          (mam-pr err-msg)
          (dosync
            ((events objx))
