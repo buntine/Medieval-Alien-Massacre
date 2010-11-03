@@ -58,7 +58,7 @@
        "Entrance to obscure shop. Dead-end.")
      '("You are faced with two paths - one to the east and one going south. Both are slimy and wet."
        "Alley way. Paths to south/north and also to the east")
-     '("The shop has not attendant. You can see a bunch of empty bottles, odd trinkets and another Bill Hicks portrait."
+     '("The shop has no attendant. You can see a bunch of empty bottles, odd trinkets and another Bill Hicks portrait."
        "Unattended shop with crap lying around.")))
 
 ; Map to specify which rooms the player will enter on the given movement.
@@ -94,7 +94,7 @@
 (def object-identifiers
     {'candy 0 'bar 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3 'boy 7
      'teenager 7 'keycard #{4 5 6} 'key #{4 5 6} 'man #{8 9} 'robot 10
-     'green #{4 13} 'red #{5 12} 'brown 14 'silver 6 'bum 11})
+     'green #{4 13} 'red #{5 12} 'brown 14 'silver 6 'bum 11 'potion #{12 13 14}})
 
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.

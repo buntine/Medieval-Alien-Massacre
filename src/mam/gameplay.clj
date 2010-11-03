@@ -177,7 +177,7 @@
     (if (nil? eat-fn)
       (do
         (mam-pr (str "You force it into your throat and fucking die in pain."))
-        (kill-player (str "Trying to eat: " ((object-details objnum) :inv))))
+        (kill-player ((object-details objnum) :inv)))
       (dosync
         (eat-fn)
         (remove-object-from-inventory! objnum)))))
