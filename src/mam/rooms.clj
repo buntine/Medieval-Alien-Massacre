@@ -53,7 +53,13 @@
      '("You are at the front of the large room. There is a huge glass-like window here and you can see now that you are, infact, travelling through space! There are passages going back southeast and southwest."
        "Front of large room with huge glass-like window. Passages southeast/southwest.")
      '("You are in a dark alley and there is rubbish lying around everywhere. There are solid walls behind you and to either side. The alley leads south."
-       "Dead-end of alley. Passage leads south.")))
+       "Dead-end of alley. Passage leads south.")
+     '("You are standing at the entrance of an obscure-looking shop. There are cryptic characters on the sign. You can go in or head back to the west."
+       "Entrance to obscure shop. Dead-end.")
+     '("You are faced with two paths - one to the east and one going south. Both are slimy and wet."
+       "Alley way. Paths to south/north and also to the east")
+     '("The shop has not attendant. You can see a bunch of empty bottles, odd trinkets and another Bill Hicks portrait."
+       "Unattended shop with crap lying around.")))
 
 ; Map to specify which rooms the player will enter on the given movement.
 ; A function indicates that something special needs to be done (check conditions, etc).
@@ -72,7 +78,10 @@
     [nil      8        nil      10       nil      nil      nil      nil      nil      nil      nil      nil]   ;9
     [nil      9        nil      nil      11       nil      nil      nil      nil      nil      nil      nil]   ;10
     [nil      nil      nil      nil      nil      8        10       nil      nil      nil      nil      nil]   ;11
-    [nil      nil      13       nil      nil      nil      nil      nil      nil      nil      nil      nil])) ;12
+    [nil      nil      14       nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;12
+    [nil      nil      nil      14       nil      nil      nil      nil      nil      nil      15       nil]   ;13
+    [12       13       nil      nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;14
+    [nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      13]))  ;15
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
@@ -85,7 +94,7 @@
 (def object-identifiers
     {'candy 0 'bar 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3 'boy 7
      'teenager 7 'keycard #{4 5 6} 'key #{4 5 6} 'man #{8 9} 'robot 10
-     'green 4 'red 5 'silver 6})
+     'green #{4 13} 'red #{5 12} 'brown 14 'silver 6 'bum 11})
 
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
@@ -103,7 +112,10 @@
          []
          [8]
          [9 10]
-         [11])))
+         [11]
+         []
+         []
+         [12 13 14])))
 
 ; Some living objects have special speech considerations, such as checking conditions.
 ; Here I keep a bunch of functions that are assigned to the relevent objects in object-details.
@@ -220,6 +232,18 @@
                 :inspect "He smells like alcohol and blue cheese"
                 :events {:speak (speech-fn-for :homeless-bum)}
                 :permanent true
-                :living true})))
+                :living true}),
+    (make-dets {:game "There is a red potion here"
+                :inspect "It looks a bit like diluted blood"
+                :inv "Red potion"
+                :weight 1}),
+    (make-dets {:game "There is a green potion here"
+                :inspect "It smells weird and is foaming"
+                :inv "Green potion"
+                :weight 1}),
+    (make-dets {:game "There is a brown potion here"
+                :inspect "It seems to be bubbling!"
+                :inv "Brown potion"
+                :weight 1})))
 
 (def *total-weight* 12)
