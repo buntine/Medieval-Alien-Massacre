@@ -64,7 +64,7 @@
 (defn cmd-help [verbs]
   (println "  M-A-M HELP")
   (println "  ------------------------------")
-  (println "   * Directions are north, east, south, west, northeaast, southeast, southwest, northeast, in, out, up, down.")
+  (println "   * Directions are north, east, south, west, northeast, southeast, southwest, northeast, in, out, up, down.")
   (println "   * Or abbreviated n, e, s, w, ne, se, sw, nw, i, o, u, d.")
   (println "   * Keys automatically open the appropriate doors, so just walk in their direction.")
   (println "   * You can go 'in' and 'out' of buildings if the action is appropriate.")
