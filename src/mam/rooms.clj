@@ -51,7 +51,9 @@
      '("You are at the west-end of the room. Here you can see sealed entrance and a sign saying 'Exit pod'."
        "West-end of large room with exit pod.")
      '("You are at the front of the large room. There is a huge glass-like window here and you can see now that you are, infact, travelling through space! There are passages going back southeast and southwest."
-       "Front of large room with huge glass-like window. Passages southeast/southwest.")))
+       "Front of large room with huge glass-like window. Passages southeast/southwest.")
+     '("You are in a dark alley and there is rubbish lying around everywhere. There are solid walls behind you and to either side. The alley leads south."
+       "Dead-end of alley. Passage leads south.")))
 
 ; Map to specify which rooms the player will enter on the given movement.
 ; A function indicates that something special needs to be done (check conditions, etc).
@@ -69,7 +71,8 @@
     [nil      nil      6        9        nil      nil      nil      11       nil      nil      nil      nil]   ;8
     [nil      8        nil      10       nil      nil      nil      nil      nil      nil      nil      nil]   ;9
     [nil      9        nil      nil      11       nil      nil      nil      nil      nil      nil      nil]   ;10
-    [nil      nil      nil      nil      nil      8        10       nil      nil      nil      nil      nil])) ;11
+    [nil      nil      nil      nil      nil      8        10       nil      nil      nil      nil      nil]   ;11
+    [nil      nil      13       nil      nil      nil      nil      nil      nil      nil      nil      nil])) ;12
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
@@ -99,7 +102,8 @@
          []
          []
          [8]
-         [9 10])))
+         [9 10]
+         [11])))
 
 ; Some living objects have special speech considerations, such as checking conditions.
 ; Here I keep a bunch of functions that are assigned to the relevent objects in object-details.
@@ -111,7 +115,10 @@
         (not (hit-milestone? :speak-to-captain))
           (mam-pr "The man says 'Hey matey, I can get your sorry ass off here, but I suggest you speak to the captain over there to our northeast first'.")
         :else
-          (mam-pr "The man says 'Oky doke, matey, lets get your punk ass outta' here. I hope Syndal City on Jupiter 4 is alright'.")),
+          (do
+            (mam-pr "The man says 'Oky doke, matey, lets get your punk ass outta' here. I hope Syndal City on Jupiter 4 is alright'.")
+            (mam-pr "\n... flying to Syndal City ..." 300)
+            (set-current-room! 12))),
    :repairs-captain
      #(if (hit-milestone? :speak-to-captain)
         (mam-pr "The captain says 'That is all the information I have. Now, fuck off before I get mad.'.")
@@ -120,7 +127,9 @@
           (mam-pr "It is the year 2843, you're currently travelling on a highway between two of the moons of Jupiter.")
           (mam-pr "\n** At this point you explain that you are infact from the year 2010 and the last thing you remember is driking coffee at home and writing some Lisp code **\n")
           (mam-pr "The captain says 'Oh, yes, it makes sense now. A true Lisp hacker and drinker of the finest bean can transcend both space and time. We've seen your type before. You should head over to see the Pod Manager to our southwest in order to get yourself off this ship'")
-          (add-milestone! :speak-to-captain)))})
+          (add-milestone! :speak-to-captain))),
+   :homeless-bum
+     #(mam-pr "He mutters 'Hey mystery man! Welcome to Syndal City, perhaps you can spare an old cyborg some whisky?'.")})
 
 ; Giving a certain x to a certain y will cause special things to happen.
 (def give-fn-for
@@ -206,6 +215,11 @@
                 :inspect "He looks a bit like R2D2, but without the lights. There seems to be a vac-u-lock Dildo sticking out of his forehead."
                 :permanent true
                 :events {:speak "The robot says 'Hello, I am Nexus model 19, series 4. It seems to me that you are not from around here. Perhaps you are lost? Regardless, I have but one thing to tell you, and that, of course, is the meaning to life. The answer is, simply stated in Human tongue, the persuit of excellence in Skateboarding.'"}
+                :living true}),
+    (make-dets {:game "There is a dirty, old homeless bum here"
+                :inspect "He smells like alcohol and blue cheese"
+                :events {:speak (speech-fn-for :homeless-bum)}
+                :permanent true
                 :living true})))
 
 (def *total-weight* 12)

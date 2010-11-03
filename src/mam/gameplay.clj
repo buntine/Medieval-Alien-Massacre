@@ -22,15 +22,16 @@
 (def ignore-words '(the that is   ; Words that should be ignored in commands.
                     fucking damn)) 
 
-(defn mam-pr [s]
-  "Prints a string per-character like the ancient terminals used to"
-  (if (empty? s)
-    (newline)
-    (do
-      (print (first s))
-      (flush)
-      (. Thread sleep 30)
-      (recur (rest s)))))
+(defn mam-pr ([s] (mam-pr s 30))
+  ([s i]
+   "Prints a string like the ancient terminals used to, sleeping for i ms per character"
+   (if (empty? s)
+     (newline)
+     (do
+       (print (first s))
+       (flush)
+       (. Thread sleep i)
+       (recur (rest s) i)))))
 
 ; Maps user commands to the appropriate function.
 (def cmd-verbs
