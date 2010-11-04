@@ -129,6 +129,13 @@
               eat-object!
               :inventory))
 
+  (defn cmd-drink [verbs]
+    (interact verbs
+              "You must supply an item to drink!"
+              "You don't have that item..."
+              drink-object!
+              :inventory))
+
   (defn cmd-fuck [verbs]
     (cond
       (= (first verbs) 'you)

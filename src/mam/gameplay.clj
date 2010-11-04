@@ -46,7 +46,7 @@
    'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
    'save cmd-save 'load cmd-load 'give cmd-give 'put cmd-put 'in cmd-in
    'out cmd-out 'up cmd-up 'down cmd-down 'i cmd-in 'o cmd-out 'u cmd-up
-   'd cmd-down})
+   'd cmd-down 'drink cmd-drink})
    
 (defn set-current-room! [room]
   (dosync
@@ -165,7 +165,7 @@
 
 (defn fuck-object
   ([objnum]
-   "Attempts to fuck the given object."
+   "Attempts to fuck the given object"
    (if (not (object-is? objnum :living))
      (mam-pr (str "You start fucking away but it just feels painful."))
      (mam-pr "Hmm... I bet that felt pretty good!")))
@@ -180,6 +180,15 @@
         (kill-player ((object-details objnum) :inv)))
       (dosync
         (eat-fn)
+        (remove-object-from-inventory! objnum)))))
+
+(defn drink-object! [objnum]
+  "Attempts to drink the given object"
+  (let [drink-fn (event-for objnum :drink)]
+    (if (nil? drink-fn)
+      (mam-pr (str "It doesn't seem to be drinkable."))
+      (dosync
+        (drink-fn)
         (remove-object-from-inventory! objnum)))))
 
 (defn talk-to-object [objnum]

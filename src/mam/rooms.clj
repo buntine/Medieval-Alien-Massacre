@@ -158,6 +158,19 @@
         (mam-pr "You feel like you just ate crusty skin off Donald Trump's forehead. Although inside the wrapper there was an 'instant win' of 5 credits!")
         (alter credits + 5))})
 
+; Functions to execute when player drinks particular objects.
+(def drink-fn-for
+  {:red-potion
+     #(do
+        (mam-pr "Wow, that tasted great. Unfortunately, it also physically melted your brain and ended your life...")
+        (kill-player "Red potion")),
+   :green-potion
+     #(do
+        (mam-pr "You drink the potion and instantly start to feel strange. Without warning, a large hook protrudes from your left arm! Luckily, you feel no pain.")
+        (add-milestone! :drinks-green-potion)),
+   :brown-potion
+     #(mam-pr "Hmm... That was clearly a vile of human shit. And you just drank it! DUDE!")})
+
 ; Functions to execute when player pulls particular objects.
 (def pull-fn-for
   {:control-lever
@@ -236,14 +249,17 @@
     (make-dets {:game "There is a red potion here"
                 :inspect "It looks a bit like diluted blood"
                 :inv "Red potion"
+                :events {:drink (drink-fn-for :red-potion)}
                 :weight 1}),
     (make-dets {:game "There is a green potion here"
                 :inspect "It smells weird and is foaming"
                 :inv "Green potion"
+                :events {:drink (drink-fn-for :green-potion)}
                 :weight 1}),
     (make-dets {:game "There is a brown potion here"
                 :inspect "It seems to be bubbling!"
                 :inv "Brown potion"
+                :events {:drink (drink-fn-for :brown-potion)}
                 :weight 1})))
 
 (def *total-weight* 12)
