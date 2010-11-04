@@ -6,7 +6,7 @@
 (in-ns 'mam.gameplay)
 (declare set-current-room! current-room in-inventory? mam-pr can-afford?
          hit-milestone? add-milestone! credits take-object-from-room!
-         drop-object-in-room!)
+         drop-object-in-room! kill-player)
 
 (ns mam.rooms
   (:use mam.gameplay))

@@ -10,7 +10,7 @@
          display-inventory drop-object! inspect-object parse-input
          describe-room room-has-object?  eat-object! fuck-object
          talk-to-object save-game! load-game! give-object! put-object!
-         mam-pr pull-object deduce-object)
+         mam-pr pull-object deduce-object drink-object!)
 
 (ns mam.commands
   (:use mam.gameplay)
