@@ -46,20 +46,28 @@
       "Repairs deck. Door to the east and passage south.")
     '("You are in a large room with space age decor. It seems to be the central living quarters. The walls are lined with pictures of the late comedian, Bill Hicks. There are walkways to the west and northwest and a door to the south."
       "Central living quarters, walkways to west and northwest, door to south.")
-     '("You can see some more framed pictures of Bill Hicks here. As you walk past them, Bills eyes seem to follow you. The passage goes west or east."
-       "Passage with more creepy Bill Hicks pictures. Passage leads east/west.")
-     '("You are at the west-end of the room. Here you can see sealed entrance and a sign saying 'Exit pod'."
-       "West-end of large room with exit pod.")
-     '("You are at the front of the large room. There is a huge glass-like window here and you can see now that you are, infact, travelling through space! There are passages going back southeast and southwest."
-       "Front of large room with huge glass-like window. Passages southeast/southwest.")
-     '("You are in a dark alley and there is rubbish lying around everywhere. There are solid walls behind you and to either side. The alley leads south."
-       "Dead-end of alley. Passage leads south.")
-     '("You are standing at the entrance of an obscure-looking shop. There are cryptic characters on the sign. You can go in or head back to the west."
-       "Entrance to obscure shop. Dead-end.")
-     '("You are faced with two paths - one to the east and one going south. Both are slimy and wet."
-       "Alley way. Paths to south/north and also to the east")
-     '("The shop has no attendant. You can see a bunch of empty bottles, odd trinkets and another Bill Hicks portrait."
-       "Unattended shop with crap lying around.")))
+    '("You can see some more framed pictures of Bill Hicks here. As you walk past them, Bills eyes seem to follow you. The passage goes west or east."
+      "Passage with more creepy Bill Hicks pictures. Passage leads east/west.")
+    '("You are at the west-end of the room. Here you can see sealed entrance and a sign saying 'Exit pod'."
+      "West-end of large room with exit pod.")
+    '("You are at the front of the large room. There is a huge glass-like window here and you can see now that you are, infact, travelling through space! There are passages going back southeast and southwest."
+      "Front of large room with huge glass-like window. Passages southeast/southwest.")
+    '("You are in a dark alley and there is rubbish lying around everywhere. There are solid walls behind you and to either side. The alley leads south."
+      "Dead-end of alley. Passage leads south.")
+    '("You are standing at the entrance of an obscure-looking shop. There are cryptic characters on the sign. You can go in or head back to the west."
+      "Entrance to obscure shop. Dead-end.")
+    '("You are faced with two paths - one to the east and one going south. Both are slimy and wet."
+      "Alley way. Paths to south/north and also to the east")
+    '("The shop has no attendant. You can see a bunch of empty bottles, odd trinkets and another Bill Hicks portrait."
+      "Unattended shop with crap lying around.")
+    '("You are standing at the entrance of a grimy looking liquor store."
+      "Grimy liquor store entrance. Passage goes south.")
+    '("The shop is in disarray and is pretty much empty, although there are some things lying around."
+      "Bottle shop with attendant.")
+    '("You are at another corner. There are paths running both east and west, or back to the north."
+      "Bottom of alley, passages to east/west or back north.")
+    '("You are at the end of the alley way, but there is a giant spider web (must be some Jupiterian species) blocking the way!."
+      "End of alley, giant spider web blocking the way out.")))
 
 ; Map to specify which rooms the player will enter on the given movement.
 ; A function indicates that something special needs to be done (check conditions, etc).
@@ -81,10 +89,11 @@
     [nil      nil      14       nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;12
     [nil      nil      nil      14       nil      nil      nil      nil      nil      nil      15       nil]   ;13
     [12       13       17       nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;14
-    [nil      nil      nil      17       nil      nil      nil      nil      nil      nil      16       nil]   ;15
-    [nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      15]    ;16
-    [14       15       nil      nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;17
-    [nil      17       nil      nil      nil      nil      nil      nil      nil      nil      nil      nil])) ;18
+    [nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      13]    ;15
+    [nil      nil      nil      18       nil      nil      nil      nil      nil      nil      17       nil]   ;16
+    [nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      16]    ;17
+    [14       16       nil      19       nil      nil      nil      nil      nil      nil      nil      nil]   ;18
+    [nil      18       nil      nil      nil      nil      nil      nil      nil      nil      nil      nil])) ;19
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
