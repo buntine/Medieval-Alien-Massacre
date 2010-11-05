@@ -65,7 +65,7 @@
 ; A function indicates that something special needs to be done (check conditions, etc).
 (def world-map
   (vector
-;    north    east     south    west     ntheast  stheast  sthwest  nthwest  up       down     in       out
+;    north    east     south    west     ntheast  stheast  sthwest  nthwest  up       down     in       out    room
     [3        2        nil      nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;0
     [4        nil      nil      2        nil      nil      nil      nil      nil      nil      nil      nil]   ;1
     [nil      1        nil      0        nil      nil      nil      nil      nil      nil      nil      nil]   ;2
@@ -80,8 +80,11 @@
     [nil      nil      nil      nil      nil      8        10       nil      nil      nil      nil      nil]   ;11
     [nil      nil      14       nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;12
     [nil      nil      nil      14       nil      nil      nil      nil      nil      nil      15       nil]   ;13
-    [12       13       nil      nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;14
-    [nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      13]))  ;15
+    [12       13       17       nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;14
+    [nil      nil      nil      17       nil      nil      nil      nil      nil      nil      16       nil]   ;15
+    [nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      15]    ;16
+    [14       15       nil      nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;17
+    [nil      17       nil      nil      nil      nil      nil      nil      nil      nil      nil      nil])) ;18
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
