@@ -58,7 +58,7 @@
       "Entrance to obscure shop. Dead-end.")
     '("You are faced with two paths - one to the east and one going south. Both are slimy and wet."
       "Alley way. Paths to south/north and also to the east")
-    '("The shop has no attendant. You can see a bunch of empty bottles, odd trinkets and another Bill Hicks portrait."
+    '("The shop has no attendant. You can see a bunch of empty viles, odd trinkets and another Bill Hicks portrait."
       "Unattended shop with crap lying around.")
     '("You are standing at the entrance of a grimy looking liquor store."
       "Grimy liquor store entrance. Passage goes south.")
@@ -66,7 +66,7 @@
       "Bottle shop with attendant.")
     '("You are at another corner. There are paths running both east and west, or back to the north."
       "Bottom of alley, passages to east/west or back north.")
-    '("You are at the end of the alley way, but there is a giant spider web (must be some Jupiterian species) blocking the way!."
+    '("You are at the end of the alley way, but there is a giant spider web (must be some Jupiterian species) blocking the way out!."
       "End of alley, giant spider web blocking the way out.")))
 
 ; Map to specify which rooms the player will enter on the given movement.
@@ -106,28 +106,33 @@
 (def object-identifiers
     {'candy 0 'bar 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3 'boy 7
      'teenager 7 'keycard #{4 5 6} 'key #{4 5 6} 'man #{8 9} 'robot 10
-     'green #{4 13} 'red #{5 12} 'brown 14 'silver 6 'bum 11 'potion #{12 13 14}})
+     'green #{4 13} 'red #{5 12} 'brown 14 'silver 6 'bum 11 'potion #{12 13 14}
+     'credits 18 'attendant 15 'woman 15 'salvika 16 'whisky 16 'becherovka 17})
 
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
 (def room-objects
   (ref (vector
-         [0 1]
-         []
-         [2]
-         []
-         []
-         []
-         []
-         [7]
-         []
-         []
-         [8]
-         [9 10]
-         [11]
-         []
-         []
-         [12 13 14])))
+         [0 1]        ;0
+         []           ;1
+         [2]          ;2
+         []           ;3
+         []           ;4
+         []           ;5
+         []           ;6
+         [7]          ;7
+         []           ;8
+         []           ;9
+         [8]          ;10
+         [9 10]       ;11
+         [11]         ;12
+         []           ;13
+         []           ;14
+         [12 13 14]   ;15
+         [18]         ;16
+         [15 16 17]   ;17
+         []           ;18
+         [18])))      ;19
 
 ; Some living objects have special speech considerations, such as checking conditions.
 ; Here I keep a bunch of functions that are assigned to the relevent objects in object-details.
@@ -194,14 +199,15 @@
 
 (defn make-dets [details]
   "A helper function to merge in some sane defaults for object details"
-  (let [defaults {:inv nil, :weight nil, :edible false, :permanent false, :living false
-                  :events {}}]
+  (let [defaults {:game nil, :inv nil, :weight nil, :edible false, :permanent false,
+                  :living false, :events {}, :credits false}]
     (merge defaults details)))
 
 ; The details of all objects. Each object is assigned a number in object-identifiers, which
 ; corresponds to it's index here. Permanent object cannot be taken and thus don't require
 ; weights or inventory descriptions. Humans/Aliens can talk, the :speech symbol should contain
-; their response (this can be a function, for checking conditions, etc).
+; their response (this can be a function, for checking conditions, etc). Events, such as :eat,
+; :give and :put can be assigned and will be executed in the correct contexts.
 (def object-details
   (vector
     (make-dets {:game "There is a tasty-looking candy bar here"
@@ -272,6 +278,27 @@
                 :inspect "It seems to be bubbling!"
                 :inv "Brown potion"
                 :events {:drink (drink-fn-for :brown-potion)}
-                :weight 1})))
+                :weight 1}),
+    (make-dets {:game "There is a shop attendant (a woman) here"
+                :inspect "She is wearing an old cooking pot as a hat. It looks rather dumb."
+                :permanent true
+                :living true
+                :events {:speak (speech-fn-for :liquor-store-woman)}}),
+    (make-dets {:game "There is a bottle of 'Salvika' whisky here"
+                :inspect "Looks OK. The price tag says 3 credits."
+                :inv "Bottle of Salvika whisky"
+                :events {:drink (drink-fn-for :salvika-whisky)
+                         :take (take-fn-for :salvika-whisky)}
+                :weight 2}),
+    (make-dets {:game "There is a bottle of Becherovka (a Czech Liquer) here"
+                :inspect "Looks great. The price tag says 4 credits."
+                :inv "Bottle of Becherovka"
+                :events {:drink (drink-fn-for :becherovka)
+                         :take (take-fn-for :becherovka)}
+                :weight 2}),
+    (make-dets {:game "There is 5 credits here!"
+                :inspect "Some dumbass must have dropped it."
+                :credits true})))
+
 
 (def *total-weight* 12)

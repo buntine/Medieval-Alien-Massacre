@@ -71,8 +71,10 @@
 
 (defn describe-object ([objnum] (describe-object objnum :game))
   ([objnum context]
-    "Returns the string which describes the given object"
-    (str ((object-details objnum) context))))
+    "Returns the string which describes the given object, or nil"
+    (let [info ((object-details objnum) context)]
+      (if info
+        (str info)))))
 
 (defn object-is? [objnum k]
   "Returns true is the object adheres to the given keyword"
@@ -229,10 +231,10 @@
 
 (defn describe-objects-for-room [room]
   "Prints a description for each object that's in the given room"
-  (let [objs (@room-objects room)
-        descs (map describe-object objs)]
+  (let [objs (@room-objects room)]
     (if (not (empty? objs))
-      (print-with-newlines descs))))
+      (print-with-newlines
+        (remove nil? (map describe-object objs))))))
 
 (defn describe-room ([room] (describe-room room false))
   ([room verbose?]
