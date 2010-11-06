@@ -6,7 +6,7 @@
 (in-ns 'mam.gameplay)
 (declare set-current-room! current-room in-inventory? mam-pr can-afford?
          hit-milestone? add-milestone! credits take-object-from-room!
-         drop-object-in-room! kill-player)
+         drop-object-in-room! kill-player credits)
 
 (ns mam.rooms
   (:use mam.gameplay))
@@ -197,6 +197,26 @@
         (drop-object-in-room! @current-room 3)
         (set-current-room! 0))})
 
+; Functions to execute when player takes particular objects.
+(def take-fn-for
+  {:salvika-whisky
+     #(if (can-afford? 3)
+        (dosync
+          (alter credits - 3)
+          true)
+        (do
+          (mam-pr "You try to take the whisky without paying, but the attendant swiftly thrusts a rusted knife into your jugular.")
+          (kill-player "Rusty knife to the throat"))),
+    :becherovka
+      #(if (can-afford? 4)
+        (dosync
+          (alter credits - 4)
+          true)
+        (do
+          (mam-pr "You try to take the whisky without paying, but the attendant displays a vile of acid and forcfully pours it into your eyeballs.")
+          (kill-player "Acid to the brain"))),
+ 
+
 (defn make-dets [details]
   "A helper function to merge in some sane defaults for object details"
   (let [defaults {:game nil, :inv nil, :weight 0, :edible false, :permanent false,
@@ -205,9 +225,8 @@
 
 ; The details of all objects. Each object is assigned a number in object-identifiers, which
 ; corresponds to it's index here. Permanent object cannot be taken and thus don't require
-; weights or inventory descriptions. Humans/Aliens can talk, the :speech symbol should contain
-; their response (this can be a function, for checking conditions, etc). Events, such as :eat,
-; :give and :put can be assigned and will be executed in the correct contexts.
+; weights or inventory descriptions. Events, such as :eat, :speak, :give and :put can be
+; assigned and will be executed in the correct contexts.
 (def object-details
   (vector
     (make-dets {:game "There is a tasty-looking candy bar here"
@@ -283,22 +302,21 @@
                 :inspect "She is wearing an old cooking pot as a hat. It looks rather dumb."
                 :permanent true
                 :living true
-                :events {:speak (speech-fn-for :liquor-store-woman)}}),
+                :events {:speak "She says 'Welcome, stranger. We don't get many customers these days. Anyway, the whisky is 3 credits and the Becharovka is 4 credits'. She also mentions that theft is punishable by a swift death."}}),
     (make-dets {:game "There is a bottle of 'Salvika' whisky here"
                 :inspect "Looks OK. The price tag says 3 credits."
                 :inv "Bottle of Salvika whisky"
-                :events {:drink (drink-fn-for :salvika-whisky)
+                :events {:drink "* hiccup! *"
                          :take (take-fn-for :salvika-whisky)}
                 :weight 2}),
     (make-dets {:game "There is a bottle of Becherovka (a Czech Liquer) here"
                 :inspect "Looks great. The price tag says 4 credits."
                 :inv "Bottle of Becherovka"
-                :events {:drink (drink-fn-for :becherovka)
+                :events {:drink "Wow, that was strong!"
                          :take (take-fn-for :becherovka)}
                 :weight 2}),
     (make-dets {:game "There is 5 credits here!"
                 :inspect "Some dumbass must have dropped it."
                 :credits 5})))
-
 
 (def *total-weight* 12)

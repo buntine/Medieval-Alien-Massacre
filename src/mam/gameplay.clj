@@ -187,22 +187,22 @@
 
 (defn eat-object! [objnum]
   "Attempts to eat the given object"
-  (let [eat-fn (event-for objnum :eat)]
-    (if (nil? eat-fn)
+  (let [evt (event-for objnum :eat)]
+    (if (nil? evt)
       (do
         (mam-pr (str "You force it into your throat and fucking die in pain."))
         (kill-player ((object-details objnum) :inv)))
       (dosync
-        (eat-fn)
+        ((if (string? evt) mam-pr apply) evt)
         (remove-object-from-inventory! objnum)))))
 
 (defn drink-object! [objnum]
   "Attempts to drink the given object"
-  (let [drink-fn (event-for objnum :drink)]
-    (if (nil? drink-fn)
+  (let [evt (event-for objnum :drink)]
+    (if (nil? evt)
       (mam-pr (str "It doesn't seem to be drinkable."))
       (dosync
-        (drink-fn)
+        ((if (string? evt) mam-pr apply) evt)
         (remove-object-from-inventory! objnum)))))
 
 (defn talk-to-object [objnum]
