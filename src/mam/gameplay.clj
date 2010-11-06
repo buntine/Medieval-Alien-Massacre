@@ -69,6 +69,10 @@
   (mam-pr (str "You were killed by: " reason))
   (cmd-quit false))
 
+(defn event-for [objnum evt]
+  "Returns either the value (usually a fn) assigned to the given event, or nil"
+  (((object-details objnum) :events) evt))
+
 (defn describe-object ([objnum] (describe-object objnum :game))
   ([objnum context]
     "Returns the string which describes the given object, or nil"
@@ -109,32 +113,36 @@
   (ref-set inventory (vec (remove #(= % objnum) @inventory))))
  
 (defn take-object! [objnum]
-  "Attempts to take an object from the current room"
+  "Attempts to take an object from the current room. If the object
+   has an event for :take, then it must return a boolean - if true,
+   the object will be taken"
   (cond
     (object-is? objnum :permanent)
       (mam-pr "You can't take that.")
     (> (+ (inventory-weight) (obj-weight objnum)) *total-weight*)
       (mam-pr "You cannot carry that much weight.")
     :else
-      (dosync
-        (let [c ((object-details objnum) :credits)]
-          ; If we are taking credits, just add them to the players wallet.
-          (if (integer? c)
-            (alter credits + c)
-            (alter inventory conj objnum)
-          (take-object-from-room! @current-room objnum)
-          (mam-pr "Taken..."))))))
+      (let [evt (event-for objnum :take)]
+        (if (or (nil? evt) (apply evt))
+          (dosync
+            (let [c ((object-details objnum) :credits)]
+              ; If we are taking credits, just add them to the players wallet.
+              (if (integer? c)
+                (alter credits + c)
+              (alter inventory conj objnum)
+            (take-object-from-room! @current-room objnum)
+            (mam-pr "Taken..."))))))))
 
 (defn drop-object! [objnum]
-  "Attempts to drop an object into the current room"
-  (dosync
-    (remove-object-from-inventory! objnum)
-    (drop-object-in-room! @current-room objnum)
-    (mam-pr "Dropped...")))
-
-(defn event-for [objnum evt]
-  "Returns either the value (usually a fn) assigned to the given event, or nil"
-  (((object-details objnum) :events) evt))
+  "Attempts to drop an object into the current room If the object
+   has an event for :drop, then it must return a boolean - if true,
+   the object will be dropped"
+  (let [evt (event-for objnum :drop)]
+    (if (or (nil? evt) (apply evt))
+      (dosync
+        (remove-object-from-inventory! objnum)
+        (drop-object-in-room! @current-room objnum)
+        (mam-pr "Dropped...")))))
 
 (letfn
   [(give-or-put [evt objx objy err-msg]
