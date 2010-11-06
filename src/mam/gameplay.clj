@@ -129,9 +129,9 @@
               ; If we are taking credits, just add them to the players wallet.
               (if (integer? c)
                 (alter credits + c)
-              (alter inventory conj objnum)
+                (alter inventory conj objnum))
             (take-object-from-room! @current-room objnum)
-            (mam-pr "Taken..."))))))))
+            (mam-pr "Taken...")))))))
 
 (defn drop-object! [objnum]
   "Attempts to drop an object into the current room If the object

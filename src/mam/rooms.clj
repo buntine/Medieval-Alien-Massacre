@@ -214,7 +214,7 @@
           true)
         (do
           (mam-pr "You try to take the whisky without paying, but the attendant displays a vile of acid and forcfully pours it into your eyeballs.")
-          (kill-player "Acid to the brain"))),
+          (kill-player "Acid to the brain")))})
  
 
 (defn make-dets [details]
