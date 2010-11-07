@@ -88,7 +88,7 @@
     [nil      nil      nil      nil      nil      8        10       nil      nil      nil      nil      nil]   ;11
     [nil      nil      14       nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;12
     [nil      nil      nil      14       nil      nil      nil      nil      nil      nil      15       nil]   ;13
-    [12       13       17       nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;14
+    [12       13       18       nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;14
     [nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      13]    ;15
     [nil      nil      nil      18       nil      nil      nil      nil      nil      nil      17       nil]   ;16
     [nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      16]    ;17
@@ -132,7 +132,7 @@
          [18]         ;16
          [15 16 17]   ;17
          []           ;18
-         [18])))      ;19
+         [])))        ;19
 
 ; Some living objects have special speech considerations, such as checking conditions.
 ; Here I keep a bunch of functions that are assigned to the relevent objects in object-details.
@@ -144,9 +144,10 @@
         (not (hit-milestone? :speak-to-captain))
           (mam-pr "The man says 'Hey matey, I can get your sorry ass off here, but I suggest you speak to the captain over there to our northeast first'.")
         :else
-          (do
+          (dosync
             (mam-pr "The man says 'Oky doke, matey, lets get your punk ass outta' here. I hope Syndal City on Jupiter 4 is alright'.")
             (mam-pr "\n... flying to Syndal City ..." 300)
+            (alter credits - 3)
             (set-current-room! 12))),
    :repairs-captain
      #(if (hit-milestone? :speak-to-captain)
@@ -302,7 +303,7 @@
                 :inspect "She is wearing an old cooking pot as a hat. It looks rather dumb."
                 :permanent true
                 :living true
-                :events {:speak "She says 'Welcome, stranger. We don't get many customers these days. Anyway, the whisky is 3 credits and the Becharovka is 4 credits'. She also mentions that theft is punishable by a swift death."}}),
+                :events {:speak "She says 'Welcome, stranger. We don't get many customers these days. Anyway, the whisky is 3 credits and the Becharovka is 4 credits. Just take what you like.'. She also mentions that theft is punishable by a swift death."}}),
     (make-dets {:game "There is a bottle of 'Salvika' whisky here"
                 :inspect "Looks OK. The price tag says 3 credits."
                 :inv "Bottle of Salvika whisky"

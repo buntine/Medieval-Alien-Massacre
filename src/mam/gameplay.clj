@@ -123,7 +123,7 @@
       (mam-pr "You cannot carry that much weight.")
     :else
       (let [evt (event-for objnum :take)]
-        (if (or (nil? evt) (apply evt))
+        (if (or (nil? evt) (evt))
           (dosync
             (let [c ((object-details objnum) :credits)]
               ; If we are taking credits, just add them to the players wallet.
@@ -138,7 +138,7 @@
    has an event for :drop, then it must return a boolean - if true,
    the object will be dropped"
   (let [evt (event-for objnum :drop)]
-    (if (or (nil? evt) (apply evt))
+    (if (or (nil? evt) (evt))
       (dosync
         (remove-object-from-inventory! objnum)
         (drop-object-in-room! @current-room objnum)
@@ -193,7 +193,7 @@
         (mam-pr (str "You force it into your throat and fucking die in pain."))
         (kill-player ((object-details objnum) :inv)))
       (dosync
-        ((if (string? evt) mam-pr apply) evt)
+        (if (string? evt) (mam-pr evt) (evt))
         (remove-object-from-inventory! objnum)))))
 
 (defn drink-object! [objnum]
@@ -202,7 +202,7 @@
     (if (nil? evt)
       (mam-pr (str "It doesn't seem to be drinkable."))
       (dosync
-        ((if (string? evt) mam-pr apply) evt)
+        (if (string? evt) (mam-pr evt) (evt))
         (remove-object-from-inventory! objnum)))))
 
 (defn talk-to-object [objnum]
