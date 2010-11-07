@@ -6,7 +6,7 @@
 (in-ns 'mam.gameplay)
 (declare set-current-room! current-room in-inventory? mam-pr can-afford?
          hit-milestone? add-milestone! credits take-object-from-room!
-         drop-object-in-room! kill-player credits)
+         drop-object-in-room! kill-player credits inventory)
 
 (ns mam.rooms
   (:use mam.gameplay))
@@ -100,14 +100,15 @@
                  'in 10 'out 11})
 
 ; Specifies the verbs that users can identify an object with (a gun might
-; be "gun", "weapon", etc). Permanent objects (people, beds, etc) may be identified
-; by the same word depending on the room (in room 1, "bed" means object 2, but in
-; room 42, it means object 8). Each index corresponds to the same index in room-objects.
+; be "gun", "weapon", etc). A set means that the given term may refer to
+; multiple objects. The system will try to deduce the correct object when
+; a command is entered. Each index corresponds to the same index in room-objects.
 (def object-identifiers
     {'candy 0 'bar 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3 'boy 7
      'teenager 7 'keycard #{4 5 6} 'key #{4 5 6} 'man #{8 9} 'robot 10
      'green #{4 13} 'red #{5 12} 'brown 14 'silver 6 'bum 11 'potion #{12 13 14}
-     'credits 18 'attendant 15 'woman 15 'salvika 16 'whisky 16 'becherovka 17})
+     'credits 18 'attendant 15 'woman 15 'salvika 16 'whisky 16 'becherovka 17
+     'web 20 'knife 19 'small 19})
 
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
@@ -132,7 +133,7 @@
          [18]         ;16
          [15 16 17]   ;17
          []           ;18
-         [])))        ;19
+         [20])))      ;19
 
 ; Some living objects have special speech considerations, such as checking conditions.
 ; Here I keep a bunch of functions that are assigned to the relevent objects in object-details.
@@ -167,7 +168,21 @@
      #(dosync
         (mam-pr "The teenagers eyes explode!! He quickly accepts the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room.")
         (take-object-from-room! @current-room 7)
-        (drop-object-in-room! @current-room 4))})
+        (drop-object-in-room! @current-room 4)),
+   :whisky-to-bum
+     #(if (not (hit-milestone? :alcohol-to-bum))
+        (dosync
+          (mam-pr "The old bum accepts the whisky and says 'Wow!! Thank you, cobba! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife.")
+          (alter inventory conj 19)
+          (add-milestone! :alcohol-to-bum))
+        (mam-pr "He accepts the alcohol, but just grumbles something about Common Lisp in response")),
+   :becherovka-to-bum
+     #(if (not (hit-milestone? :alcohol-to-bum))
+        (dosync
+          (mam-pr "The old bum accepts the whisky and says 'Holy fuck, Becherovka! My favourite! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife.")
+          (alter inventory conj 19)
+          (add-milestone! :alcohol-to-bum))
+        (mam-pr "He accepts the alcohol, but just grumbles something about Emacs Lisp in response"))})
 
 ; Functions to execute when player eats particular objects.
 (def eat-fn-for
@@ -281,7 +296,9 @@
                 :living true}),
     (make-dets {:game "There is a dirty, old homeless bum here"
                 :inspect "He smells like alcohol and blue cheese"
-                :events {:speak (speech-fn-for :homeless-bum)}
+                :events {:speak (speech-fn-for :homeless-bum)
+                         :give {16 (give-fn-for :whisky-to-bum)
+                                17 (give-fn-for :becherovka-to-bum)}}
                 :permanent true
                 :living true}),
     (make-dets {:game "There is a red potion here"
@@ -318,6 +335,12 @@
                 :weight 2}),
     (make-dets {:game "There is 5 credits here!"
                 :inspect "Some dumbass must have dropped it."
-                :credits 5})))
+                :credits 5}),
+    (make-dets {:game "There is a small knife here"
+                :inspect "It looks old and will probably only work once or twice..."
+                :inv "Small knife"
+                :weight 2}),
+    (make-dets {:inspect "It's tough. You'll need to find something sharp to cut through it."
+                :permanent true})))
 
 (def *total-weight* 12)
