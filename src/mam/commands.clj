@@ -3,7 +3,7 @@
 ; Defines functions for handling user commands. Lots of dispatch
 ; to mam.gameplay going on here...
 
-; I need this to allow 'mutual' interation between this namespace and
+; I need this to allow 'mutual' interaction between this namespace and
 ; mam.gameplay. There must be a better way of doing this!
 (in-ns 'mam.gameplay)
 (declare set-current-room! current-room take-object! inventory

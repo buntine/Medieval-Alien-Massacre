@@ -82,25 +82,25 @@
 ; A function indicates that something special needs to be done (check conditions, etc).
 (def world-map
   (vector
-;    north    east     south    west     ntheast  stheast  sthwest  nthwest  up       down     in       out    room
-    [3        2        nil      nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;0
-    [4        nil      nil      2        nil      nil      nil      nil      nil      nil      nil      nil]   ;1
-    [nil      1        nil      0        nil      nil      nil      nil      nil      nil      nil      nil]   ;2
-    [nil      5        0        nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;3
-    [6        nil      1        7        nil      nil      nil      nil      nil      nil      nil      nil]   ;4
-    [nil      7        nil      3        nil      nil      nil      nil      nil      nil      nil      nil]   ;5
-    [(k 4 8)  nil      4        nil      nil      nil      nil      nil      nil      nil      (k 4 8)  nil]   ;6
-    [nil      4        nil      5        nil      nil      nil      nil      nil      nil      nil      nil]   ;7
-    [nil      nil      6        9        nil      nil      nil      11       nil      nil      nil      nil]   ;8
-    [nil      8        nil      10       nil      nil      nil      nil      nil      nil      nil      nil]   ;9
-    [nil      9        nil      nil      11       nil      nil      nil      nil      nil      nil      nil]   ;10
-    [nil      nil      nil      nil      nil      8        10       nil      nil      nil      nil      nil]   ;11
-    [nil      nil      14       nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;12
-    [nil      nil      nil      14       nil      nil      nil      nil      nil      nil      15       nil]   ;13
-    [12       13       18       nil      nil      nil      nil      nil      nil      nil      nil      nil]   ;14
-    [nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      13]    ;15
-    [nil      nil      nil      18       nil      nil      nil      nil      nil      nil      17       nil]   ;16
-    [nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      16]    ;17
+;    north     east      south     west      ntheast   stheast   sthwest   nthwest   up        down      in        out
+    [3         2         nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;0
+    [4         nil       nil       2         nil       nil       nil       nil       nil       nil       nil       nil]   ;1
+    [nil       1         nil       0         nil       nil       nil       nil       nil       nil       nil       nil]   ;2
+    [nil       5         0         nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;3
+    [6         nil       1         7         nil       nil       nil       nil       nil       nil       nil       nil]   ;4
+    [nil       7         nil       3         nil       nil       nil       nil       nil       nil       nil       nil]   ;5
+    [(k 4 8)   nil       4         nil       nil       nil       nil       nil       nil       nil       (k 4 8)   nil]   ;6
+    [nil       4         nil       5         nil       nil       nil       nil       nil       nil       nil       nil]   ;7
+    [nil       nil       6         9         nil       nil       nil       11        nil       nil       nil       nil]   ;8
+    [nil       8         nil       10        nil       nil       nil       nil       nil       nil       nil       nil]   ;9
+    [nil       9         nil       nil       11        nil       nil       nil       nil       nil       nil       nil]   ;10
+    [nil       nil       nil       nil       nil       8         10        nil       nil       nil       nil       nil]   ;11
+    [nil       nil       14        nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;12
+    [nil       nil       nil       14        nil       nil       nil       nil       nil       nil       15        nil]   ;13
+    [12        13        18        nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;14
+    [nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       13]    ;15
+    [nil       nil       nil       18        nil       nil       nil       nil       nil       nil       17        nil]   ;16
+    [nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       16]    ;17
     [14        16        nil       19        nil       nil       nil       nil       nil       nil       nil       nil]   ;18
     [nil       18        nil       (o 20 20) nil       nil       nil       nil       nil       nil       nil       nil])) ;19
 
