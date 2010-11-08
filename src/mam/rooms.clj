@@ -57,7 +57,9 @@
     '("You are at another corner. There are paths running both east and west, or back to the north."
       "Bottom of alley, passages to east/west or back north.")
     '("You are at the end of the alley way, but there is a giant spider web (must be some Jupiterian species) blocking the way out!."
-      "End of alley, giant spider web blocking the way out.")))
+      "End of alley, giant spider web blocking the way out.")
+    '("You are on a road. It doesn't seem to be used anymore, though. It runs both north and south."
+      "Road with no vehicles, running north/south.")))
 
 (defn k [keynum room]
   "Returns a function that checks if the player has the given key. If they
@@ -76,7 +78,6 @@
     (if (room-has-object? @current-room objnum)
       (mam-pr "You can't go that way."
       (set-current-room! room)))))
-
 
 ; Map to specify which rooms the player will enter on the given movement.
 ; A function indicates that something special needs to be done (check conditions, etc).
@@ -102,7 +103,8 @@
     [nil       nil       nil       18        nil       nil       nil       nil       nil       nil       17        nil]   ;16
     [nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       16]    ;17
     [14        16        nil       19        nil       nil       nil       nil       nil       nil       nil       nil]   ;18
-    [nil       18        nil       (o 20 20) nil       nil       nil       nil       nil       nil       nil       nil])) ;19
+    [nil       18        nil       (o 20 20) nil       nil       nil       nil       nil       nil       nil       nil]   ;19
+    [nil       19        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;20
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
