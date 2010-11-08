@@ -104,7 +104,7 @@
     [nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       16]    ;17
     [14        16        nil       19        nil       nil       nil       nil       nil       nil       nil       nil]   ;18
     [nil       18        nil       (o 20 20) nil       nil       nil       nil       nil       nil       nil       nil]   ;19
-    [nil       19        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;20
+    [nil       19        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil])) ;20
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9

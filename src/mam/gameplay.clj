@@ -294,19 +294,10 @@
         (key (first matches))
         (keys matches)))))
 
-(defn add-or-inc [m k]
-  "Either increments a keys value in m or create a key/value pair for it"
-  (let [new-val (or (m k) 0)]
-    (merge m {k (+ 1 new-val)})))
-
-(defn most-popular ([objnums] (most-popular objnums {}))
-  ([objnums obj-counts]
+(defn most-popular [objnums]
    "Given a list of object numbers, returns the one that occurs the most"
-   (if (empty? objnums)
-     (highest-val obj-counts)
-     (recur (rest objnums)
-            (add-or-inc obj-counts (first objnums))))))
-    
+  (highest-val (frequencies objnums)))
+
 (defn deduce-object ([verbs context] (deduce-object verbs '() context))
   ([verbs realised context]
    "Attempts to realise a single object given a sequence of verbs and
