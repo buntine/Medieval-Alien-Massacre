@@ -6,23 +6,13 @@
 (in-ns 'mam.gameplay)
 (declare set-current-room! current-room in-inventory? mam-pr can-afford?
          hit-milestone? add-milestone! credits take-object-from-room!
-         drop-object-in-room! kill-player credits inventory)
+         drop-object-in-room! room-has-object? kill-player credits inventory)
 
 (ns mam.rooms
   (:use mam.gameplay))
 
 (declare object-details)
 
-
-(defn k [keynum room]
-  "Returns a function that checks if the player has the given key. If they
-   do, set the current room to 'room'. Otherwise, let them know"
-  (fn []
-    (if (in-inventory? keynum)
-      (let [key-name (. ((object-details keynum) :inv) toLowerCase)]
-        (set-current-room! room)
-        (mam-pr (str " * Door unlocked with " key-name " *")))
-      (mam-pr "You don't have security clearance for this door!"))))
 
 ; A vector of rooms. Each index contains both a large description (first visit) and a brief
 ; description (all subsequent visits).
@@ -69,6 +59,25 @@
     '("You are at the end of the alley way, but there is a giant spider web (must be some Jupiterian species) blocking the way out!."
       "End of alley, giant spider web blocking the way out.")))
 
+(defn k [keynum room]
+  "Returns a function that checks if the player has the given key. If they
+   do, set the current room to 'room'. Otherwise, let them know"
+  (fn []
+    (if (in-inventory? keynum)
+      (let [key-name (. ((object-details keynum) :inv) toLowerCase)]
+        (set-current-room! room)
+        (mam-pr (str " * Door unlocked with " key-name " *")))
+      (mam-pr "You don't have security clearance for this door!"))))
+
+(defn o [objnum room]
+  "Returns a function that checks if the given room houses the given object. If
+   it does, the player cannot go in the given direction."
+  (fn []
+    (if (room-has-object? @current-room objnum)
+      (mam-pr "You can't go that way."
+      (set-current-room! room)))))
+
+
 ; Map to specify which rooms the player will enter on the given movement.
 ; A function indicates that something special needs to be done (check conditions, etc).
 (def world-map
@@ -92,8 +101,8 @@
     [nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      13]    ;15
     [nil      nil      nil      18       nil      nil      nil      nil      nil      nil      17       nil]   ;16
     [nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      nil      16]    ;17
-    [14       16       nil      19       nil      nil      nil      nil      nil      nil      nil      nil]   ;18
-    [nil      18       nil      nil      nil      nil      nil      nil      nil      nil      nil      nil])) ;19
+    [14        16        nil       19        nil       nil       nil       nil       nil       nil       nil       nil]   ;18
+    [nil       18        nil       (o 20 20) nil       nil       nil       nil       nil       nil       nil       nil])) ;19
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
@@ -213,6 +222,13 @@
         (drop-object-in-room! @current-room 3)
         (set-current-room! 0))})
 
+; Functions to execute when player cuts particular objects.
+(def cut-fn-for
+  {:spider-web
+     #(dosync
+        (mam-pr "You swing violently. The web gives way and falls into small peices. You are now free to continue west.")
+        (take-object-from-room! @current-room 20))})
+ 
 ; Functions to execute when player takes particular objects.
 (def take-fn-for
   {:salvika-whisky
@@ -231,7 +247,6 @@
         (do
           (mam-pr "You try to take the whisky without paying, but the attendant displays a vile of acid and forcfully pours it into your eyeballs.")
           (kill-player "Acid to the brain")))})
- 
 
 (defn make-dets [details]
   "A helper function to merge in some sane defaults for object details"
@@ -339,8 +354,10 @@
     (make-dets {:game "There is a small knife here"
                 :inspect "It looks old and will probably only work once or twice..."
                 :inv "Small knife"
+                :cutter true
                 :weight 2}),
     (make-dets {:inspect "It's tough. You'll need to find something sharp to cut through it."
+                :events {:cut (cut-fn-for :spider-web)}
                 :permanent true})))
 
 (def *total-weight* 12)

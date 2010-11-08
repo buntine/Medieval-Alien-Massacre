@@ -10,7 +10,7 @@
          display-inventory drop-object! inspect-object parse-input
          describe-room room-has-object?  eat-object! fuck-object
          talk-to-object save-game! load-game! give-object! put-object!
-         mam-pr pull-object deduce-object drink-object!)
+         mam-pr pull-object deduce-object drink-object! cut-object)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -121,6 +121,13 @@
                 "I don't see that here..."
                 inspect-object
                 :room)))
+
+  (defn cmd-cut [verbs]
+    (interact verbs
+              "You must supply an item to cut!"
+              "I don't see that here..."
+              cut-object
+              :room))
 
   (defn cmd-eat [verbs]
     (interact verbs

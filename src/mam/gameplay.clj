@@ -46,7 +46,7 @@
    'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
    'save cmd-save 'load cmd-load 'give cmd-give 'put cmd-put 'in cmd-in
    'out cmd-out 'up cmd-up 'down cmd-down 'i cmd-in 'o cmd-out 'u cmd-up
-   'd cmd-down 'drink cmd-drink})
+   'd cmd-down 'drink cmd-drink 'cut cmd-cut})
    
 (defn set-current-room! [room]
   (dosync
@@ -55,6 +55,10 @@
 (defn in-inventory? [objnum]
   "Returns true if object assigned to 'objnum' is in players inventory"
   (boolean (some #{objnum} @inventory)))
+
+(defn has-knife? []
+  "Returns true if the player has a knife-like object"
+  (some #((object-details %) :cutter) @inventory))
 
 (defn obj-weight [objnum]
   "Returns the weight assigned to the given object"
@@ -95,9 +99,10 @@
 (defn take-object-from-room! [room objnum]
   "Physically removes an object from the given room. Must be called from within
    a dosync form"
-  (alter room-objects (fn [objs]
-                        (assoc-in objs [room]
-                                  (vec (remove #(= objnum %) (objects-in-room room)))))))
+  (alter room-objects
+         (fn [objs]
+           (assoc-in objs [room]
+                     (vec (remove #(= objnum %) (objects-in-room room)))))))
 
 (defn drop-object-in-room! [room objnum]
   "Physically adds an object to the given room. Must be called from within
@@ -185,6 +190,15 @@
      (mam-pr "Hmm... I bet that felt pretty good!")))
   {:ridiculous true})
 
+(defn cut-object [objnum]
+  "Attempts to cut the given object"
+  (if (not (has-knife?))
+    (mam-pr "You need a something sharp before you can cut this!")
+    (let [evt (event-for objnum :cut)]
+      (if (nil? evt)
+        (mam-pr "Nothing seemed to happen.")
+        (if (string? evt) (mam-pr evt) (evt))))))
+
 (defn eat-object! [objnum]
   "Attempts to eat the given object"
   (let [evt (event-for objnum :eat)]
@@ -209,14 +223,10 @@
   "Attempts to talk to the given object"
   (if (not (object-is? objnum :living))
     (mam-pr (str "That item does not possess the ability to talk."))
-    (let [speech (event-for objnum :speak)]
-      (cond
-        (nil? speech)
-          (mam-pr "Sorry, they have nothing to say at the moment.")
-        (fn? speech)
-          (speech)
-        :else
-          (mam-pr speech)))))
+    (let [evt (event-for objnum :speak)]
+      (if (nil? evt)
+        (mam-pr "Sorry, they have nothing to say at the moment.")
+        (if (string? evt) (mam-pr evt) (evt))))))
 
 (defn pull-object [objnum]
   "Attempts to pull the given object (probably a lever)"
