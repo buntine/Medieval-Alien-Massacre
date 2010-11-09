@@ -294,17 +294,13 @@
         (key (first matches))
         (keys matches)))))
 
-(defn most-popular [objnums]
-   "Given a list of object numbers, returns the one that occurs the most"
-  (highest-val (frequencies objnums)))
-
 (defn deduce-object ([verbs context] (deduce-object verbs '() context))
   ([verbs realised context]
    "Attempts to realise a single object given a sequence of verbs and
     a context. This allows for the same term to identify multiple objects.
     Context must be either :room or :inventory"
    (if (empty? verbs)
-     (most-popular realised)
+     (highest-val (frequencies realised))
      (recur (rest verbs)
             (concat (prospects-for (first verbs) context) realised)
             context))))
