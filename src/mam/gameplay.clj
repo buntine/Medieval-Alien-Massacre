@@ -5,7 +5,7 @@
 
 (ns mam.gameplay
   (:use mam.commands)
-  (:use mam.rooms)
+  (:use mam.story)
   (:use mam.compression)
   (:use [clojure.contrib.string :only (split join)]))
 
@@ -27,11 +27,11 @@
    "Prints a string like the ancient terminals used to, sleeping for i ms per character"
    (if (empty? s)
      (newline)
-     (do
-       (print (first s))
+     (let [c (first s) r (rest s)]
+       (print c)
        (flush)
        (. Thread sleep i)
-       (recur (rest s) i)))))
+       (recur r i)))))
 
 ; Maps user commands to the appropriate function.
 (def cmd-verbs

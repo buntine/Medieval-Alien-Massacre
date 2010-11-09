@@ -1,14 +1,15 @@
 
-; rooms.clj
+; story.clj
 ; Defines data structures for describing rooms,
-; maps, objects and inventories.
+; maps, objects and inventories. The entire story
+; is/should be encoded here.
 
 (in-ns 'mam.gameplay)
 (declare set-current-room! current-room in-inventory? mam-pr can-afford?
          hit-milestone? add-milestone! credits take-object-from-room!
          drop-object-in-room! room-has-object? kill-player credits inventory)
 
-(ns mam.rooms
+(ns mam.story
   (:use mam.gameplay))
 
 (declare object-details)
@@ -146,8 +147,7 @@
          []           ;18
          [20])))      ;19
 
-; Some living objects have special speech considerations, such as checking conditions.
-; Here I keep a bunch of functions that are assigned to the relevent objects in object-details.
+; Functions to execute when player speaks to a given object.
 (def speech-fn-for
   {:pod-manager
      #(cond
@@ -173,7 +173,7 @@
    :homeless-bum
      #(mam-pr "He mutters 'Hey mystery man! Welcome to Syndal City, perhaps you can spare an old cyborg some whisky?'.")})
 
-; Giving a certain x to a certain y will cause special things to happen.
+; Functions to execute when player gives a particular X to a Y.
 (def give-fn-for
   {:porno-to-boy
      #(dosync

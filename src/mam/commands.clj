@@ -14,7 +14,7 @@
 
 (ns mam.commands
   (:use mam.gameplay)
-  (:use mam.rooms)
+  (:use mam.story)
   (:use [clojure.contrib.str-utils :only (str-join)]))
 
 (declare cmd-inspect)
