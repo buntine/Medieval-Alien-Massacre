@@ -215,7 +215,7 @@
         (kill-player "Red potion")),
    :green-potion
      #(do
-        (mam-pr "You drink the potion and instantly start to feel strange. Without warning, a large hook protrudes from your left arm! Luckily, you feel no pain.")
+        (mam-pr "You drink the potion and instantly start to feel strange. Without warning, your eyes begin to glow green! Luckily, you feel no pain.")
         (add-milestone! :drinks-green-potion)),
    :brown-potion
      #(mam-pr "Hmm... That was clearly a vile of human shit. And you just drank it! DUDE!")})
