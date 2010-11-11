@@ -62,7 +62,11 @@
     '("You are on a road. It doesn't seem to be used anymore, though. It runs both north and south."
       "Road with no vehicles, running north/south or east.")
     '("You are at the entrance of a Library of Ancient Technology. You can go in or head back south."
-      "Library of Ancient Technology. Go in or back south.")))
+      "Library of Ancient Technology. Go in or back south.")
+    '("You are now into the actual library area (It's labelled Isle zero). There are rows of books to your east and west and further shelving to the north."
+      "Isle zero. Shelves to east and west. Isle one to the north, exit to the south.")
+    '("You are inside the library's foyer. You can see several rows of shelves to your north. This place does not look very popular. The exit is behind you."
+      "Entrance of the library. Rows of shelves to the north or you can go out.")))
 
 (defn k [keynum room]
   "Returns a function that checks if the player has the given key. If they
@@ -108,7 +112,9 @@
     [14        16        nil       19        nil       nil       nil       nil       nil       nil       nil       nil]   ;18
     [nil       18        nil       (o 20 20) nil       nil       nil       nil       nil       nil       nil       nil]   ;19
     [21        19        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;20
-    [nil       nil       20        nil       nil       nil       nil       nil       nil       nil       22        nil])) ;21
+    [nil       nil       20        nil       nil       nil       nil       nil       nil       nil       23        nil]   ;21
+    [25        24        23        26        nil       nil       nil       nil       nil       nil       nil       nil]   ;22
+    [22        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       21]))  ;23
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
@@ -150,7 +156,9 @@
          []           ;18
          [20]         ;19
          []           ;20
-         [21 22])))   ;21
+         [21 22]      ;21
+         []           ;22
+         [23])))      ;23
 
 ; Functions to execute when player speaks to a given object.
 (def speech-fn-for
@@ -375,6 +383,11 @@
                 :inspect "He has a sign that says 'More Referential Transparency!'."
                 :permanent true
                 :living true
-                :events {:speak "He says 'OOP is inherantly imperative! Without first-class functions, we stand no chance!'."}})))
+                :events {:speak "He says 'OOP is inherantly imperative! Without first-class functions, we stand no chance!'."}}),
+    (make-dets {:game "There is a gentle-looking old man here"
+                :inspect "He has a tag that says 'Curator' on it. He seems to be slightly aroused..."
+                :permanent true
+                :living true
+                :events {:speak "He says 'IMPLEMENT'."}})))
 
 (def *total-weight* 12)
