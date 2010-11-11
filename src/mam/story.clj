@@ -60,7 +60,9 @@
     '("You are at the end of the alley way, but there is a giant spider web (must be some Jupiterian species) blocking the way out!."
       "End of alley, giant spider web blocking the way out.")
     '("You are on a road. It doesn't seem to be used anymore, though. It runs both north and south."
-      "Road with no vehicles, running north/south.")))
+      "Road with no vehicles, running north/south or east.")
+    '("You are at the entrance of a Library of Ancient Technology. You can go in or head back south."
+      "Library of Ancient Technology. Go in or back south.")))
 
 (defn k [keynum room]
   "Returns a function that checks if the player has the given key. If they
@@ -105,7 +107,8 @@
     [nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       16]    ;17
     [14        16        nil       19        nil       nil       nil       nil       nil       nil       nil       nil]   ;18
     [nil       18        nil       (o 20 20) nil       nil       nil       nil       nil       nil       nil       nil]   ;19
-    [nil       19        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil])) ;20
+    [21        19        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;20
+    [nil       nil       20        nil       nil       nil       nil       nil       nil       nil       22        nil])) ;21
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
@@ -117,10 +120,10 @@
 ; a command is entered. Each index corresponds to the same index in room-objects.
 (def object-identifiers
     {'candy 0 'bar 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3 'boy 7
-     'teenager 7 'keycard #{4 5 6} 'key #{4 5 6} 'man #{8 9} 'robot 10
+     'teenager 7 'keycard #{4 5 6} 'key #{4 5 6} 'man #{8 9 21 22} 'robot 10
      'green #{4 13} 'red #{5 12} 'brown 14 'silver 6 'bum 11 'potion #{12 13 14}
      'credits 18 'attendant 15 'woman 15 'salvika 16 'whisky 16 'becherovka 17
-     'web 20 'knife 19 'small 19})
+     'web 20 'knife 19 'small 19 'thin 22 'skinny 22 'fat 21})
 
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
@@ -145,7 +148,9 @@
          [18]         ;16
          [15 16 17]   ;17
          []           ;18
-         [20])))      ;19
+         [20]         ;19
+         []           ;20
+         [21 22])))   ;21
 
 ; Functions to execute when player speaks to a given object.
 (def speech-fn-for
@@ -210,7 +215,7 @@
         (kill-player "Red potion")),
    :green-potion
      #(do
-        (mam-pr "You drink the potion and instantly start to feel strange. Without warning, a large hook protrudes from your left arm! Luckily, you feel no pain.")
+        (mam-pr "You drink the potion and instantly start to feel strange. Without warning, your eyes begin to glow green! Luckily, you feel no pain.")
         (add-milestone! :drinks-green-potion)),
    :brown-potion
      #(mam-pr "Hmm... That was clearly a vile of human shit. And you just drank it! DUDE!")})
@@ -360,6 +365,16 @@
                 :weight 2}),
     (make-dets {:inspect "It's tough. You'll need to find something sharp to cut through it."
                 :events {:cut (cut-fn-for :spider-web)}
-                :permanent true})))
+                :permanent true}),
+    (make-dets {:game "There is a fat man protesting here"
+                :inspect "He has a sign that says 'OOP killed my father!'."
+                :permanent true
+                :living true
+                :events {:speak "He says 'The Object Oriented paradigm is unfit for use by our advanced society. We must end this madness!'."}}),
+    (make-dets {:game "There is a thin man protesting here"
+                :inspect "He has a sign that says 'More Referential Transparency!'."
+                :permanent true
+                :living true
+                :events {:speak "He says 'OOP is inherantly imperative! Without first-class functions, we stand no chance!'."}})))
 
 (def *total-weight* 12)
