@@ -97,19 +97,19 @@
   (boolean (some #{objnum} (objects-in-room room))))
 
 (letfn
-  [(use-object! [room changed]
-     "Physically removes an object from the given room. Must be called from within
+  [(alter-room! [room changed]
+     "Physically alters the contents of the given. Must be called from within
       a dosync form"
      (alter room-objects
             (fn [objs]
               (assoc-in objs [room] changed))))]
 
   (defn take-object-from-room! [room objnum]
-    (use-object! r (vec (remove #(= objnum %)
+    (alter-room! room (vec (remove #(= objnum %)
                                 (objects-in-room room)))))
 
   (defn drop-object-in-room! [room objnum]
-    (use-object! r (conj (objects-in-room room) objnum))))
+    (alter-room! room (conj (objects-in-room room) objnum))))
 
 (defn remove-object-from-inventory! [objnum]
   "Physically removes an object from the players inventory. Must be called
