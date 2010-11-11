@@ -96,21 +96,20 @@
   "Returns true if the gien room currently houses the given object"
   (boolean (some #{objnum} (objects-in-room room))))
 
-(defn take-object-from-room! [room objnum]
-  "Physically removes an object from the given room. Must be called from within
-   a dosync form"
-  (alter room-objects
-         (fn [objs]
-           (assoc-in objs [room]
-                     (vec (remove #(= objnum %) (objects-in-room room)))))))
+(letfn
+  [(use-object! [room changed]
+     "Physically removes an object from the given room. Must be called from within
+      a dosync form"
+     (alter room-objects
+            (fn [objs]
+              (assoc-in objs [room] changed))))]
 
-(defn drop-object-in-room! [room objnum]
-  "Physically adds an object to the given room. Must be called from within
-   a dosync form"
-  (alter room-objects
-         (fn [objs]
-           (assoc-in objs [room]
-             (conj (objects-in-room room) objnum)))))
+  (defn take-object-from-room! [room objnum]
+    (use-object! r (vec (remove #(= objnum %)
+                                (objects-in-room room)))))
+
+  (defn drop-object-in-room! [room objnum]
+    (use-object! r (conj (objects-in-room room) objnum))))
 
 (defn remove-object-from-inventory! [objnum]
   "Physically removes an object from the players inventory. Must be called
@@ -324,7 +323,7 @@
 (defn command->seq [s]
   "Translates the given string to a sequence of symbols, removing ignored words"
   (let [verbs (split #"\s+" s)]
-    (filter (fn [v] (not (some #{v} ignore-words)))
+    (filter #(not (some #{%} ignore-words))
             (map symbol verbs))))
 
 (defn parse-input [s]
