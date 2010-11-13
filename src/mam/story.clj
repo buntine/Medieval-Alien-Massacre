@@ -66,7 +66,19 @@
     '("You are now into the actual library area (It's labelled Isle zero). There are rows of books to your east and west and further shelving to the north."
       "Isle zero. Shelves to east and west. Isle one to the north, exit to the south.")
     '("You are inside the library's foyer. You can see several rows of shelves to your north. This place does not look very popular. The exit is behind you."
-      "Entrance of the library. Rows of shelves to the north or you can go out.")))
+      "Entrance of the library. Rows of shelves to the north or you can go out.")
+    '("You are in Isle Zero-B, the Embedded Programming section. There are assorted books with titles like 'We are demigods', 'Mastery of C with UNT' and 'Embed this: A beginners quide to women'. There is nothing much here to see, though."
+      "Isle Zero-B: Emedded Programming. Dead-end.")
+    '("You are in Isle one. There are more shelves of books to your east and west. You can also go north or south."
+      "Isle one. Shelving to east/west. You can go north/south.")
+    '("You are in Isle Zero-A, the Web Development section. There are atleast 799 bad - and a single good - books on JavaScript here. There is also a poster on the wall that displays a graph that seems to depict how PHP became worse as time went by. By 2087 it had implemented (poorly) every language feature known to man (and supposedly some creatures from Proxima Centauri)."
+      "Isle Zero-A: Web Development. Dead-end.")
+    '(""
+      "")
+    '(""
+      "")
+    '(""
+      "")))
 
 (defn k [keynum room]
   "Returns a function that checks if the player has the given key. If they
@@ -114,7 +126,14 @@
     [21        19        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;20
     [nil       nil       20        nil       nil       nil       nil       nil       nil       nil       23        nil]   ;21
     [25        24        23        26        nil       nil       nil       nil       nil       nil       nil       nil]   ;22
-    [22        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       21]))  ;23
+    [22        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       21]    ;23
+
+    [nil       nil       nil       22        nil       nil       nil       nil       nil       nil       nil       nil]   ;24
+    [27        28        22        29        nil       nil       nil       nil       nil       nil       nil       nil]   ;25
+    [nil       22        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;26
+    [nil       nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;27
+    [nil       nil       nil       25        nil       nil       nil       nil       nil       nil       nil       nil]   ;28
+    [nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;29
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
