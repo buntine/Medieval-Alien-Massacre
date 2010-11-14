@@ -127,7 +127,6 @@
     [nil       nil       20        nil       nil       nil       nil       nil       nil       nil       23        nil]   ;21
     [25        24        23        26        nil       nil       nil       nil       nil       nil       nil       nil]   ;22
     [22        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       21]    ;23
-
     [nil       nil       nil       22        nil       nil       nil       nil       nil       nil       nil       nil]   ;24
     [27        28        22        29        nil       nil       nil       nil       nil       nil       nil       nil]   ;25
     [nil       22        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;26
@@ -148,7 +147,7 @@
      'teenager 7 'keycard #{4 5 6} 'key #{4 5 6} 'man #{8 9 21 22} 'robot 10
      'green #{4 13} 'red #{5 12} 'brown 14 'silver 6 'bum 11 'potion #{12 13 14}
      'credits 18 'attendant 15 'woman 15 'salvika 16 'whisky 16 'becherovka 17
-     'web 20 'knife 19 'small 19 'thin 22 'skinny 22 'fat 21})
+     'web 20 'knife 19 'small 19 'thin 22 'skinny 22 'fat 21 'paper 24 'book 25})
 
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
@@ -177,7 +176,13 @@
          []           ;20
          [21 22]      ;21
          []           ;22
-         [23])))      ;23
+         [23]         ;23
+         []           ;24
+         []           ;25
+         []           ;26
+         [25]         ;27
+         [24]         ;28
+         [])))        ;29
 
 ; Functions to execute when player speaks to a given object.
 (def speech-fn-for
@@ -280,7 +285,11 @@
           true)
         (do
           (mam-pr "You try to take the whisky without paying, but the attendant displays a vile of acid and forcfully pours it into your eyeballs.")
-          (kill-player "Acid to the brain")))})
+          (kill-player "Acid to the brain")))
+    :paper
+      (fn []
+        (mam-pr "As you take the paper, you notice that it's actually got a function in ML written on it. There is an obvious mistake in the source, so you fix it up and then put it in your pocket.")
+        true)})
 
 (defn make-dets [details]
   "A helper function to merge in some sane defaults for object details"
@@ -407,6 +416,15 @@
                 :inspect "He has a tag that says 'Curator' on it. He seems to be slightly aroused..."
                 :permanent true
                 :living true
-                :events {:speak "He says 'IMPLEMENT'."}})))
+                :events {:speak "He says 'IMPLEMENT'."}}),
+    (make-dets {:game "There is a peice of paper on the ground here."
+                :inspect "It seems to have some source code written on there."
+                :inv "Paper with ML code"
+                :weight 1
+                :events {:take (take-fn-for :paper)}}),
+    (make-dets {:game "There is a book on the ground here."
+                :inspect "It is a dirty old copy of 'Programming Language Pragmatics' by Michael L. Scott."
+                :inv "Book: Programming Language Pragmatics"
+                :weight 2})))
 
 (def *total-weight* 12)
