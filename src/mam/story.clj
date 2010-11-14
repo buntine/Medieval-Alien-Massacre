@@ -416,7 +416,7 @@
                 :inspect "He has a tag that says 'Curator' on it. He seems to be slightly aroused..."
                 :permanent true
                 :living true
-                :events {:speak "He says 'IMPLEMENT'."}}),
+                :events {:speak "He says 'Hello, my strange looking friend. I am the curator of this fine establishment. It has been my life ambition to preserve the teachings of the early Computer Science scholars. Ever since the mid-24th century, the Computer Science field has been in disarray. The art of computer programming has been lost to all but a few. For over 100 years, humans have been working on a function to compute the true name of our God. So far, it's proven nearly impossible. Around here somewhere is my latest attempt. I wrote it in ML, but again I failed...'"}}),
     (make-dets {:game "There is a peice of paper on the ground here."
                 :inspect "It seems to have some source code written on there."
                 :inv "Paper with ML code"
