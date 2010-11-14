@@ -73,12 +73,12 @@
       "Isle one. Shelving to east/west. You can go north/south.")
     '("You are in Isle Zero-A, the Web Development section. There are atleast 799 bad - and a single good - books on JavaScript here. There is also a poster on the wall that displays a graph that seems to depict how PHP became worse as time went by. By 2087 it had implemented (poorly) every language feature known to man (and supposedly some creatures from Proxima Centauri)."
       "Isle Zero-A: Web Development. Dead-end.")
-    '(""
-      "")
-    '(""
-      "")
-    '(""
-      "")))
+    '("You have arrived at the back-end of the library. You cannot go any further in this direction."
+      "Back of library. It's a dead-end.")
+    '("You are in Isle one-B, the functional programming section. There are ancient books lying around including gems like 'Lisp in Small Peices', 'ML for the Working Programmer' and 'Revised^666 Report on the Algorithmic Language Scheme'."
+      "Isle One-B: Functional programming. Dead-end.")
+    '("You have arrived in Isle one-A, the logic/misc. programming section. There are some seriously odd books here including 'Forth for Jupiterians' and 'Prolog knows best'."
+      "Isle one-A: Logic/Misc programming. Dead-end.")))
 
 (defn k [keynum room]
   "Returns a function that checks if the player has the given key. If they
