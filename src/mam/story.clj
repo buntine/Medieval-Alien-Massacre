@@ -132,7 +132,7 @@
     [nil       22        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;26
     [nil       nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;27
     [nil       nil       nil       25        nil       nil       nil       nil       nil       nil       nil       nil]   ;28
-    [nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;29
+    [nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil])) ;29
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
@@ -152,37 +152,38 @@
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
 (def room-objects
-  (ref (vector
-         [0 1]        ;0
-         []           ;1
-         [2]          ;2
-         []           ;3
-         []           ;4
-         []           ;5
-         []           ;6
-         [7]          ;7
-         []           ;8
-         []           ;9
-         [8]          ;10
-         [9 10]       ;11
-         [11]         ;12
-         []           ;13
-         []           ;14
-         [12 13 14]   ;15
-         [18]         ;16
-         [15 16 17]   ;17
-         []           ;18
-         [20]         ;19
-         []           ;20
-         [21 22]      ;21
-         []           ;22
-         [23]         ;23
-         []           ;24
-         []           ;25
-         []           ;26
-         [25]         ;27
-         [24]         ;28
-         [])))        ;29
+  (ref
+    (vector
+      [0 1]        ;0
+      []           ;1
+      [2]          ;2
+      []           ;3
+      []           ;4
+      []           ;5
+      []           ;6
+      [7]          ;7
+      []           ;8
+      []           ;9
+      [8]          ;10
+      [9 10]       ;11
+      [11]         ;12
+      []           ;13
+      []           ;14
+      [12 13 14]   ;15
+      [18]         ;16
+      [15 16 17]   ;17
+      []           ;18
+      [20]         ;19
+      []           ;20
+      [21 22]      ;21
+      []           ;22
+      [23]         ;23
+      []           ;24
+      []           ;25
+      []           ;26
+      [25]         ;27
+      [24]         ;28
+      [])))        ;29
 
 ; Functions to execute when player speaks to a given object.
 (def speech-fn-for
