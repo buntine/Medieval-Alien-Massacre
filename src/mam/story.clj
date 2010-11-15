@@ -78,7 +78,9 @@
     '("You are in Isle one-B, the functional programming section. There are ancient books lying around including gems like 'Lisp in Small Peices', 'ML for the Working Programmer' and 'Revised^666 Report on the Algorithmic Language Scheme'."
       "Isle One-B: Functional programming. Dead-end.")
     '("You have arrived in Isle one-A, the logic/misc. programming section. There are some seriously odd books here including 'Forth for Jupiterians' and 'Prolog knows best'."
-      "Isle one-A: Logic/Misc programming. Dead-end.")))
+      "Isle one-A: Logic/Misc programming. Dead-end.")
+    '("Hidden under web dev section"
+      "aaa")))
 
 (defn k [keynum room]
   "Returns a function that checks if the player has the given key. If they
@@ -97,6 +99,19 @@
     (if (room-has-object? @current-room objnum)
       (mam-pr "You can't go that way."
       (set-current-room! room)))))
+
+(letfn
+  [(library-trapdoor []
+     (when (> inventory-weight 7)
+         (mam-pr "As you walk into this area, the floorboards below you give way because of your weight! You fall through the floor.")
+         30))]
+
+  (defn rc [i room]
+    "Returns a function that performs the 'room check' (a named function) identified by i. The function should either return a number indicating the room to move the player to, or a false value, in which case the player will be sent to 'room'"
+    (fn []
+      (let [fnvec [library-trapdoor]]
+           [new-room (or ((fnvec i)) room)]
+        (set-current-room! new-room)))))
 
 ; Map to specify which rooms the player will enter on the given movement.
 ; A function indicates that something special needs to be done (check conditions, etc).
@@ -125,14 +140,15 @@
     [nil       18        nil       (o 20 20) nil       nil       nil       nil       nil       nil       nil       nil]   ;19
     [21        19        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;20
     [nil       nil       20        nil       nil       nil       nil       nil       nil       nil       23        nil]   ;21
-    [25        24        23        26        nil       nil       nil       nil       nil       nil       nil       nil]   ;22
+    [25        24        23        (rc 0 26) nil       nil       nil       nil       nil       nil       nil       nil]   ;22
     [22        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       21]    ;23
     [nil       nil       nil       22        nil       nil       nil       nil       nil       nil       nil       nil]   ;24
     [27        28        22        29        nil       nil       nil       nil       nil       nil       nil       nil]   ;25
     [nil       22        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;26
     [nil       nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;27
     [nil       nil       nil       25        nil       nil       nil       nil       nil       nil       nil       nil]   ;28
-    [nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil])) ;29
+    [nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;29
+    [nil       nil       nil       nil       nil       nil       nil       nil       26        nil       nil       nil])) ;30
 
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
@@ -175,7 +191,7 @@
       []           ;18
       [20]         ;19
       []           ;20
-      [21 22]      ;21
+      [21 22 26]   ;21
       []           ;22
       [23]         ;23
       []           ;24
@@ -183,7 +199,8 @@
       []           ;26
       [25]         ;27
       [24]         ;28
-      [])))        ;29
+      []           ;29
+      [])))        ;30
 
 ; Functions to execute when player speaks to a given object.
 (def speech-fn-for
@@ -426,6 +443,10 @@
     (make-dets {:game "There is a book on the ground here."
                 :inspect "It is a dirty old copy of 'Programming Language Pragmatics' by Michael L. Scott."
                 :inv "Book: Programming Language Pragmatics"
-                :weight 2})))
+                :weight 2}),
+    (make-dets {:game "There is a medium sized stone here."
+                :inspect "It doesn't look particularly special"
+                :inv "Stone"
+                :weight 3})))
 
 (def *total-weight* 12)
