@@ -7,7 +7,8 @@
 (in-ns 'mam.gameplay)
 (declare set-current-room! current-room in-inventory? mam-pr can-afford?
          hit-milestone? add-milestone! credits take-object-from-room!
-         drop-object-in-room! room-has-object? kill-player credits inventory)
+         drop-object-in-room! room-has-object? kill-player credits inventory
+         inventory-weight)
 
 (ns mam.story
   (:use mam.gameplay))
@@ -102,15 +103,15 @@
 
 (letfn
   [(library-trapdoor []
-     (when (> inventory-weight 7)
+     (when (> (inventory-weight) 7)
          (mam-pr "As you walk into this area, the floorboards below you give way because of your weight! You fall through the floor.")
          30))]
 
   (defn rc [i room]
     "Returns a function that performs the 'room check' (a named function) identified by i. The function should either return a number indicating the room to move the player to, or a false value, in which case the player will be sent to 'room'"
     (fn []
-      (let [fnvec [library-trapdoor]]
-           [new-room (or ((fnvec i)) room)]
+      (let [fnvec [library-trapdoor]
+            new-room (or ((fnvec i)) room)]
         (set-current-room! new-room)))))
 
 ; Map to specify which rooms the player will enter on the given movement.
