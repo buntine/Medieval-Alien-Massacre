@@ -103,9 +103,11 @@
 
 (letfn
   [(library-trapdoor []
-     (when (> (inventory-weight) 7)
-         (mam-pr "As you walk into this area, the floorboards below you give way because of your weight! You fall through the floor.")
-         30))]
+     (if (> (inventory-weight) 7)
+       (dosync
+         (mam-pr "As you walk into this area, the floorboards below you give way because of your weight! The hole reveals a hidden staircase. You can now go down.")
+         (take-object-from-room! @current-room 27)
+         (drop-object-in-room! @current-room 28))))]
 
   (defn rc [i room]
     "Returns a function that performs the 'room check' (a named function) identified by i. The function should either return a number indicating the room to move the player to, or a false value, in which case the player will be sent to 'room'"
@@ -145,7 +147,7 @@
     [22        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       21]    ;23
     [nil       nil       nil       22        nil       nil       nil       nil       nil       nil       nil       nil]   ;24
     [27        28        22        29        nil       nil       nil       nil       nil       nil       nil       nil]   ;25
-    [nil       22        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;26
+    [nil       22        nil       nil       nil       nil       nil       nil       nil       (o 27 30) nil       nil]   ;26
     [nil       nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;27
     [nil       nil       nil       25        nil       nil       nil       nil       nil       nil       nil       nil]   ;28
     [nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;29
@@ -164,7 +166,8 @@
      'teenager 7 'keycard #{4 5 6} 'key #{4 5 6} 'man #{8 9 21 22} 'robot 10
      'green #{4 13} 'red #{5 12} 'brown 14 'silver 6 'bum 11 'potion #{12 13 14}
      'credits 18 'attendant 15 'woman 15 'salvika 16 'whisky 16 'becherovka 17
-     'web 20 'knife 19 'small 19 'thin 22 'skinny 22 'fat 21 'paper 24 'book 25})
+     'web 20 'knife 19 'small 19 'thin 22 'skinny 22 'fat 21 'paper 24 'book 25
+     'stone 26 'rock 26})
 
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
@@ -197,7 +200,7 @@
       [23]         ;23
       []           ;24
       []           ;25
-      []           ;26
+      [27]         ;26
       [25]         ;27
       [24]         ;28
       []           ;29
@@ -448,6 +451,12 @@
     (make-dets {:game "There is a medium sized stone here."
                 :inspect "It doesn't look particularly special"
                 :inv "Stone"
-                :weight 3})))
+                :weight 3}),
+    (make-dets {:game "The floorboards look particularly weak here."
+                :inspect "It seems like they might break if enough weight is put on top of them!"
+                :permanent true}),
+    (make-dets {:game "There is a staircase leading downwards here."
+                :inspect "It is a hidden passage of some sort. Might be dangerous..."
+                :permanent true})))
 
 (def *total-weight* 12)
