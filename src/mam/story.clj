@@ -80,8 +80,8 @@
       "Isle One-B: Functional programming. Dead-end.")
     '("You have arrived in Isle one-A, the logic/misc. programming section. There are some seriously odd books here including 'Forth for Jupiterians' and 'Prolog knows best'."
       "Isle one-A: Logic/Misc programming. Dead-end.")
-    '("Hidden under web dev section"
-      "aaa")))
+    '("You are in a pitch black room. The only thing you can see is a glowing hologram of Bill Hicks. He smiles. The staircase leading upwards is behind you."
+      "Pitch black room with Bill Hicks hologram. Stairs leading upwards.")))
 
 (defn k [keynum room]
   "Returns a function that checks if the player has the given key. If they
