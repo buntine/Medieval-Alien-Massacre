@@ -1,5 +1,11 @@
-- Allow Curator to treat 'green-eyed' players specially.
-- Add stab command.
-- Add Adventure-esque commands for fun.
-- Think about implementing a fighting system like that of Fighting Fantasy books.
-  - OR Design/implement a simple scoring system
+Problems:
+ - Objects with empty game desc should not be listed.
+ - Room descriptions of items only shown in desc do not makes sense if the object is gone (spider web)
+   - Maybe just implement as object in room?
+
+Features:
+ - Allow Curator to treat 'green-eyed' players specially.
+ - Add stab command.
+ - Add Adventure-esque commands for fun.
+ - Think about implementing a fighting system like that of Fighting Fantasy books.
+   - OR Design/implement a simple scoring system

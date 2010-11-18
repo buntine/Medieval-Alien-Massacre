@@ -53,7 +53,7 @@
     '("The shop has no attendant. You can see a bunch of empty viles, odd trinkets and another Bill Hicks portrait."
       "Unattended shop with crap lying around.")
     '("You are standing at the entrance of a grimy looking liquor store."
-      "Grimy liquor store entrance. Passage goes south.")
+      "Grimy liquor store entrance. Passage goes west.")
     '("The shop is in disarray and is pretty much empty, although there are some things lying around."
       "Bottle shop with attendant.")
     '("You are at another corner. There are paths running both east and west, or back to the north."
@@ -98,8 +98,8 @@
    it does, the player cannot go in the given direction."
   (fn []
     (if (room-has-object? @current-room objnum)
-      (mam-pr "You can't go that way."
-      (set-current-room! room)))))
+      (mam-pr "You can't go that way.")
+      (set-current-room! room))))
 
 (letfn
   [(library-trapdoor []
