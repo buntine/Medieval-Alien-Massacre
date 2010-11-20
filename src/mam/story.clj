@@ -58,10 +58,10 @@
       "Bottle shop with attendant.")
     '("You are at another corner. There are paths running both east and west, or back to the north."
       "Bottom of alley, passages to east/west or back north.")
-    '("You are at the end of the alley way, but there is a giant spider web (must be some Jupiterian species) blocking the way out!."
-      "End of alley, giant spider web blocking the way out.")
+    '("You are at the end of the alley way and you can see a street to your west."
+      "End of alley, street to the west.")
     '("You are on a road. It doesn't seem to be used anymore, though. It runs both north and south."
-      "Road with no vehicles, running north/south or east.")
+      "Road with no vehicles, running north/south. Alley to the east.")
     '("You are at the entrance of a Library of Ancient Technology. You can go in or head back south."
       "Library of Ancient Technology. Go in or back south.")
     '("You are now into the actual library area (It's labelled Isle zero). There are rows of books to your east and west and further shelving to the north."
@@ -421,7 +421,8 @@
                 :inv "Small knife"
                 :cutter true
                 :weight 2}),
-    (make-dets {:inspect "It's tough. You'll need to find something sharp to cut through it."
+    (make-dets {:game "There is a thick spider web (must be some Jupiterian species) blocking your way out!"
+                :inspect "It's tough. You'll need to find something sharp to cut through it."
                 :events {:cut (cut-fn-for :spider-web)}
                 :permanent true}),
     (make-dets {:game "There is a fat man protesting here"
