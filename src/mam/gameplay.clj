@@ -19,7 +19,7 @@
 (def inventory (ref []))          ; The players inventory of items.
 (def credits (ref 0))             ; The players credits (aka $$$).
 (def milestones (ref #{}))        ; The players milestones. Used to track and manipulate story.
-(def ignore-words '(the that is   ; Words that should be ignored in commands.
+(def ignore-words '(that is the   ; Words that should be ignored in commands.
                     fucking damn)) 
 
 (defn mam-pr ([s] (mam-pr s 30))
@@ -46,7 +46,7 @@
    'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
    'save cmd-save 'load cmd-load 'give cmd-give 'put cmd-put 'in cmd-in
    'out cmd-out 'up cmd-up 'down cmd-down 'i cmd-in 'o cmd-out 'u cmd-up
-   'd cmd-down 'drink cmd-drink 'cut cmd-cut})
+   'd cmd-down 'drink cmd-drink 'cut cmd-cut 'stab cmd-cut})
    
 (defn set-current-room! [room]
   (dosync
@@ -195,7 +195,10 @@
     (mam-pr "You need a something sharp before you can cut this!")
     (let [evt (event-for objnum :cut)]
       (if (nil? evt)
-        (mam-pr "Nothing seemed to happen.")
+        (mam-pr
+          (if (object-is? objnum :living)
+            (mam-pr "Wow, that must have hurt...")
+            (mam-pr "Nothing seemed to happen.")))
         (if (string? evt) (mam-pr evt) (evt))))))
 
 (defn eat-object! [objnum]
