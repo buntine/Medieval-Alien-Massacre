@@ -1,4 +1,6 @@
 Features:
- - Allow Curator to treat 'green-eyed' players specially.
+ - Players with green eyes can see in the dark.
  - Add Adventure-esque commands for fun.
+   - xyzzy: If entered in room with a living object, 5 credits are dropped into the room.
+   - Fee Fie Foe Foo: If entered in sequential order, something special happens...
  - Possibly: Design/implement a simple scoring system
