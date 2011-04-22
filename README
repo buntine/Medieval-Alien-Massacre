@@ -9,7 +9,7 @@ A hobby project, written in Clojure (A Lisp for the JVM) during Oct/Nov 2010.
 
 First install, and then:
 
-$ java -jar mam-1.0.0-SNAPSHOT-standalone.jar
+$ java -jar mam-0.2.0-SNAPSHOT-standalone.jar
 
 Or see a list of standalone packages in my downloads: https://github.com/buntine/Medieval-Alien-Massacre/archives/master
 
