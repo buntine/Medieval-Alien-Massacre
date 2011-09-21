@@ -5,21 +5,23 @@ A sadistic and pro-death text-based adventure for (bastard) children.
 A hobby project, written in Clojure (A Lisp for the JVM) during Oct/Nov 2010.
 
 
-## Usage
-
-First install, and then:
-
-$ java -jar mam-0.2.0-SNAPSHOT-standalone.jar
-
-Or see a list of standalone packages in my downloads: https://github.com/buntine/Medieval-Alien-Massacre/archives/master
-
-
 ## Installation
 
 First, install Leiningen: http://github.com/technomancy/leiningen
 
+And then:
+
 $ lein deps
 $ lein uberjar
+
+
+## Usage
+
+After you've installed:
+
+$ java -jar mam-1.0.0-SNAPSHOT-standalone.jar
+
+Or see a list of standalone packages in my downloads: https://github.com/buntine/Medieval-Alien-Massacre/archives/master
 
 
 ## Notes
@@ -30,7 +32,7 @@ $ lein uberjar
 
 ## License
 
-Copyright (C) 2010 Andrew Buntine
+Copyright (C) 2010-2011 Andrew Buntine
 
 info@andrewbuntine.com
 http://www.andrewbuntine.com
