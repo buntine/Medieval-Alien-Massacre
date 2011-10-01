@@ -26,5 +26,6 @@
 
 (defn -main []
   "Game initializer. Welcomes user and starts loop."
+  (play-file "media/opening.wav")
   (print-welcome-message)
   (messages))

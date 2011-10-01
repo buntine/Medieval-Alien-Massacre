@@ -7,7 +7,10 @@
   (:use mam.commands)
   (:use mam.story)
   (:use mam.compression)
-  (:use [clojure.contrib.string :only (split join)]))
+  (:use [clojure.contrib.string :only (split join)])
+  (:import (java.applet Applet))
+  (:import (java.io File))
+  (:import (java.net URL)))
 
 ; Declarations for some procedures I mention before they have been
 ; defined.
@@ -21,6 +24,17 @@
 (def milestones (ref #{}))        ; The players milestones. Used to track and manipulate story.
 (def ignore-words '(that is the   ; Words that should be ignored in commands.
                     fucking damn)) 
+
+
+; Plays audio from the specified URL.
+(defn play-url [url-string]
+  (.play (Applet/newAudioClip (URL. url-string))))
+
+; Plays audio from the specified local file.
+(defn play-file [file-name]
+  (let [absolute-name (.getAbsolutePath (File. file-name))
+        url-string (str "file://" absolute-name)]
+    (play-url url-string)))
 
 (defn mam-pr ([s] (mam-pr s 30))
   ([s i]
