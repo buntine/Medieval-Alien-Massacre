@@ -1,0 +1,56 @@
+Notes for my presentation at the functional programmers meetup.
+
+Text-based gaming
+  - Popular from 1970 onwards.
+  - The user interacts with the terminal by typing commands.
+  - Early successes included Zork, Adventure! and Dunnet.
+  - Relatively easy to write, but can be complex (language parsing, etc).
+  - Super fun!
+    - Total control over the story.
+    - No need for artistic skill.
+    - Add new commands at will.
+
+Medieval Alien Massacre
+  - Written in clojure, a LISP for the JVM.
+  - Currently about 1200 lines - probably my largest lisp project.
+  - A hobby project, inspired by Dunnet (written in emacs LISP).
+  - All of the hard stuff is done, but the story is incomplete.
+
+...Demonstration...
+
+Who is familiar with LISP?
+  - Give 5 minute intro to Clojure.
+    - Released in 2007, but relatively unknown until 2009-ish.
+    - Compiles to Java bytecode, so you can run it on the JVM.
+      - So you get real Java interop.
+        - You can use Java libraries.
+        - You can write part/all of your app in Clojure and use it in Java projects.
+    - Is a real LISP
+      - Code is data.
+      - S-Expressions.
+    - A Lisp-1
+      - There is no separate namespace for functions (looks more like Scheme than Common Lisp)
+    - Has literal syntax for many data structures (not just lists)
+      - Maps, Sets and Vectors
+    - It goes further than older lisps and does not try to be code-compatible.
+    - Functions are first-class (real closures)
+    - Emphasis on higher-order functions and recursion over side-effect based looping, etc.
+    - Supports lazy (infinite) sequences
+    - Simplifies concurrent programming
+    - Some examples:
+      - Simple forms (+ 1 1), etc.
+      - Write function and execute.
+      - Lambda.
+      - Higher-order function.
+      - Basic Java interop.
+
+How it's written
+  - Show main files and explain role of each.
+  - Open core and see how things get going.
+  - Show language parsing.
+    - Can get potentially complicated:
+      - Give blue key to old man.
+      - Give the fucking blue key to that old man over there.
+  - Change the first room of the game.
+    - Modify description
+    - Add new object.

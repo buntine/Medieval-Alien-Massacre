@@ -1,6 +1,6 @@
 
 ; MEDIEVAL ALIEN MASSACRE.
-; By Andrew Buntine, 2010
+; By Andrew Buntine, 2010-2011
 ; http://www.andrewbuntine.com
 ;
 ; core.clj
@@ -22,6 +22,8 @@
   (println "\033[31m|\033[0m   \033[33m* grotesque sexual violence\033[0m                           \033[31m|\033[0m")
   (println "\033[31m|\033[0m   \033[33m* murder without end\033[0m                                  \033[31m|\033[0m")
   (println "\033[31m|\033[0m   \033[33m* zombie goat sodomy\033[0m                                  \033[31m|\033[0m")
+  (println "\033[31m|\033[0m                                                         \033[31m|\033[0m")
+  (println "\033[31m|\033[0m \033[33mType 'help' if you're a pussy.\033[0m                         \033[31m|\033[0m")
   (println "\033[31m|---------------------------------------------------------|\033[0m\n"))
 
 (defn -main []
