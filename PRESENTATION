@@ -34,7 +34,7 @@ Who is familiar with LISP?
         - You can use Java libraries.
         - You can write part/all of your app in Clojure and use it in Java projects.
     - Is a real LISP
-      - Code is data - no separate syntax for code and data.
+      - Maintains homoiconicity, code is data - no separate syntax for code and data.
       - S-Expressions.
     - It is functional, but not purely a-la Haskell.
       - Side-effects must be encapsulated
@@ -49,17 +49,37 @@ Who is familiar with LISP?
       - All/most are immutible
         - Modifications generate cheap copies.
     - It goes further than older lisps and does not try to be code-compatible.
-    - Functions are first-class (real closures)
+    - Functions are first-class (real closures, lambda, etc)
     - Emphasis on higher-order functions and recursion over side-effect based looping, etc.
     - Supports lazy (infinite) sequences
       - Not calculated until request
+    - Complex Macro system
     - Does not have TCO (because JVM does not have it)
       - But has a work-around (loop..recur)
     - Simplifies concurrent programming
     - Some examples:
-      - Simple forms (+ 1 1), etc.
+      - Simple forms:
+        
+        (list 1 2 3)
+        (+ 1 2 3)
+        (if (= (+ 1 2) 3) :guilty :innocent)
+
       - Write function and execute.
-      - Lambda.
+
+        ; Recursive fact, grows at 0(n)
+        (defn fact [n]
+          (if (<= n 1)
+            n
+            (* n (fact (- n 1)))))
+
+        (fact 5) ; --> 120
+
+      - Lambda
+
+        ((fn [n] (+ n 1)) 10) ; --> 11
+
+        #(+ %1 10) ; --> Adds 10 to argument. A macro that expands to (fn [n] (+ n 10))
+
       - Higher-order function.
       - Basic Java interop.
 
