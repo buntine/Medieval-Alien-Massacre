@@ -94,6 +94,15 @@ Who is familiar with LISP?
 
         (reduce + [1 2 3 4])
 
+      - Closure
+
+        (defn make-adder [n]
+          (fn [i] (+ n i)))
+
+        (def plus10 (make-adder 10))
+
+        (plus10 30) ; --> 40
+
       - Basic Java interop.
         - Clojure strings are Java strings.
         - .instanceMethodName form.
