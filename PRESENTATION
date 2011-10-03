@@ -1,5 +1,13 @@
 Notes for my presentation at the functional programmers meetup.
 
+Me
+  - Andrew Buntine
+  - Work for HHD as lead developer, predominantly Ruby/Rails.
+    - Some internal with in Python and Clojure.
+  - Interested in FP for a few years, mostly Lisp.
+  - A Schemer
+  - Interested in programming language theory and design, but admittedly find it mind-numbing
+
 Text-based gaming
   - Popular from 1970 onwards.
   - The user interacts with the terminal by typing commands.
@@ -28,6 +36,8 @@ Who is familiar with LISP?
     - Is a real LISP
       - Code is data - no separate syntax for code and data.
       - S-Expressions.
+    - It is functional, but not purely a-la Haskell.
+      - Side-effects must be encapsulated
     - A Lisp-1
       - Lexically scoped
       - There is no separate namespace for functions (looks more like Scheme than Common Lisp)
@@ -43,6 +53,8 @@ Who is familiar with LISP?
     - Emphasis on higher-order functions and recursion over side-effect based looping, etc.
     - Supports lazy (infinite) sequences
       - Not calculated until request
+    - Does not have TCO (because JVM does not have it)
+      - But has a work-around (loop..recur)
     - Simplifies concurrent programming
     - Some examples:
       - Simple forms (+ 1 1), etc.
