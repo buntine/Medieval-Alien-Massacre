@@ -45,7 +45,13 @@ Who is familiar with LISP?
       - Maps, Sets and Vectors
       - First class
       - Each has unique semantics
+        - Vectors have O(1) lookup
+      - All implement an iSeq interface, and thus have great interop
+        - Including string.
       - They are functions of their keys (really cool)
+        - ([1 2 3 4 5] 3) ; --> 4
+        - (:name {:age 25 :name "Andrew"}) ; --> "Andrew"
+        - ({:age 25 :name "Andrew"} :name) ; --> "Andrew"
       - All/most are immutible
         - Modifications generate cheap copies.
     - It goes further than older lisps and does not try to be code-compatible.
@@ -66,7 +72,7 @@ Who is familiar with LISP?
 
       - Write function and execute.
 
-        ; Recursive fact, grows at 0(n)
+        ; Recursive fact, grows at 0(n). Bad.
         (defn fact [n]
           (if (<= n 1)
             n
@@ -81,7 +87,27 @@ Who is familiar with LISP?
         #(+ %1 10) ; --> Adds 10 to argument. A macro that expands to (fn [n] (+ n 10))
 
       - Higher-order function.
+
+        (map (fn [n] (* n 2)) [1 2 3 4]) ; --> (2 4 6 8) ; Seq
+
+        (into [] (map #(* %1 n) [1 2 3 4])) ; --> [ 2 4 6 8] ; Vector
+
+        (reduce + [1 2 3 4])
+
       - Basic Java interop.
+        - Clojure strings are Java strings.
+        - .instanceMethodName form.
+
+          (.toUpperCase "Hello") ; --> "HELLO")
+          (.getName Boolean) ; --> "java.lang.Boolean"
+
+        - The '.' special form
+
+          (. "hello" length) ; --> 5
+
+        - doto macro for executing several functions in succession on a Java object
+
+          (doto (new java.util.HashMap) (.put "a" 1) (.put "b" 2))
 
 How it's written
   - Show main files and explain role of each.
