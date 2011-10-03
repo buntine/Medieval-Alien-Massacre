@@ -8,7 +8,7 @@
 (declare set-current-room! current-room in-inventory? mam-pr can-afford?
          hit-milestone? add-milestone! credits take-object-from-room!
          drop-object-in-room! room-has-object? kill-player credits inventory
-         inventory-weight)
+         inventory-weight play-file)
 
 (ns mam.story
   (:use mam.gameplay))
@@ -91,7 +91,9 @@
       (let [key-name (. ((object-details keynum) :inv) toLowerCase)]
         (set-current-room! room)
         (mam-pr (str " * Door unlocked with " key-name " *")))
-      (mam-pr "You don't have security clearance for this door!"))))
+      (do
+        (play-file "media/fail.wav")
+        (mam-pr "You don't have security clearance for this door!")))))
 
 (defn o [objnum room]
   "Returns a function that checks if the given room houses the given object. If

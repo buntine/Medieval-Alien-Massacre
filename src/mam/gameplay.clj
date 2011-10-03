@@ -84,6 +84,7 @@
 
 (defn kill-player [reason]
   "Kills the player and ends the game"
+  (play-file "media/kill.wav")
   (mam-pr (str "You were killed by: " reason))
   (cmd-quit false))
 
@@ -223,6 +224,7 @@
         (mam-pr (str "You force it into your throat and fucking die in pain."))
         (kill-player ((object-details objnum) :inv)))
       (dosync
+        (play-file "media/eat.wav")
         (if (string? evt) (mam-pr evt) (evt))
         (remove-object-from-inventory! objnum)))))
 
@@ -232,6 +234,7 @@
     (if (nil? evt)
       (mam-pr (str "It doesn't seem to be drinkable."))
       (dosync
+        (play-file "media/drink.wav")
         (if (string? evt) (mam-pr evt) (evt))
         (remove-object-from-inventory! objnum)))))
 
