@@ -23,7 +23,7 @@
   (println "\033[31m|\033[0m   \033[33m* murder without end\033[0m                                  \033[31m|\033[0m")
   (println "\033[31m|\033[0m   \033[33m* zombie goat sodomy\033[0m                                  \033[31m|\033[0m")
   (println "\033[31m|\033[0m                                                         \033[31m|\033[0m")
-  (println "\033[31m|\033[0m \033[33mType 'help' if you're a pussy.\033[0m                         \033[31m|\033[0m")
+  (println "\033[31m|\033[0m \033[33mType 'help' if you're a pussy.\033[0m                          \033[31m|\033[0m")
   (println "\033[31m|---------------------------------------------------------|\033[0m\n"))
 
 (defn -main []
