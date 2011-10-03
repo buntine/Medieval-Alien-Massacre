@@ -26,16 +26,23 @@ Who is familiar with LISP?
         - You can use Java libraries.
         - You can write part/all of your app in Clojure and use it in Java projects.
     - Is a real LISP
-      - Code is data.
+      - Code is data - no separate syntax for code and data.
       - S-Expressions.
     - A Lisp-1
+      - Lexically scoped
       - There is no separate namespace for functions (looks more like Scheme than Common Lisp)
     - Has literal syntax for many data structures (not just lists)
       - Maps, Sets and Vectors
+      - First class
+      - Each has unique semantics
+      - They are functions of their keys (really cool)
+      - All/most are immutible
+        - Modifications generate cheap copies.
     - It goes further than older lisps and does not try to be code-compatible.
     - Functions are first-class (real closures)
     - Emphasis on higher-order functions and recursion over side-effect based looping, etc.
     - Supports lazy (infinite) sequences
+      - Not calculated until request
     - Simplifies concurrent programming
     - Some examples:
       - Simple forms (+ 1 1), etc.
