@@ -5,6 +5,7 @@ Me
   - Work for HHD as lead developer, predominantly Ruby/Rails.
     - Some internal with in Python and Clojure.
   - Interested in FP for a few years, mostly Lisp.
+  - Self-taught
   - A Schemer
   - Interested in programming language theory and design, but admittedly find it mind-numbing
 
@@ -57,6 +58,9 @@ Who is familiar with LISP?
     - It goes further than older lisps and does not try to be code-compatible.
       - car = first, cdr = rest
     - Functions are first-class (real closures, lambda, etc)
+      - Support variable arity
+        - Multiple function bodies
+        - A bit like pattern matching, but matches arity (number of arguments) not type
     - Emphasis on higher-order functions and recursion over side-effect based looping, etc.
     - Does not have TCO (because JVM does not have it)
       - But has a work-around (loop..recur)
@@ -93,7 +97,7 @@ Who is familiar with LISP?
 
         (into [] (map #(* %1 n) [1 2 3 4])) ; --> [ 2 4 6 8] ; Vector
 
-        (reduce + [1 2 3 4])
+        (reduce + [1 2 3 4]) ; --> 10
 
       - Closure
 
@@ -117,7 +121,7 @@ Who is familiar with LISP?
 
         - doto macro for executing several functions in succession on a Java object
 
-          (doto (new java.util.HashMap) (.put "a" 1) (.put "b" 2))
+          (doto (new java.util.HashMap) (.put "a" 1) (.put "b" 2)) ; --> {"a" 1 "b" 2}
 
 How it's written
   - Show main files and explain role of each.
