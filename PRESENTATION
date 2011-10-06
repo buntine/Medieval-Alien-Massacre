@@ -75,17 +75,39 @@ Who is familiar with LISP?
         (+ 1 2 3)
         (if (= (+ 1 2) 3) :guilty :innocent)
 
+        (def n 1)
+        ((if (< n 2) * +) 10 10) ; --> 100
+
+        (let [a 2
+              b :cool
+              c a]
+          c) ; --> 2
+
+        (let [[a b & c :as d] [1 2 3 4 5]]
+          [a b c d]) ; --> [1 2 (3 4 5) [1 2 3 4 5]]
+
       - Write function and execute.
 
-        ; Recursive fact, grows at 0(n). Bad.
+        ; Recursive fact, grows stack. Bad.
         (defn fact [n]
           (if (<= n 1)
             n
             (* n (fact (- n 1)))))
 
         (fact 5) ; --> 120
+        (fact 20000) ; --> Stack Overflow!!
 
-      - Lambda
+        ; Iterative fact, stack won't grow.
+        (defn fact
+          ([n] (fact n 1))
+          ([n t]
+            (if (<= n 1)
+              t
+              (recur (- n 1) (* t n)))))
+
+        (fact 20000) ; --> Very big number
+
+      - Lambda, anonymous functions
 
         ((fn [n] (+ n 1)) 10) ; --> 11
 
@@ -95,7 +117,7 @@ Who is familiar with LISP?
 
         (map (fn [n] (* n 2)) [1 2 3 4]) ; --> (2 4 6 8) ; Seq
 
-        (into [] (map #(* %1 n) [1 2 3 4])) ; --> [ 2 4 6 8] ; Vector
+        (into [] (map #(* %1 2) [1 2 3 4])) ; --> [ 2 4 6 8] ; Vector
 
         (reduce + [1 2 3 4]) ; --> 10
 
