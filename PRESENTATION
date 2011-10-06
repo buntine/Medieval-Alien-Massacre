@@ -50,8 +50,10 @@ Who is familiar with LISP?
       - Maps, Sets and Vectors
       - First class
       - Each has unique semantics
-        - Vectors have O(1) lookup
+        - Vectors have O(1) lookup, grow at end
+        - Lists are singly-linked, drow and front
       - All implement an iSeq interface, and thus have great interop
+        - So library functions are generic: conj, etc.
         - Including string.
       - They are functions of their keys (really cool)
         - ([1 2 3 4 5] 3) ; --> 4
