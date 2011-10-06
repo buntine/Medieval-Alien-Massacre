@@ -30,13 +30,17 @@ Medieval Alien Massacre
 Who is familiar with LISP?
   - Give 15 minute intro to Clojure.
     - Released in 2007, but relatively unknown until 2009-ish.
-    - Compiles to Java bytecode, so you can run it on the JVM.
+    - Runs on the JVM.
+      - Compiles to Java bytecode
+      - Gets GC for free from the JVM.
       - So you get real Java interop.
         - You can use Java libraries.
         - You can write part/all of your app in Clojure and use it in Java projects.
     - Is a real LISP
       - Maintains homoiconicity, code is data - no separate syntax for code and data.
-      - S-Expressions.
+      - S-Expressions
+      - Dynamically-typed
+      - Not Object Oriented (as generally perceived - that is inherently imperative)
     - It is functional, but not purely a-la Haskell.
       - Side-effects must be encapsulated
     - A Lisp-1
@@ -130,6 +134,18 @@ Who is familiar with LISP?
 
         (plus10 30) ; --> 40
 
+      - Software transactional memory
+
+        (def n (ref 0)) ; Ensures single location for value.
+
+        (ref-set n 1) ; --> Error! Must be changed within a transaction.
+
+        (dosync
+          (ref-set n 1)) ; --> 1
+
+        n  ; --> #<Ref:23af65>
+        @n ; --> 1  ; Deref reader macro
+
       - Basic Java interop.
         - Clojure strings are Java strings.
         - .instanceMethodName form.
@@ -148,6 +164,7 @@ Who is familiar with LISP?
 How it's written
   - Show main files and explain role of each.
   - Open core and see how things get going.
+  - I use STM for managing side-effects.
   - Show language parsing.
     - Can get potentially complicated:
       - Give blue key to old man.
