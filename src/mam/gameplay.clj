@@ -153,7 +153,7 @@
             (mam-pr "Taken...")))))))
 
 (defn drop-object! [objnum]
-  "Attempts to drop an object into the current room If the object
+  "Attempts to drop an object into the current room. If the object
    has an event for :drop, then it must return a boolean - if true,
    the object will be dropped"
   (let [evt (event-for objnum :drop)]
@@ -201,7 +201,9 @@
    "Attempts to fuck the given object"
    (if (not (object-is? objnum :living))
      (mam-pr (str "You start fucking away but it just feels painful."))
-     (mam-pr "Hmm... I bet that felt pretty good!")))
+     (do
+       (play-file "media/fuck.wav")
+       (mam-pr "Hmm... I bet that felt pretty good!"))))
   {:ridiculous true})
 
 (defn cut-object [objnum]
