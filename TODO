@@ -1,6 +1,5 @@
 Features:
  - Finish story
- - Add readline-like clarity to prompt (history, etc)
  - Players with green eyes can see in the dark.
  - Add Adventure-esque commands for fun.
    - xyzzy: If entered in room with a living object, 5 credits are dropped into the room.

@@ -14,10 +14,18 @@ And then:
 $ lein deps
 $ lein uberjar
 
+Also install rlwrap (optional, but highly recommended as it provides tab completion, history, etc):
+
+$ sudo apt-get install rlwrap
+
 
 ## Usage
 
-After you've installed:
+If you've installed rlwrap:
+
+$ ./play
+
+Otherwise:
 
 $ java -jar mam-1.0.0-SNAPSHOT-standalone.jar
 

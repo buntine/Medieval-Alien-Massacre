@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+# A Small script to start the game with readline-like support (history, tab completion, etc).
+
+rlwrap -f media/completion -c java -jar mam-1.0.0-SNAPSHOT-standalone.jar
