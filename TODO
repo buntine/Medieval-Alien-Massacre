@@ -5,3 +5,4 @@ Features:
    - xyzzy: If entered in room with a living object, 5 credits are dropped into the room.
    - Fee Fie Foe Foo: If entered in sequential order, something special happens...
  - Possibly: Design/implement a simple scoring system
+ - Non-room responses need an additional newline.

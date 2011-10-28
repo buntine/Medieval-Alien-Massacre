@@ -59,8 +59,8 @@
    'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat 'fuck cmd-fuck
    'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
    'save cmd-save 'load cmd-load 'give cmd-give 'put cmd-put 'in cmd-in
-   'out cmd-out 'up cmd-up 'down cmd-down 'i cmd-in 'o cmd-out 'u cmd-up
-   'd cmd-down 'drink cmd-drink 'cut cmd-cut 'stab cmd-cut})
+   'out cmd-out 'up cmd-up 'down cmd-down 'drink cmd-drink 'cut cmd-cut
+   'stab cmd-cut})
    
 (defn set-current-room! [room]
   (dosync
@@ -139,7 +139,7 @@
     (object-is? objnum :permanent)
       (mam-pr "You can't take that.")
     (> (+ (inventory-weight) (obj-weight objnum)) *total-weight*)
-      (mam-pr "You cannot carry that much weight.")
+      (mam-pr "You cannot carry that much weight. Try dropping something.")
     :else
       (let [evt (event-for objnum :take)]
         (if (or (nil? evt) (evt))
@@ -333,14 +333,13 @@
 (defn verb-parse [verb-lst]
   "Calls the procedure identified by the first usable verb. Returns
    false if the command is not understood"
-  (let [f (fn-for-command (first verb-lst))]
+  (let [f (fn-for-command (first verb-lst))
+        verbs (rest verb-lst)]
     (if (empty? verb-lst)
       false
       (if f
-        (do
-          (f (rest verb-lst))
-          true)
-        (verb-parse (rest verb-lst))))))
+        (and (f verbs) true)
+        (recur verbs)))))
 
 (defn command->seq [s]
   "Translates the given string to a sequence of symbols, removing ignored words"
