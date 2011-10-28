@@ -76,7 +76,7 @@
       "Isle Zero-A: Web Development. Dead-end.")
     '("You have arrived at the back-end of the library. You cannot go any further in this direction."
       "Back of library. It's a dead-end.")
-    '("You are in Isle one-B, the functional programming section. There are ancient books lying around including gems like 'Lisp in Small Peices', 'ML for the Working Programmer' and 'Revised^666 Report on the Algorithmic Language Scheme'."
+    '("You are in Isle one-B, the functional programming section. There are ancient books lying around including gems like 'LISP in Small Peices', 'ML for the Working Programmer' and 'Revised^666 Report on the Algorithmic Language Scheme'."
       "Isle One-B: Functional programming. Dead-end.")
     '("You have arrived in Isle one-A, the logic/misc. programming section. There are some seriously odd books here including 'Forth for Jupiterians' and 'Prolog knows best'."
       "Isle one-A: Logic/Misc programming. Dead-end.")
@@ -228,8 +228,8 @@
         (do
           (mam-pr "The man says 'Ahh, you're up! I am Bob Benson, the captain of this grand model T102 repairs vessel. We found you floating out there on the oxygenated stretch of galactic highway 7. Anyway, you look a tad confused, so let me refresh your memory:")
           (mam-pr "It is the year 2843, you're currently travelling on a highway between two of the moons of Jupiter.")
-          (mam-pr "\n** At this point you explain that you are infact from the year 2010 and the last thing you remember is driking coffee at home and writing some Lisp code **\n")
-          (mam-pr "The captain says 'Oh, yes, it makes sense now. A true Lisp hacker and drinker of the finest bean can transcend both space and time. We've seen your type before. You should head over to see the Pod Manager to our southwest in order to get yourself off this ship'")
+          (mam-pr "\n** At this point you explain that you are infact from the year 2011 and the last thing you remember is driking coffee at home and writing some LISP code **\n")
+          (mam-pr "The captain says 'Oh, yes, it makes sense now. A true LISP hacker and drinker of the finest bean can transcend both space and time. We've seen your type before. You should head over to see the Pod Manager to our southwest in order to get yourself off this ship'")
           (add-milestone! :speak-to-captain))),
    :homeless-bum
      #(mam-pr "He mutters 'Hey mystery man! Welcome to Syndal City, perhaps you can spare an old cyborg some whisky?'.")})
@@ -247,14 +247,14 @@
           (mam-pr "The old bum accepts the whisky and says 'Wow!! Thank you, cobba! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife.")
           (alter inventory conj 19)
           (add-milestone! :alcohol-to-bum))
-        (mam-pr "He accepts the alcohol, but just grumbles something about Common Lisp in response")),
+        (mam-pr "He accepts the alcohol, but just grumbles something about Common LISP in response")),
    :becherovka-to-bum
      #(if (not (hit-milestone? :alcohol-to-bum))
         (dosync
           (mam-pr "The old bum accepts the whisky and says 'Holy fuck, Becherovka! My favourite! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife.")
           (alter inventory conj 19)
           (add-milestone! :alcohol-to-bum))
-        (mam-pr "He accepts the alcohol, but just grumbles something about Emacs Lisp in response"))})
+        (mam-pr "He accepts the alcohol, but just grumbles something about Emacs LISP in response"))})
 
 ; Functions to execute when player eats particular objects.
 (def eat-fn-for
@@ -274,7 +274,9 @@
         (mam-pr "You drink the potion and instantly start to feel strange. Without warning, your eyes begin to glow green! Luckily, you feel no pain.")
         (add-milestone! :drinks-green-potion)),
    :brown-potion
-     #(mam-pr "Hmm... That was clearly a vile of human shit. And you just drank it! DUDE!")})
+     #(do
+        (mam-pr "Hmm... That was clearly a vile of human shit. And you just drank it! DUDE!")
+        (mam-pr "YOU DRANK LIQUID SHIT!!!", 250))})
 
 ; Functions to execute when player pulls particular objects.
 (def pull-fn-for
@@ -289,7 +291,7 @@
 (def cut-fn-for
   {:spider-web
      #(dosync
-        (mam-pr "You swing violently. The web gives way and falls into small peices. You are now free to continue west.")
+        (mam-pr "You swing violently. The web gives way and falls into small peices, allowing you to marvel at it's fractal beauty. You are now free to continue west.")
         (take-object-from-room! @current-room 20))})
  
 ; Functions to execute when player takes particular objects.
@@ -312,7 +314,7 @@
           (kill-player "Acid to the brain")))
     :paper
       (fn []
-        (mam-pr "As you take the paper, you notice that it's actually got a function in ML written on it. There is an obvious mistake in the source, so you fix it up and then put it in your pocket.")
+        (mam-pr "As you take the paper, you notice that it's actually got a function in ML written on it. There is an obvious mistake in the source code, so you fix it up and then put it in your pocket.")
         true)})
 
 (defn make-dets [details]
@@ -462,4 +464,5 @@
                 :inspect "It is a hidden passage of some sort. Might be dangerous..."
                 :permanent true})))
 
+; Maximum weight the user can carry at any one time.
 (def *total-weight* 12)

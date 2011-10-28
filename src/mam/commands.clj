@@ -153,7 +153,7 @@
         (mam-pr "One day, machines will enslave puney humans like yourself.")
       :else
         (interact verbs
-                  "Fuck what exactly?"
+                  "Fuck what, exactly?"
                   "I don't see him/her/it here..."
                   fuck-object
                   :room)))
