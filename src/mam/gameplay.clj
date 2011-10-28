@@ -328,7 +328,7 @@
 
 (defn fn-for-command [cmd]
   "Returns the function for the given command verb, or nil"
-  (if cmd (cmd-verbs cmd) nil))
+  (if cmd (cmd-verbs cmd)))
 
 (defn verb-parse [verb-lst]
   "Calls the procedure identified by the first usable verb. Returns

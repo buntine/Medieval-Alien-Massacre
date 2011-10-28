@@ -335,7 +335,7 @@
                 :weight 1
                 :events {:eat (eat-fn-for :eats-candy)}}),
     (make-dets {:game "There is a small bed here"
-                :inspect "It's black and sorta' small looking. Perhaps for a child?"
+                :inspect "It's black and sorta' small looking. Perhaps for a unwanted child or a gimp of some kind?"
                 :permanent true}),
     (make-dets {:game "There is a large metal lever here"
                 :inspect "There is no label, but it seems to have some wear from usage"
@@ -379,7 +379,7 @@
                 :events {:speak "The robot says 'Hello, I am Nexus model 19, series 4. It seems to me that you are not from around here. Perhaps you are lost? Regardless, I have but one thing to tell you, and that, of course, is the meaning to life. The answer is, simply stated in Human tongue, the persuit of excellence in Skateboarding.'"}
                 :living true}),
     (make-dets {:game "There is a dirty, old homeless bum here"
-                :inspect "He smells like alcohol and blue cheese"
+                :inspect "He smells like cheap alcohol and blue cheese"
                 :events {:speak (speech-fn-for :homeless-bum)
                          :give {16 (give-fn-for :whisky-to-bum)
                                 17 (give-fn-for :becherovka-to-bum)}}
@@ -401,7 +401,7 @@
                 :events {:drink (drink-fn-for :brown-potion)}
                 :weight 1}),
     (make-dets {:game "There is a shop attendant (a woman) here"
-                :inspect "She is wearing an old cooking pot as a hat. It looks rather dumb."
+                :inspect "She is wearing an old cooking pot as a hat. What a dumb old bitch."
                 :permanent true
                 :living true
                 :events {:speak "She says 'Welcome, stranger. We don't get many customers these days. Anyway, the whisky is 3 credits and the Becharovka is 4 credits. Just take what you like.'. She also mentions that theft is punishable by a swift death."}}),
