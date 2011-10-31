@@ -61,7 +61,7 @@
    'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
    'save cmd-save 'load cmd-load 'give cmd-give 'put cmd-put 'in cmd-in
    'out cmd-out 'up cmd-up 'down cmd-down 'drink cmd-drink 'cut cmd-cut
-   'stab cmd-cut})
+   'stab cmd-cut 'set cmd-set})
    
 (defn set-current-room! [room]
   (dosync

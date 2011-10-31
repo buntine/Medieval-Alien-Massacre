@@ -10,7 +10,8 @@
          display-inventory drop-object! inspect-object parse-input
          describe-room room-has-object?  eat-object! fuck-object
          talk-to-object save-game! load-game! give-object! put-object!
-         mam-pr pull-object deduce-object drink-object! cut-object)
+         mam-pr pull-object deduce-object drink-object! cut-object
+         output-pause)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -77,6 +78,23 @@
   (println "   * Inspired by Dunnet, by Rob Schnell and Colossal Cave Adventure by William Crowther.")
   (println "   * Don't forget: Life is a game and everything is pointless.")
   (println "  ------------------------------"))
+
+(letfn
+  [(set-output-pause! [state]
+     (let [opts {'on 30 'off 0}]
+       (if (some #{state} (keys opts))
+         (dosync
+           (ref-set output-pause (opts state))
+           (mam-pr "Set..."))
+         (mam-pr "Sorry, I only understand 'on' or 'off'."))))]
+
+  (defn cmd-set [verbs]
+    "Attempts to update the given game setting"
+    (if (not (= (count verbs) 2))
+      (mam-pr "Set what? And how? I can't just read your damn mind...")
+      (case (first verbs)
+        'retro-print (set-output-pause! (second verbs))
+        (mam-pr "You can't just make up settings... This doesn't exist")))))
 
 (defn cmd-look ([verbs] (cmd-inspect verbs))
   ([]
