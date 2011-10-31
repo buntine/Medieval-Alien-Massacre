@@ -4,7 +4,7 @@
 ; to mam.gameplay going on here...
 
 ; I need this to allow 'mutual' interaction between this namespace and
-; mam.gameplay. There must be a better way of doing this!
+; mam.gameplay. There must be a better way of doing this!?!
 (in-ns 'mam.gameplay)
 (declare set-current-room! current-room take-object! inventory
          display-inventory drop-object! inspect-object parse-input
@@ -23,8 +23,8 @@
 (defn direction? [verb]
   (boolean
     (some #{verb}
-          '(n e s w ne se sw nw i o u d north east south west
-            northeast southeast southwest northwest in out up down))))
+          '(n e s w ne se sw nw north east south west northeast
+            southeast southwest northwest in out up down))))
 
 (letfn
   [(move-room [dir]
@@ -65,7 +65,7 @@
   (println "  M-A-M HELP")
   (println "  ------------------------------")
   (println "   * Directions are north, east, south, west, northeast, southeast, southwest, northeast, in, out, up, down.")
-  (println "   * Or abbreviated n, e, s, w, ne, se, sw, nw, i, o, u, d.")
+  (println "   * Or abbreviated n, e, s, w, ne, se, sw, nw.")
   (println "   * Keys automatically open the appropriate doors, so just walk in their direction.")
   (println "   * You can go 'in' and 'out' of buildings if the action is appropriate.")
   (println "   * Credit is equivalent to our concept of money. Use it wisely!")

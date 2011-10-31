@@ -17,14 +17,14 @@
 (declare messages)
 
 
-(def current-room (ref 0))        ; The current room the player is in.
-(def visited-rooms (ref []))      ; The rooms that the player has visited.
-(def inventory (ref []))          ; The players inventory of items.
-(def credits (ref 0))             ; The players credits (aka $$$).
-(def milestones (ref #{}))        ; The players milestones. Used to track and manipulate story.
+(def current-room (ref 0))        ; Current room the player is in.
+(def visited-rooms (ref []))      ; Rooms that the player has visited.
+(def inventory (ref []))          ; Players inventory of items.
+(def credits (ref 0))             ; Players credits (aka $$$).
+(def milestones (ref #{}))        ; Players milestones. Used to track and manipulate story.
+(def output-pause (ref 30))       ; Amount of time sleep between printing characters (retro look 'n' feel).
 (def ignore-words '(that is the   ; Words that should be ignored in commands.
                     fucking damn)) 
-
 
 ; Plays audio from the specified URL.
 (defn play-url [url-string]
@@ -36,16 +36,17 @@
         url-string (str "file://" absolute-name)]
     (play-url url-string)))
 
-(defn mam-pr ([s] (mam-pr s 30))
+(defn mam-pr ([s] (mam-pr s @output-pause))
   ([s i]
    "Prints a string like the ancient terminals used to, sleeping for i ms per character"
-   (if (empty? s)
-     (newline)
-     (let [c (first s) r (rest s)]
-       (print c)
-       (flush)
-       (. Thread sleep i)
-       (recur r i)))))
+   (if (< i 5)
+     (println s)
+     (do
+       (doseq [c s]
+         (print c)
+         (flush)
+         (. Thread sleep i))
+       (newline)))))
 
 ; Maps user commands to the appropriate function.
 (def cmd-verbs
