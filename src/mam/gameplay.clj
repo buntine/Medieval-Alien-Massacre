@@ -22,9 +22,16 @@
 (def inventory (ref []))          ; Players inventory of items.
 (def credits (ref 0))             ; Players credits (aka $$$).
 (def milestones (ref #{}))        ; Players milestones. Used to track and manipulate story.
-(def output-pause (ref 30))       ; Amount of time sleep between printing characters (retro look 'n' feel).
 (def ignore-words '(that is the   ; Words that should be ignored in commands.
                     fucking damn)) 
+
+(def game-options (ref {:retro-terminal true ; Print to stdout with tiny pauses between characters.
+                        :sound true}))       ; Play sound during gameplay.
+
+(defn set-option! [option value]
+  "Sets one of the pre-defined game options. Assumes valid input."
+  (dosync
+    (alter game-options assoc option value)))
 
 ; Plays audio from the specified URL.
 (defn play-url [url-string]
@@ -36,7 +43,8 @@
         url-string (str "file://" absolute-name)]
     (play-url url-string)))
 
-(defn mam-pr ([s] (mam-pr s @output-pause))
+(defn mam-pr
+  ([s] (mam-pr s (if (@game-options :retro-terminal) 30 0)))
   ([s i]
    "Prints a string like the ancient terminals used to, sleeping for i ms per character"
    (if (< i 5)

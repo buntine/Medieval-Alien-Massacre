@@ -11,7 +11,7 @@
          describe-room room-has-object?  eat-object! fuck-object
          talk-to-object save-game! load-game! give-object! put-object!
          mam-pr pull-object deduce-object drink-object! cut-object
-         output-pause)
+         set-option!)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -80,11 +80,11 @@
   (println "  ------------------------------"))
 
 (letfn
-  [(set-output-pause! [state]
-     (let [opts {'on 30 'off 0}]
-       (if (some #{state} (keys opts))
-         (dosync
-           (ref-set output-pause (opts state))
+  [(set-retro-terminal! [state]
+     (let [opts ['on 'off]]
+       (if (some #{state} opts)
+         (do
+           (set-option! :retro-terminal (= 'on state))
            (mam-pr "Set..."))
          (mam-pr "Sorry, I only understand 'on' or 'off'."))))]
 
@@ -93,7 +93,7 @@
     (if (not (= (count verbs) 2))
       (mam-pr "Set what? And how? I can't just read your damn mind...")
       (case (first verbs)
-        'retro-print (set-output-pause! (second verbs))
+        'retro (set-retro-terminal! (second verbs))
         (mam-pr "You can't just make up settings... This doesn't exist")))))
 
 (defn cmd-look ([verbs] (cmd-inspect verbs))
