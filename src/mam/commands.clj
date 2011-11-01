@@ -80,11 +80,11 @@
   (println "  ------------------------------"))
 
 (letfn
-  [(set-retro-terminal! [state]
+  [(set-on-off! [option state]
      (let [opts ['on 'off]]
        (if (some #{state} opts)
          (do
-           (set-option! :retro-terminal (= 'on state))
+           (set-option! option (= 'on state))
            (mam-pr "Set..."))
          (mam-pr "Sorry, I only understand 'on' or 'off'."))))]
 
@@ -93,7 +93,8 @@
     (if (not (= (count verbs) 2))
       (mam-pr "Set what? And how? I can't just read your damn mind...")
       (case (first verbs)
-        'retro (set-retro-terminal! (second verbs))
+        'retro (set-on-off! :retro-terminal (second verbs))
+        'sound (set-on-off! :sound (second verbs))
         (mam-pr "You can't just make up settings... This doesn't exist")))))
 
 (defn cmd-look ([verbs] (cmd-inspect verbs))

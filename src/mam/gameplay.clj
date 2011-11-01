@@ -39,9 +39,10 @@
 
 ; Plays audio from the specified local file.
 (defn play-file [file-name]
-  (let [absolute-name (.getAbsolutePath (File. file-name))
-        url-string (str "file://" absolute-name)]
-    (play-url url-string)))
+  (if (@game-options :sound)
+    (let [absolute-name (.getAbsolutePath (File. file-name))
+          url-string (str "file://" absolute-name)]
+      (play-url url-string))))
 
 (defn mam-pr
   ([s] (mam-pr s (if (@game-options :retro-terminal) 30 0)))
