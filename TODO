@@ -6,5 +6,4 @@ Features:
    - Fee Fie Foe Foo: If entered in sequential order, something special happens...
  - Possibly: Design/implement a simple scoring system
  - Non-room responses need an additional newline.
- - Add set option for sound.
-   - Also think about moving state-changing functions for these into gameplay.clj
+ - Print current settings on "set" or "settings".

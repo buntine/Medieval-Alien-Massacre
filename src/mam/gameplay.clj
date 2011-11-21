@@ -25,13 +25,18 @@
 (def ignore-words '(that is the   ; Words that should be ignored in commands.
                     fucking damn)) 
 
-(def game-options (ref {:retro-terminal true ; Print to stdout with tiny pauses between characters.
+(def game-options (ref {:retro true ; Print to stdout with tiny pauses between characters.
                         :sound true}))       ; Play sound during gameplay.
 
 (defn set-option! [option value]
   "Sets one of the pre-defined game options. Assumes valid input."
   (dosync
     (alter game-options assoc option value)))
+
+(defn valid-option? [option]
+  "Returns true if option is valid game option."
+  (let [opts (map key @game-options)]
+    (boolean (some #{option} opts))))
 
 ; Plays audio from the specified URL.
 (defn play-url [url-string]
@@ -45,7 +50,7 @@
       (play-url url-string))))
 
 (defn mam-pr
-  ([s] (mam-pr s (if (@game-options :retro-terminal) 30 0)))
+  ([s] (mam-pr s (if (@game-options :retro) 30 0)))
   ([s i]
    "Prints a string like the ancient terminals used to, sleeping for i ms per character"
    (if (< i 5)
