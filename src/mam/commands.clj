@@ -11,7 +11,7 @@
          describe-room room-has-object?  eat-object! fuck-object
          talk-to-object save-game! load-game! give-object! put-object!
          mam-pr pull-object deduce-object drink-object! cut-object
-         set-option! valid-option?)
+         set-option! valid-option? game-options)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -90,7 +90,14 @@
   (defn cmd-set [verbs]
     "Attempts to update the given game setting"
     (if (not (= (count verbs) 2))
-      (mam-pr "PRINT\nCURRENT\nSETTINGS")
+      (letfn
+        [(format-option [opt value]
+           (str " - " (name opt) ": " (if value "On" "Off")))]
+        (mam-pr "Game options:\n")
+        (mam-pr (str-join
+                  "\n"
+                  (map #(apply format-option %)
+                       @game-options))))
       (let [[opt state] (map keyword verbs)]
         (if (valid-option? opt)
           (set-on-off! opt state)

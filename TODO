@@ -6,4 +6,4 @@ Features:
    - Fee Fie Foe Foo: If entered in sequential order, something special happens...
  - Possibly: Design/implement a simple scoring system
  - Non-room responses need an additional newline.
- - Print current settings on "set" or "settings".
+ - Save game settings in save/load.

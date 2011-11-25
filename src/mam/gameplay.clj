@@ -25,8 +25,8 @@
 (def ignore-words '(that is the   ; Words that should be ignored in commands.
                     fucking damn)) 
 
-(def game-options (ref {:retro true ; Print to stdout with tiny pauses between characters.
-                        :sound true}))       ; Play sound during gameplay.
+(def game-options (ref {:retro true    ; Print to stdout with tiny pauses between characters.
+                        :sound true})) ; Play sound during gameplay.
 
 (defn set-option! [option value]
   "Sets one of the pre-defined game options. Assumes valid input."
@@ -75,7 +75,7 @@
    'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
    'save cmd-save 'load cmd-load 'give cmd-give 'put cmd-put 'in cmd-in
    'out cmd-out 'up cmd-up 'down cmd-down 'drink cmd-drink 'cut cmd-cut
-   'stab cmd-cut 'set cmd-set})
+   'stab cmd-cut 'set cmd-set 'settings cmd-set})
    
 (defn set-current-room! [room]
   (dosync
