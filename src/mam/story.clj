@@ -72,7 +72,7 @@
       "Isle Zero-B: Emedded Programming. Dead-end.")
     '("You are in Isle one. There are more shelves of books to your east and west. You can also go north or south."
       "Isle one. Shelving to east/west. You can go north/south.")
-    '("You are in Isle Zero-A, the Web Development section. There are atleast 799 bad - and a single good - books on JavaScript here. There is also a poster on the wall that displays a graph that seems to depict how PHP became worse as time went by. By 2087 it had implemented (poorly) every language feature known to man (and supposedly some creatures from Proxima Centauri)."
+    '("You are in Isle Zero-A, the Web Development section. There are at least 799 bad books on JavaScript here. There is also a poster on the wall that displays a graph that seems to depict how PHP became worse as time went by. By 2087 it had implemented (poorly) every language feature known to man (and supposedly some creatures from Proxima Centauri)."
       "Isle Zero-A: Web Development. Dead-end.")
     '("You have arrived at the back-end of the library. You cannot go any further in this direction."
       "Back of library. It's a dead-end.")

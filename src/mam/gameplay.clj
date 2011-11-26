@@ -399,6 +399,7 @@
                     :visited-rooms @visited-rooms
                     :credits @credits
                     :milestones @milestones
+                    :game-options @game-options
                     :room-objects @room-objects}]
     (spit "savedata", (compress (str game-state)))))
 
@@ -412,5 +413,6 @@
         (ref-set visited-rooms (game-state :visited-rooms))
         (ref-set credits (game-state :credits))
         (ref-set milestones (game-state :milestones))
+        (ref-set game-options (game-state :game-options))
         (ref-set room-objects (game-state :room-objects))))
     (mam-pr "No saved game data!")))
