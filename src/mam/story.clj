@@ -34,7 +34,7 @@
       "Repairs deck, center. Passage leads west/east.")
     '("You are at the end of the hallway. There is a large, sliding door in front of you."
       "End of hallway. Large door here.")
-    '("There are a bunch of broken machines lying around on the repairs deck. There is a door to the east or a passage south."
+    '("There are a bunch of broken machines lying around on the repairs deck. There is a door to the east or a passage west."
       "Repairs deck. Door to the east and passage south.")
     '("You are in a large room with space age decor. It seems to be the central living quarters. The walls are lined with pictures of the late comedian, Bill Hicks. There are walkways to the west and northwest and a door to the south."
       "Central living quarters, walkways to west and northwest, door to south.")
@@ -90,6 +90,7 @@
     (if (in-inventory? keynum)
       (let [key-name (. ((object-details keynum) :inv) toLowerCase)]
         (set-current-room! room)
+        (play-file "media/door.wav")
         (mam-pr (str " * Door unlocked with " key-name " *")))
       (do
         (play-file "media/fail.wav")
