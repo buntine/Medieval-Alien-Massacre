@@ -11,7 +11,7 @@
          describe-room room-has-object?  eat-object! fuck-object
          talk-to-object save-game! load-game! give-object! put-object!
          mam-pr pull-object deduce-object drink-object! cut-object
-         set-option! valid-option? game-options)
+         set-option! valid-option? game-options cmd-verbs)
 
 (ns mam.commands
   (:use mam.gameplay)
@@ -68,6 +68,7 @@
   (println "   * Directions are north, east, south, west, northeast, southeast, southwest, northeast, in, out, up, down.")
   (println "   * Or abbreviated n, e, s, w, ne, se, sw, nw.")
   (println "   * Keys automatically open the appropriate doors, so just walk in their direction.")
+  (println "   * Type 'commands' to see a fat-ass list of the things I understand.")
   (println "   * You can go 'in' and 'out' of buildings if the action is appropriate.")
   (println "   * Credit is equivalent to our concept of money. Use it wisely!")
   (println "   * Check your items and credit with 'inventory' or 'inv'.")
@@ -78,6 +79,12 @@
   (println "   * Inspired by Dunnet, by Rob Schnell and Colossal Cave Adventure by William Crowther.")
   (println "   * Don't forget: Life is a game and everything is pointless.")
   (println "  ------------------------------"))
+
+(defn cmd-commands [verbs]
+  "Prints a line-delimited list of the commands the system understands."
+  (let [commands (sort (map str (keys cmd-verbs)))]
+    (doseq [c commands]
+      (println c))))
 
 (letfn
   [(set-on-off! [option state]

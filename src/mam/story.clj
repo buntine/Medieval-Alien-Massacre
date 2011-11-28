@@ -40,8 +40,8 @@
       "Central living quarters, walkways to west and northwest, door to south.")
     '("You can see some more framed pictures of Bill Hicks here. As you walk past them, Bills eyes seem to follow you. The passage goes west or east."
       "Passage with more creepy Bill Hicks pictures. Passage leads east/west.")
-    '("You are at the west-end of the room. Here you can see sealed entrance and a sign saying 'Exit pod'."
-      "West-end of large room with exit pod.")
+    '("You are at the west-end of the room. Here you can see sealed entrance and a sign saying 'Exit pod'. Passage goes north-east or east."
+      "West-end of large room with exit pod. Passages north-east and east.")
     '("You are at the front of the large room. There is a huge glass-like window here and you can see now that you are, infact, travelling through space! There are passages going back southeast and southwest."
       "Front of large room with huge glass-like window. Passages southeast/southwest.")
     '("You are in a dark alley and there is rubbish lying around everywhere. There are solid walls behind you and to either side. The alley leads south."
@@ -231,6 +231,7 @@
           (mam-pr "It is the year 2843, you're currently travelling on a highway between two of the moons of Jupiter.")
           (mam-pr "\n** At this point you explain that you are infact from the year 2011 and the last thing you remember is driking coffee at home and writing some LISP code **\n")
           (mam-pr "The captain says 'Oh, yes, it makes sense now. A true LISP hacker and drinker of the finest bean can transcend both space and time. We've seen your type before. You should head over to see the Pod Manager to our southwest in order to get yourself off this ship'")
+          (mam-pr "Good luck out there, young man...")
           (add-milestone! :speak-to-captain))),
    :homeless-bum
      #(mam-pr "He mutters 'Hey mystery man! Welcome to Syndal City, perhaps you can spare an old cyborg some whisky?'.")})
