@@ -8,9 +8,9 @@
 (in-ns 'mam.gameplay)
 (declare set-current-room! current-room take-object! inventory
          display-inventory drop-object! inspect-object parse-input
-         describe-room room-has-object?  eat-object! fuck-object
-         talk-to-object save-game! load-game! give-object! put-object!
-         mam-pr pull-object deduce-object drink-object! cut-object
+         describe-room eat-object! fuck-object talk-to-object
+         save-game! load-game! give-object! put-object! mam-pr
+         pull-object deduce-object drink-object! cut-object
          set-option! valid-option? game-options cmd-verbs)
 
 (ns mam.commands

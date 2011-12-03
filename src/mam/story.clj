@@ -282,11 +282,11 @@
         (mam-pr "YOU DRANK LIQUID SHIT!!!", 250)
         true)
    :salvika-whisky
-     #(if (playey_has_becherovka)
+     #(if (in-inventory? 17)
         (do (mam-pr "Hiccup!") true)
-        (do (mam-pr "Maybe you should give that to the dirty old hobo in the alley way? After all, he did ask for it kindly!") false))
+        (do (mam-pr "Maybe you should give that to the dirty old hobo in the alley way?") false))
    :becherovka
-     #(if (playey_has_salvika)
+     #(if (in-inventory? 16)
         (do (mam-pr "Wow! That'll put hair on ya' chest!") true)
         (do (mam-pr "I think you should give that to the dirty old hobo in the alley way. Don't be so greedy!") false))})
 
@@ -335,10 +335,10 @@
                   :living false, :events {}, :credits nil}]
     (merge defaults details)))
 
-; The details of all objects. Each object is assigned a number in object-identifiers, which
-; corresponds to it's index here. Permanent object cannot be taken and thus don't require
-; weights or inventory descriptions. Events, such as :eat, :speak, :give and :put can be
-; assigned and will be executed in the correct contexts.
+; The details of all objects. Each object is assigned one or more numbers in object-identifiers,
+; which corresponds to it's index here. Permanent object cannot be taken and thus don't require
+; weights or inventory descriptions. Events, such as :eat, :drink, :speak, :give, :take and :put
+; can be assigned and will be executed in the correct contexts.
 (def object-details
   (vector
     (make-dets {:game "There is a tasty-looking candy bar here"
