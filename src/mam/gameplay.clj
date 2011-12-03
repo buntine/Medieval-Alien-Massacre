@@ -74,8 +74,9 @@
    'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat 'fuck cmd-fuck
    'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
    'save cmd-save 'load cmd-load 'give cmd-give 'put cmd-put 'in cmd-in
-   'out cmd-out 'up cmd-up 'down cmd-down 'drink cmd-drink 'cut cmd-cut
-   'stab cmd-cut 'set cmd-set 'settings cmd-set 'commands cmd-commands})
+   'out cmd-out 'enter cmd-in 'leave cmd-out 'up cmd-up 'down cmd-down
+   'drink cmd-drink 'cut cmd-cut 'stab cmd-cut 'set cmd-set 'settings cmd-set
+   'commands cmd-commands})
    
 (defn set-current-room! [room]
   (dosync
@@ -238,7 +239,7 @@
   (let [evt (event-for objnum :eat)]
     (if (nil? evt)
       (do
-        (mam-pr (str "You force it into your throat and fucking die in pain."))
+        (mam-pr  "You force it into your throat and fucking die in pain.")
         (kill-player ((object-details objnum) :inv)))
       (dosync
         (play-file "media/eat.wav")
@@ -246,19 +247,23 @@
         (remove-object-from-inventory! objnum)))))
 
 (defn drink-object! [objnum]
-  "Attempts to drink the given object"
-  (let [evt (event-for objnum :drink)]
+  "Attempts to drink the given object. The event must return a boolean value, if
+   false then the side-effect will not occur (removal of item from game)."
+  (let [evt (event-for objnum :drink)
+        drink! #(dosync
+                  (play-file "media/drink.wav")
+                  (remove-object-from-inventory! objnum))]
     (if (nil? evt)
-      (mam-pr (str "It doesn't seem to be drinkable."))
-      (dosync
-        (play-file "media/drink.wav")
-        (if (string? evt) (mam-pr evt) (evt))
-        (remove-object-from-inventory! objnum)))))
+      (mam-pr "It doesn't seem to be drinkable.")
+      (if (string? evt)
+        (do (mam-pr evt) (drink!))
+        (if (evt)
+          (drink!))))))
 
 (defn talk-to-object [objnum]
   "Attempts to talk to the given object"
   (if (not (object-is? objnum :living))
-    (mam-pr (str "That item does not possess the ability to talk."))
+    (mam-pr "That item does not possess the ability to talk.")
     (let [evt (event-for objnum :speak)]
       (if (nil? evt)
         (mam-pr "Sorry, they have nothing to say at the moment.")

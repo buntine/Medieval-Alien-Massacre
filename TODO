@@ -6,3 +6,4 @@ Features:
    - Fee Fie Foe Foo: If entered in sequential order, something special happens...
  - Possibly: Design/implement a simple scoring system
  - Non-room responses need an additional newline.
+ - Change events model so you can return false to prevent side-effect.

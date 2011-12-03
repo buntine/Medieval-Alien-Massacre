@@ -274,11 +274,21 @@
    :green-potion
      #(do
         (mam-pr "You drink the potion and instantly start to feel strange. Without warning, your eyes begin to glow green! Luckily, you feel no pain.")
-        (add-milestone! :drinks-green-potion)),
+        (add-milestone! :drinks-green-potion)
+        true),
    :brown-potion
      #(do
         (mam-pr "Hmm... That was clearly a vile of human shit. And you just drank it! DUDE!")
-        (mam-pr "YOU DRANK LIQUID SHIT!!!", 250))})
+        (mam-pr "YOU DRANK LIQUID SHIT!!!", 250)
+        true)
+   :salvika-whisky
+     #(if (playey_has_becherovka)
+        (do (mam-pr "Hiccup!") true)
+        (do (mam-pr "Maybe you should give that to the dirty old hobo in the alley way? After all, he did ask for it kindly!") false))
+   :becherovka
+     #(if (playey_has_salvika)
+        (do (mam-pr "Wow! That'll put hair on ya' chest!") true)
+        (do (mam-pr "I think you should give that to the dirty old hobo in the alley way. Don't be so greedy!") false))})
 
 ; Functions to execute when player pulls particular objects.
 (def pull-fn-for
@@ -410,13 +420,13 @@
     (make-dets {:game "There is a bottle of 'Salvika' whisky here"
                 :inspect "Looks OK. The price tag says 3 credits."
                 :inv "Bottle of Salvika whisky"
-                :events {:drink "* hiccup! *"
+                :events {:drink (drink-fn-for :salvika-whisky)
                          :take (take-fn-for :salvika-whisky)}
                 :weight 2}),
     (make-dets {:game "There is a bottle of Becherovka (a Czech Liquer) here"
                 :inspect "Looks great. The price tag says 4 credits."
                 :inv "Bottle of Becherovka"
-                :events {:drink "Wow, that was strong!"
+                :events {:drink (drink-fn-for :becherovka)
                          :take (take-fn-for :becherovka)}
                 :weight 2}),
     (make-dets {:game "There is 5 credits here!"
