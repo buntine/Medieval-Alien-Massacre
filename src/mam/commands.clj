@@ -6,20 +6,41 @@
 ; I need this to allow 'mutual' interaction between this namespace and
 ; mam.gameplay. There must be a better way of doing this!?!
 (in-ns 'mam.gameplay)
-(declare set-current-room! current-room take-object! inventory
-         display-inventory drop-object! inspect-object parse-input
-         describe-room eat-object! fuck-object talk-to-object
-         save-game! load-game! give-object! put-object! mam-pr
-         pull-object deduce-object drink-object! cut-object
-         set-option! valid-option? game-options cmd-verbs)
+;(declare set-current-room! current-room take-object! inventory
+;         display-inventory drop-object! inspect-object parse-input
+;         describe-room eat-object! fuck-object talk-to-object
+;         save-game! load-game! give-object! put-object! mam-pr
+;         pull-object deduce-object drink-object! cut-object
+;         set-option! valid-option? game-options cmd-verbs)
 
 (ns mam.commands
+  (:use mam.util)
+  (:use mam.state)
   (:use mam.gameplay)
   (:use mam.story)
   (:use [clojure.contrib.str-utils :only (str-join)]))
 
 (declare cmd-inspect)
 
+; Maps user commands to the appropriate function.
+(def cmd-verbs
+  {'go cmd-go 'n cmd-north 'e cmd-east 's cmd-south 'w cmd-west
+   'ne cmd-northeast 'se cmd-southeast 'sw cmd-southwest 'nw cmd-northwest
+   'north cmd-north 'east cmd-east 'south cmd-south 'west cmd-west
+   'northeast cmd-northeast 'southeast cmd-southeast 'southwest cmd-southwest
+   'drop cmd-drop 'throw cmd-drop 'inventory cmd-inventory 'pull cmd-pull
+   'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take
+   'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
+   'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat 'fuck cmd-fuck
+   'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
+   'save cmd-save 'load cmd-load 'give cmd-give 'put cmd-put 'in cmd-in
+   'out cmd-out 'enter cmd-in 'leave cmd-out 'up cmd-up 'down cmd-down
+   'drink cmd-drink 'cut cmd-cut 'stab cmd-cut 'set cmd-set 'settings cmd-set
+   'commands cmd-commands})
+
+(defn fn-for-command [cmd]
+  "Returns the function for the given command verb, or nil"
+  (if cmd (cmd-verbs cmd)))
 
 (defn direction? [verb]
   (boolean
