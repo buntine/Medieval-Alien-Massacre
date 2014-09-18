@@ -16,11 +16,12 @@
 (ns mam.commands
   (:use mam.util)
   (:use mam.state)
-  (:use mam.gameplay)
   (:use mam.story)
   (:use [clojure.contrib.str-utils :only (str-join)]))
 
 (declare cmd-inspect)
+
+(declare parse-input) ;; TODO: FIX THIS. MOVE INTO state.clj OR REMOVE NEED FOR IT FROM THIS FILE.
 
 ; Maps user commands to the appropriate function.
 (def cmd-verbs

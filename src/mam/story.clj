@@ -11,7 +11,8 @@
 ;         inventory-weight play-file)
 
 (ns mam.story
-  (:use mam.state)
+  (:use mam.util)
+  (:use mam.state))
 
 (declare object-details)
 

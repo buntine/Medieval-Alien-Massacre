@@ -62,6 +62,41 @@
       []           ;29
       [])))        ;30
 
+(defn prospects-for [verb context]
+  "Returns the prospective objects for the given verb.
+   E.g: 'cheese' might mean objects 6 and 12 or object 9 or nothing."
+  (let [objnums (object-identifiers verb)
+        fns {:room #(room-has-object? @current-room %)
+             :inventory in-inventory?}]
+    (if (nil? objnums)
+      '()
+      (filter (fns context)
+              (if (integer? objnums) #{objnums} objnums)))))
+
+(defn highest-val [obj-counts]
+  "Returns the key of the highest value in the given map. If no
+   single highest value is available, returns a lazy seq of keys
+   of the tied-highest. This is used during language parsing."
+  (if (not (empty? obj-counts))
+    (let [highest (apply max (vals obj-counts))
+          matches (into {}
+                        (filter #(-> % val (= highest))
+                                obj-counts))]
+      (if (= (count matches) 1)
+        (key (first matches))
+        (keys matches)))))
+
+(defn deduce-object ([verbs context] (deduce-object verbs '() context))
+  ([verbs realised context]
+   "Attempts to realise a single object given a sequence of verbs and
+    a context. This allows for the same term to identify multiple objects.
+    Context must be either :room or :inventory"
+   (if (empty? verbs)
+     (highest-val (frequencies realised))
+     (recur (rest verbs)
+            (concat (prospects-for (first verbs) context) realised)
+            context))))
+
 (defn in-inventory? [objnum]
   "Returns true if object assigned to 'objnum' is in players inventory"
   (boolean (some #{objnum} @inventory)))
