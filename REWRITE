@@ -1,0 +1,6 @@
+- Move all refs into single map data structure (game-state)
+- Pass game-state into all commands.
+- Return modified state
+- All state-changing functions (set-current-room!) are defined in new file (state.clj)
+  - They accept state and return a modified copy of it in some way.
+    - {'current-room 1 'health 10} -> {'current-room 2 'health 10}

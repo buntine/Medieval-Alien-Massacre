@@ -7,7 +7,7 @@
   (:use mam.commands)
   (:use mam.story)
   (:use mam.compression)
-  (:use [clojure.contrib.string :only (split join)])
+  (:use [clojure.string :only (split join)])
   (:import (java.applet Applet))
   (:import (java.io File))
   (:import (java.net URL)))
