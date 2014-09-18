@@ -19,47 +19,7 @@
 
 (def ignore-words '(that is the   ; Words that should be ignored in commands.
                     fucking damn)) 
-
   
-(defn in-inventory? [objnum]
-  "Returns true if object assigned to 'objnum' is in players inventory"
-  (boolean (some #{objnum} @inventory)))
-
-(defn has-knife? []
-  "Returns true if the player has a knife-like object"
-  (some #((object-details %) :cutter) @inventory))
-
-(defn obj-weight [objnum]
-  "Returns the weight assigned to the given object"
-  ((object-details objnum) :weight))
-
-(defn inventory-weight []
-  "Returns the current weight of the players inventory"
-  (reduce + 0 (map obj-weight @inventory)))
-
-(defn event-for [objnum evt]
-  "Returns either the value (usually a fn) assigned to the given event, or nil"
-  (((object-details objnum) :events) evt))
-
-(defn describe-object ([objnum] (describe-object objnum :game))
-  ([objnum context]
-    "Returns the string which describes the given object, or nil"
-    (let [info ((object-details objnum) context)]
-      (if info
-        (str info)))))
-
-(defn object-is? [objnum k]
-  "Returns true is the object adheres to the given keyword"
-  ((object-details objnum) k))
-
-(defn objects-in-room ([] (objects-in-room @current-room))
-  ([room]
-   (nth @room-objects room)))
-
-(defn room-has-object? [room objnum]
-  "Returns true if the gien room currently houses the given object"
-  (boolean (some #{objnum} (objects-in-room room))))
-
 (defn prospects-for [verb context]
   "Returns the prospective objects for the given verb.
    E.g: 'cheese' might mean objects 6 and 12 or object 9 or nothing."

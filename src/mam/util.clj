@@ -18,3 +18,10 @@
          (. Thread sleep i))
        (newline)))))
  
+(defn print-with-newlines
+  ([lines] (print-with-newlines lines ""))
+  ([lines prepend]
+   "Prints a sequence of strings, separated by newlines. Only useful for side-effects"
+   (if (not (empty? prepend))
+     (mam-pr prepend))
+   (mam-pr (str " - " (join "\n - " lines)))))
