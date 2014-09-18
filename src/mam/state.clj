@@ -62,6 +62,18 @@
       []           ;29
       [])))        ;30
 
+(defn objects-in-room ([] (objects-in-room @current-room))
+  ([room]
+   (nth @room-objects room)))
+
+(defn room-has-object? [room objnum]
+  "Returns true if the gien room currently houses the given object"
+  (boolean (some #{objnum} (objects-in-room room))))
+
+(defn in-inventory? [objnum]
+  "Returns true if object assigned to 'objnum' is in players inventory"
+  (boolean (some #{objnum} @inventory)))
+
 (defn prospects-for [verb context]
   "Returns the prospective objects for the given verb.
    E.g: 'cheese' might mean objects 6 and 12 or object 9 or nothing."
@@ -97,10 +109,6 @@
             (concat (prospects-for (first verbs) context) realised)
             context))))
 
-(defn in-inventory? [objnum]
-  "Returns true if object assigned to 'objnum' is in players inventory"
-  (boolean (some #{objnum} @inventory)))
-
 (defn has-knife? []
   "Returns true if the player has a knife-like object"
   (some #((object-details %) :cutter) @inventory))
@@ -127,14 +135,6 @@
 (defn object-is? [objnum k]
   "Returns true is the object adheres to the given keyword"
   ((object-details objnum) k))
-
-(defn objects-in-room ([] (objects-in-room @current-room))
-  ([room]
-   (nth @room-objects room)))
-
-(defn room-has-object? [room objnum]
-  "Returns true if the gien room currently houses the given object"
-  (boolean (some #{objnum} (objects-in-room room))))
 
 (defn display-inventory []
   "Displays the players inventory"
