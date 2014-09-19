@@ -17,7 +17,7 @@
 
 ; Declarations for some procedures I mention before they have been
 ; defined.
-(declare messages object-details)
+(declare messages object-details kill-player cmd-verbs)
 
 (def current-room (ref 0))             ; Current room the player is in.
 (def visited-rooms (ref []))           ; Rooms that the player has visited.
@@ -28,7 +28,21 @@
                         :sound true})) ; Play sound during gameplay.
 
 ; Maximum weight the user can carry at any one time.
-(def *total-weight* 12)
+(def total-weight 12)
+
+; Plays audio from the specified URL.
+(defn play-url [url-string]
+  (.play (Applet/newAudioClip (URL. url-string))))
+
+; Plays audio from the specified local file.
+(defn play-file [file-name]
+  (if (@game-options :sound)
+    (let [absolute-name (.getAbsolutePath (File. file-name))
+          url-string (str "file://" absolute-name)]
+      (play-url url-string))))
+
+(def ignore-words '(that is the   ; Words that should be ignored in commands.
+                    fucking damn)) 
 
 (defn mam-pr
   ([s] (mam-pr s (if (@game-options :retro) 30 0)))
@@ -323,7 +337,7 @@
   (cond
     (object-is? objnum :permanent)
       (mam-pr "You can't take that.")
-    (> (+ (inventory-weight) (obj-weight objnum)) *total-weight*)
+    (> (+ (inventory-weight) (obj-weight objnum)) total-weight)
       (mam-pr "You cannot carry that much weight. Try dropping something.")
     :else
       (let [evt (event-for objnum :take)]
@@ -723,27 +737,94 @@
         (ref-set game-options (game-state :game-options))
         (ref-set room-objects (game-state :room-objects))))
     (mam-pr "No saved game data!")))
-
-; Plays audio from the specified URL.
-(defn play-url [url-string]
-  (.play (Applet/newAudioClip (URL. url-string))))
-
-; Plays audio from the specified local file.
-(defn play-file [file-name]
-  (if (@game-options :sound)
-    (let [absolute-name (.getAbsolutePath (File. file-name))
-          url-string (str "file://" absolute-name)]
-      (play-url url-string))))
-
-(defn kill-player [reason]
-  "Kills the player and ends the game"
-  (play-file "media/kill.wav")
-  (mam-pr (str "You were killed by: " reason))
-  (cmd-quit false))
-
-(def ignore-words '(that is the   ; Words that should be ignored in commands.
-                    fucking damn)) 
   
+(def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
+                 'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
+                 'in 10 'out 11})
+
+(defn k [keynum room]
+  "Returns a function that checks if the player has the given key. If they
+   do, set the current room to 'room'. Otherwise, let them know"
+  (fn []
+    (if (in-inventory? keynum)
+      (let [key-name (. ((object-details keynum) :inv) toLowerCase)]
+        (set-current-room! room)
+        (play-file "media/door.wav")
+        (mam-pr (str " * Door unlocked with " key-name " *")))
+      (do
+        (play-file "media/fail.wav")
+        (mam-pr "You don't have security clearance for this door!")))))
+
+(defn o [objnum room]
+  "Returns a function that checks if the given room houses the given object. If
+   it does, the player cannot go in the given direction."
+  (fn []
+    (if (room-has-object? @current-room objnum)
+      (mam-pr "You can't go that way.")
+      (set-current-room! room))))
+
+(letfn
+  [(library-trapdoor []
+     (if (> (inventory-weight) 7)
+       (dosync
+         (mam-pr "As you walk into this area, the floorboards below you give way because of your weight! The hole reveals a hidden staircase. You can now go down.")
+         (take-object-from-room! @current-room 27)
+         (drop-object-in-room! @current-room 28))))]
+
+  (defn rc [i room]
+    "Returns a function that performs the 'room check' (a named function) identified by i. The function should either return a number indicating the room to move the player to, or a false value, in which case the player will be sent to 'room'"
+    (fn []
+      (let [fnvec [library-trapdoor]
+            new-room (or ((fnvec i)) room)]
+        (set-current-room! new-room)))))
+
+; Map to specify which rooms the player will enter on the given movement.
+; A function indicates that something special needs to be done (check conditions, etc).
+(def world-map
+  (vector
+;    north     east      south     west      ntheast   stheast   sthwest   nthwest   up        down      in        out
+    [3         2         nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;0
+    [4         nil       nil       2         nil       nil       nil       nil       nil       nil       nil       nil]   ;1
+    [nil       1         nil       0         nil       nil       nil       nil       nil       nil       nil       nil]   ;2
+    [nil       5         0         nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;3
+    [6         nil       1         7         nil       nil       nil       nil       nil       nil       nil       nil]   ;4
+    [nil       7         nil       3         nil       nil       nil       nil       nil       nil       nil       nil]   ;5
+    [(k 4 8)   nil       4         nil       nil       nil       nil       nil       nil       nil       (k 4 8)   nil]   ;6
+    [nil       4         nil       5         nil       nil       nil       nil       nil       nil       nil       nil]   ;7
+    [nil       nil       6         9         nil       nil       nil       11        nil       nil       nil       nil]   ;8
+    [nil       8         nil       10        nil       nil       nil       nil       nil       nil       nil       nil]   ;9
+    [nil       9         nil       nil       11        nil       nil       nil       nil       nil       nil       nil]   ;10
+    [nil       nil       nil       nil       nil       8         10        nil       nil       nil       nil       nil]   ;11
+    [nil       nil       14        nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;12
+    [nil       nil       nil       14        nil       nil       nil       nil       nil       nil       15        nil]   ;13
+    [12        13        18        nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;14
+    [nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       13]    ;15
+    [nil       nil       nil       18        nil       nil       nil       nil       nil       nil       17        nil]   ;16
+    [nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       16]    ;17
+    [14        16        nil       19        nil       nil       nil       nil       nil       nil       nil       nil]   ;18
+    [nil       18        nil       (o 20 20) nil       nil       nil       nil       nil       nil       nil       nil]   ;19
+    [21        19        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;20
+    [nil       nil       20        nil       nil       nil       nil       nil       nil       nil       23        nil]   ;21
+    [25        24        23        (rc 0 26) nil       nil       nil       nil       nil       nil       nil       nil]   ;22
+    [22        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       21]    ;23
+    [nil       nil       nil       22        nil       nil       nil       nil       nil       nil       nil       nil]   ;24
+    [27        28        22        29        nil       nil       nil       nil       nil       nil       nil       nil]   ;25
+    [nil       22        nil       nil       nil       nil       nil       nil       nil       (o 27 30) nil       nil]   ;26
+    [nil       nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;27
+    [nil       nil       nil       25        nil       nil       nil       nil       nil       nil       nil       nil]   ;28
+    [nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;29
+    [nil       nil       nil       nil       nil       nil       nil       nil       26        nil       nil       nil])) ;30
+
+(defn direction? [verb]
+  (boolean
+    (some #{verb}
+          '(n e s w ne se sw nw north east south west northeast
+            southeast southwest northwest in out up down))))
+
+(defn fn-for-command [cmd]
+  "Returns the function for the given command verb, or nil"
+  (if cmd (cmd-verbs cmd)))
+
 (defn verb-parse [verb-lst]
   "Calls the procedure identified by the first usable verb. Returns
    false if the command is not understood"
@@ -780,46 +861,6 @@
     (flush)
     (print "\033[0m")
     cmd))
-
-(defn messages ([] (messages true))
-  ([verbose]
-   "Describes current room and prompts for user input"
-   (when verbose
-     (describe-room @current-room)
-     (newline))
-   (print "> ")
-   (flush)
-   (parse-input (request-command))))
-
-(declare cmd-inspect)
-
-(declare parse-input) ;; TODO: FIX THIS. MOVE INTO state.clj OR REMOVE NEED FOR IT FROM THIS FILE.
-
-; Maps user commands to the appropriate function.
-(def cmd-verbs
-  {'go cmd-go 'n cmd-north 'e cmd-east 's cmd-south 'w cmd-west
-   'ne cmd-northeast 'se cmd-southeast 'sw cmd-southwest 'nw cmd-northwest
-   'north cmd-north 'east cmd-east 'south cmd-south 'west cmd-west
-   'northeast cmd-northeast 'southeast cmd-southeast 'southwest cmd-southwest
-   'drop cmd-drop 'throw cmd-drop 'inventory cmd-inventory 'pull cmd-pull
-   'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take
-   'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
-   'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat 'fuck cmd-fuck
-   'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
-   'save cmd-save 'load cmd-load 'give cmd-give 'put cmd-put 'in cmd-in
-   'out cmd-out 'enter cmd-in 'leave cmd-out 'up cmd-up 'down cmd-down
-   'drink cmd-drink 'cut cmd-cut 'stab cmd-cut 'set cmd-set 'settings cmd-set
-   'commands cmd-commands})
-
-(defn fn-for-command [cmd]
-  "Returns the function for the given command verb, or nil"
-  (if cmd (cmd-verbs cmd)))
-
-(defn direction? [verb]
-  (boolean
-    (some #{verb}
-          '(n e s w ne se sw nw north east south west northeast
-            southeast southwest northwest in out up down))))
 
 (letfn
   [(move-room [dir]
@@ -903,11 +944,6 @@
         (if (valid-option? opt)
           (set-on-off! opt state)
           (mam-pr "You can't just make up settings... This doesn't exist"))))))
-
-(defn cmd-look ([verbs] (cmd-inspect verbs))
-  ([]
-   "Prints a long description of a room"
-   (describe-room @current-room true)))
 
 (letfn
   [(interact [verbs on-empty on-nil mod-fn context]
@@ -998,6 +1034,11 @@
               pull-object
               :room)))
 
+(defn cmd-look ([verbs] (cmd-inspect verbs))
+  ([]
+   "Prints a long description of a room"
+   (describe-room @current-room true)))
+
 (defn cmd-inventory [verbs]
   "Displays the players inventory"
   (display-inventory))
@@ -1047,79 +1088,38 @@
   (load-game!)
   (mam-pr " * Game loaded *"))
 
-(defn k [keynum room]
-  "Returns a function that checks if the player has the given key. If they
-   do, set the current room to 'room'. Otherwise, let them know"
-  (fn []
-    (if (in-inventory? keynum)
-      (let [key-name (. ((object-details keynum) :inv) toLowerCase)]
-        (set-current-room! room)
-        (play-file "media/door.wav")
-        (mam-pr (str " * Door unlocked with " key-name " *")))
-      (do
-        (play-file "media/fail.wav")
-        (mam-pr "You don't have security clearance for this door!")))))
+; Maps user commands to the appropriate function.
+(def cmd-verbs
+  {'go cmd-go 'n cmd-north 'e cmd-east 's cmd-south 'w cmd-west
+   'ne cmd-northeast 'se cmd-southeast 'sw cmd-southwest 'nw cmd-northwest
+   'north cmd-north 'east cmd-east 'south cmd-south 'west cmd-west
+   'northeast cmd-northeast 'southeast cmd-southeast 'southwest cmd-southwest
+   'drop cmd-drop 'throw cmd-drop 'inventory cmd-inventory 'pull cmd-pull
+   'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take
+   'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
+   'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat 'fuck cmd-fuck
+   'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
+   'save cmd-save 'load cmd-load 'give cmd-give 'put cmd-put 'in cmd-in
+   'out cmd-out 'enter cmd-in 'leave cmd-out 'up cmd-up 'down cmd-down
+   'drink cmd-drink 'cut cmd-cut 'stab cmd-cut 'set cmd-set 'settings cmd-set
+   'commands cmd-commands})
 
-(defn o [objnum room]
-  "Returns a function that checks if the given room houses the given object. If
-   it does, the player cannot go in the given direction."
-  (fn []
-    (if (room-has-object? @current-room objnum)
-      (mam-pr "You can't go that way.")
-      (set-current-room! room))))
+(defn messages ([] (messages true))
+  ([verbose]
+   "Describes current room and prompts for user input"
+   (when verbose
+     (describe-room @current-room)
+     (newline))
+   (print "> ")
+   (flush)
+   (parse-input (request-command))))
 
-(letfn
-  [(library-trapdoor []
-     (if (> (inventory-weight) 7)
-       (dosync
-         (mam-pr "As you walk into this area, the floorboards below you give way because of your weight! The hole reveals a hidden staircase. You can now go down.")
-         (take-object-from-room! @current-room 27)
-         (drop-object-in-room! @current-room 28))))]
+(declare cmd-inspect)
 
-  (defn rc [i room]
-    "Returns a function that performs the 'room check' (a named function) identified by i. The function should either return a number indicating the room to move the player to, or a false value, in which case the player will be sent to 'room'"
-    (fn []
-      (let [fnvec [library-trapdoor]
-            new-room (or ((fnvec i)) room)]
-        (set-current-room! new-room)))))
+(declare parse-input) ;; TODO: FIX THIS. MOVE INTO state.clj OR REMOVE NEED FOR IT FROM THIS FILE.
 
-; Map to specify which rooms the player will enter on the given movement.
-; A function indicates that something special needs to be done (check conditions, etc).
-(def world-map
-  (vector
-;    north     east      south     west      ntheast   stheast   sthwest   nthwest   up        down      in        out
-    [3         2         nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;0
-    [4         nil       nil       2         nil       nil       nil       nil       nil       nil       nil       nil]   ;1
-    [nil       1         nil       0         nil       nil       nil       nil       nil       nil       nil       nil]   ;2
-    [nil       5         0         nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;3
-    [6         nil       1         7         nil       nil       nil       nil       nil       nil       nil       nil]   ;4
-    [nil       7         nil       3         nil       nil       nil       nil       nil       nil       nil       nil]   ;5
-    [(k 4 8)   nil       4         nil       nil       nil       nil       nil       nil       nil       (k 4 8)   nil]   ;6
-    [nil       4         nil       5         nil       nil       nil       nil       nil       nil       nil       nil]   ;7
-    [nil       nil       6         9         nil       nil       nil       11        nil       nil       nil       nil]   ;8
-    [nil       8         nil       10        nil       nil       nil       nil       nil       nil       nil       nil]   ;9
-    [nil       9         nil       nil       11        nil       nil       nil       nil       nil       nil       nil]   ;10
-    [nil       nil       nil       nil       nil       8         10        nil       nil       nil       nil       nil]   ;11
-    [nil       nil       14        nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;12
-    [nil       nil       nil       14        nil       nil       nil       nil       nil       nil       15        nil]   ;13
-    [12        13        18        nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;14
-    [nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       13]    ;15
-    [nil       nil       nil       18        nil       nil       nil       nil       nil       nil       17        nil]   ;16
-    [nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       16]    ;17
-    [14        16        nil       19        nil       nil       nil       nil       nil       nil       nil       nil]   ;18
-    [nil       18        nil       (o 20 20) nil       nil       nil       nil       nil       nil       nil       nil]   ;19
-    [21        19        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;20
-    [nil       nil       20        nil       nil       nil       nil       nil       nil       nil       23        nil]   ;21
-    [25        24        23        (rc 0 26) nil       nil       nil       nil       nil       nil       nil       nil]   ;22
-    [22        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil       21]    ;23
-    [nil       nil       nil       22        nil       nil       nil       nil       nil       nil       nil       nil]   ;24
-    [27        28        22        29        nil       nil       nil       nil       nil       nil       nil       nil]   ;25
-    [nil       22        nil       nil       nil       nil       nil       nil       nil       (o 27 30) nil       nil]   ;26
-    [nil       nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;27
-    [nil       nil       nil       25        nil       nil       nil       nil       nil       nil       nil       nil]   ;28
-    [nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;29
-    [nil       nil       nil       nil       nil       nil       nil       nil       26        nil       nil       nil])) ;30
-
-(def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
-                 'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
-                 'in 10 'out 11})
+(defn kill-player [reason]
+  "Kills the player and ends the game"
+  (play-file "media/kill.wav")
+  (mam-pr (str "You were killed by: " reason))
+  (cmd-quit false))
