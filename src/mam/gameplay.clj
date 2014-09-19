@@ -17,7 +17,7 @@
 
 ; Declarations for some procedures I mention before they have been
 ; defined.
-(declare messages object-details kill-player cmd-verbs)
+(declare messages object-details kill-player cmd-verbs cmd-look)
 
 (def current-room (ref 0))             ; Current room the player is in.
 (def visited-rooms (ref []))           ; Rooms that the player has visited.
