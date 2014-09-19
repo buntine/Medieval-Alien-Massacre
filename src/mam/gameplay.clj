@@ -10,7 +10,6 @@
 ;  (:use mam.story)
 ;  (:use mam.compression)
   (:use [clojure.string :only (join split)])
-  (:require [taoensso.nippy :as nippy])
   (:import (java.applet Applet))
   (:import (java.io File))
   (:import (java.net URL)))
@@ -722,12 +721,12 @@
                     :milestones @milestones
                     :game-options @game-options
                     :room-objects @room-objects}]
-    (spit "savedata", (nippy/freeze game-state))))
+    (spit "savedata", (with-out-str (pr game-state)))))
 
 (defn load-game! []
   "Loads all previously saved game data"
   (if (. (java.io.File. "savedata") exists)
-    (let [game-state (nippy/thaw (slurp "savedata"))]
+    (let [game-state (read-string (slurp "savedata"))]
       (dosync
         (ref-set current-room (game-state :current-room))
         (ref-set inventory (game-state :inventory))

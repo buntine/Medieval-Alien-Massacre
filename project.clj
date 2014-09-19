@@ -4,6 +4,5 @@
   :url "http://github.com/buntine/Medieval-Alien-Massacre"
   :dependencies [
     [org.clojure/clojure "1.6.0"]
-    [com.taoensso/nippy "2.6.3"]
   ]
   :main mam.core)
