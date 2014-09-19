@@ -1,6 +1,6 @@
 
 ; MEDIEVAL ALIEN MASSACRE.
-; By Andrew Buntine, 2010-2011
+; By Andrew Buntine, 2010-2014
 ; http://www.andrewbuntine.com
 ;
 ; core.clj

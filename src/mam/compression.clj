@@ -5,7 +5,8 @@
 ; Source: http://www.mail-archive.com/clojure@googlegroups.com/msg19378.html
 
 (ns mam.compression
-  (:use [clojure.contrib.duck-streams :only (to-byte-array)]))
+  (:require [taoensso.nippy :as nippy])
+  (:use [clojure.java.io :only (to-byte-array)]))
 
 
 (defn str-to-bytes [s]

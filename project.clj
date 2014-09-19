@@ -2,5 +2,8 @@
   :description "A sadistic, pro-death text-based adventure for children"
   :license "Eclipse Public License 1.0"
   :url "http://github.com/buntine/Medieval-Alien-Massacre"
-  :dependencies [[org.clojure/clojure "1.6.0"]]
+  :dependencies [
+    [org.clojure/clojure "1.6.0"]
+    [com.taoensso/nippy "2.6.3"]
+  ]
   :main mam.core)

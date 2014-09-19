@@ -21,7 +21,7 @@
 
 (declare cmd-inspect)
 
-(declare parse-input) ;; TODO: FIX THIS. MOVE INTO state.clj OR REMOVE NEED FOR IT FROM THIS FILE.
+(declare parse-input)
 
 ; Maps user commands to the appropriate function.
 (def cmd-verbs
