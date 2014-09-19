@@ -838,7 +838,7 @@
 
 (defn command->seq [s]
   "Translates the given string to a sequence of symbols, removing ignored words"
-  (let [verbs (split #"\s+" s)]
+  (let [verbs (split s #"\s+")]
     (filter #(not (some #{%} ignore-words))
             (map symbol verbs))))
 
