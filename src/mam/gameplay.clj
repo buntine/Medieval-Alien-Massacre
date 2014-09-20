@@ -4,11 +4,6 @@
 ; command parsing, saves, loads, etc.
 
 (ns mam.gameplay
-;  (:use mam.util)
-;  (:use mam.state)
-;  (:use mam.commands)
-;  (:use mam.story)
-;  (:use mam.compression)
   (:use [clojure.string :only (join split)])
   (:import (java.applet Applet))
   (:import (java.io File))
@@ -29,12 +24,12 @@
 ; Maximum weight the user can carry at any one time.
 (def total-weight 12)
 
-; Plays audio from the specified URL.
 (defn play-url [url-string]
+  "Plays audio from the specified URL"
   (.play (Applet/newAudioClip (URL. url-string))))
 
-; Plays audio from the specified local file.
 (defn play-file [file-name]
+  "Plays audio from the specified local file"
   (if (@game-options :sound)
     (let [absolute-name (.getAbsolutePath (File. file-name))
           url-string (str "file://" absolute-name)]
@@ -44,7 +39,7 @@
                     fucking damn)) 
 
 (defn mam-pr
-  ([s] (mam-pr s (if (@game-options :retro) 30 0)))
+  ([s] (mam-pr s (if (@game-options :retro) 25 0)))
   ([s i]
    "Prints a string like the ancient terminals used to, sleeping for i ms per character"
    (if (< i 5)
@@ -1112,10 +1107,6 @@
    (print "> ")
    (flush)
    (parse-input (request-command))))
-
-(declare cmd-inspect)
-
-(declare parse-input) ;; TODO: FIX THIS. MOVE INTO state.clj OR REMOVE NEED FOR IT FROM THIS FILE.
 
 (defn kill-player [reason]
   "Kills the player and ends the game"
