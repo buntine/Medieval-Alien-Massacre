@@ -8,6 +8,7 @@ Features:
    - (mam-pr (game-text 78))
  - Random response for useless actions (eat, fuck, error responses, etc)
    - fuck man -> "Damn... That was actually pretty gross"
+   - Use (game-text 34 35 36)
  - Finish story
  - Players with green eyes can see in the dark.
  - Add Adventure-esque commands for fun.

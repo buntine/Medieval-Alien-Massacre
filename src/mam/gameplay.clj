@@ -815,6 +815,7 @@
     [nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;29
     [nil       nil       nil       nil       nil       nil       nil       nil       26        nil       nil       nil])) ;30
 
+;;; UTIL
 (defn direction? [verb]
   (boolean
     (some #{verb}
@@ -897,6 +898,7 @@
   (defn cmd-up [verbs] (move-room 'up))
   (defn cmd-down [verbs] (move-room 'down)))
 
+;;; UTIL
 (defn cmd-help [verbs]
   (println "  M-A-M HELP")
   (println "  ------------------------------")
@@ -1095,7 +1097,7 @@
    'north cmd-north 'east cmd-east 'south cmd-south 'west cmd-west
    'northeast cmd-northeast 'southeast cmd-southeast 'southwest cmd-southwest
    'drop cmd-drop 'throw cmd-drop 'inventory cmd-inventory 'pull cmd-pull
-   'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take
+   'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take 'buy cmd-take
    'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
    'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat 'fuck cmd-fuck
    'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
