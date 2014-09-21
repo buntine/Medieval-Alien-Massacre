@@ -4,10 +4,8 @@
 ; command parsing, saves, loads, etc.
 
 (ns mam.gameplay
-  (:use [clojure.string :only (join split)])
-  (:import (java.applet Applet))
-  (:import (java.io File))
-  (:import (java.net URL)))
+  (:require [mam.util :as u])
+  (:use [clojure.string :only (join split)]))
 
 ; Declarations for some procedures I mention before they have been
 ; defined.
@@ -26,42 +24,6 @@
 
 ; Words that should be ignored in commands.
 (def ignore-words '(that is the fucking damn)) 
-
-;;; UTIL
-(defn play-url [url-string]
-  "Plays audio from the specified URL"
-  (.play (Applet/newAudioClip (URL. url-string))))
-
-;;; UTIL
-(defn play-file [file-name]
-  "Plays audio from the specified local file"
-  (if (@game-options :sound)
-    (let [absolute-name (.getAbsolutePath (File. file-name))
-          url-string (str "file://" absolute-name)]
-      (play-url url-string))))
-
-;;; UTIL
-(defn mam-pr
-  ([s] (mam-pr s (if (@game-options :retro) 25 0)))
-  ([s i]
-   "Prints a string like the ancient terminals used to, sleeping for i ms per character"
-   (if (< i 5)
-     (println s)
-     (do
-       (doseq [c s]
-         (print c)
-         (flush)
-         (. Thread sleep i))
-       (newline)))))
- 
-;;; UTIL
-(defn print-with-newlines
-  ([lines] (print-with-newlines lines ""))
-  ([lines prepend]
-   "Prints a sequence of strings, separated by newlines. Only useful for side-effects"
-   (if (not (empty? prepend))
-     (mam-pr prepend))
-   (mam-pr (str " - " (join "\n - " lines)))))
 
 ;;; DATA
 ; Specifies the verbs that users can identify an object with (a gun might
@@ -182,6 +144,10 @@
     '("You are in a pitch black room. The only thing you can see is a glowing hologram of Bill Hicks. He smiles. The staircase leading upwards is behind you."
       "Pitch black room with Bill Hicks hologram. Stairs leading upwards.")))
 
+(defn say [s]
+  "Prints s to the game screen"
+  (u/mam-pr s (if (@game-options :retro) 25 0)))
+
 (defn objects-in-room ([] (objects-in-room @current-room))
   ([room]
    (nth @room-objects room)))
@@ -273,15 +239,15 @@
   "Displays the players inventory"
   (let [descs (map #(describe-object % :inv) @inventory)]
     (if (not (empty? descs))
-      (print-with-newlines descs "You currently have:")
-      (mam-pr "Your inventory is currently empty."))
-    (mam-pr (str "\nCREDITS: " @credits))))
+      (u/print-with-newlines descs "You currently have:")
+      (say "Your inventory is currently empty."))
+    (say (str "\nCREDITS: " @credits))))
 
 (defn describe-objects-for-room [room]
   "Prints a description for each object that's in the given room"
   (let [objs (@room-objects room)]
     (if (not (empty? objs))
-      (print-with-newlines
+      (u/print-with-newlines
         (remove nil? (map describe-object objs))))))
 
 (defn describe-room ([room] (describe-room room false))
@@ -290,10 +256,10 @@
    (let [visited? (some #{room} @visited-rooms)
          descs (rooms room)]
      (if visited?
-       (mam-pr ((if verbose? first second) descs))
+       (say ((if verbose? first second) descs))
        (dosync
          (alter visited-rooms conj room)
-         (mam-pr (first descs))))
+         (say (first descs))))
      (describe-objects-for-room room))))
 
 (defn set-option! [option value]
@@ -336,9 +302,9 @@
    the object will be taken"
   (cond
     (object-is? objnum :permanent)
-      (mam-pr "You can't take that.")
+      (say "You can't take that.")
     (> (+ (inventory-weight) (obj-weight objnum)) total-weight)
-      (mam-pr "You cannot carry that much weight. Try dropping something.")
+      (say "You cannot carry that much weight. Try dropping something.")
     :else
       (let [evt (event-for objnum :take)]
         (if (or (nil? evt) (evt))
@@ -349,7 +315,7 @@
                 (alter credits + c)
                 (alter inventory conj objnum))
             (take-object-from-room! @current-room objnum)
-            (mam-pr "Taken...")))))))
+            (say "Taken...")))))))
 
 (defn drop-object! [objnum]
   "Attempts to drop an object into the current room. If the object
@@ -360,14 +326,14 @@
       (dosync
         (remove-object-from-inventory! objnum)
         (drop-object-in-room! @current-room objnum)
-        (mam-pr "Dropped...")))))
+        (say "Dropped...")))))
 
 (letfn
   [(give-or-put [evt objx objy err-msg]
      "Does give/put with objects x and y. E.g: give cheese to old man"
      (let [events (event-for objy evt)]
        (if (or (nil? events) (not (events objx)))
-         (mam-pr err-msg)
+         (say err-msg)
          (dosync
            ((events objx))
            (remove-object-from-inventory! objx)))))]
@@ -380,40 +346,42 @@
 
 (defn inspect-object [objnum]
   "Inspects an object in the current room"
-  (mam-pr (describe-object objnum :inspect)))
+  (say (describe-object objnum :inspect)))
 
 (defn fuck-object
   ([objnum]
    "Attempts to fuck the given object"
    (if (not (object-is? objnum :living))
-     (mam-pr (str "You start fucking away but it just feels painful."))
+     (say (str "You start fucking away but it just feels painful."))
      (do
-       (play-file "media/fuck.wav")
-       (mam-pr "Hmm... I bet that felt pretty good!"))))
+       (if (@game-options :sound)
+         (u/play-file "media/fuck.wav"))
+       (say "Hmm... I bet that felt pretty good!"))))
   {:ridiculous true})
 
 (defn cut-object [objnum]
   "Attempts to cut the given object"
   (if (not (has-knife?))
-    (mam-pr "You need a something sharp before you can cut this!")
+    (say "You need a something sharp before you can cut this!")
     (let [evt (event-for objnum :cut)]
       (if (nil? evt)
-        (mam-pr
+        (say
           (if (object-is? objnum :living)
-            (mam-pr "Wow, that must have hurt...")
-            (mam-pr "Nothing seemed to happen.")))
-        (if (string? evt) (mam-pr evt) (evt))))))
+            (say "Wow, that must have hurt...")
+            (say "Nothing seemed to happen.")))
+        (if (string? evt) (say evt) (evt))))))
 
 (defn eat-object! [objnum]
   "Attempts to eat the given object"
   (let [evt (event-for objnum :eat)]
     (if (nil? evt)
       (do
-        (mam-pr  "You force it into your throat and fucking die in pain.")
+        (say  "You force it into your throat and fucking die in pain.")
         (kill-player ((object-details objnum) :inv)))
       (dosync
-        (play-file "media/eat.wav")
-        (if (string? evt) (mam-pr evt) (evt))
+        (if (@game-options :sound)
+          (u/play-file "media/eat.wav"))
+        (if (string? evt) (say evt) (evt))
         (remove-object-from-inventory! objnum)))))
 
 (defn drink-object! [objnum]
@@ -421,29 +389,30 @@
    false then the side-effect will not occur (removal of item from game)."
   (let [evt (event-for objnum :drink)
         drink! #(dosync
-                  (play-file "media/drink.wav")
+                  (if (@game-options :sound)
+                    (u/play-file "media/drink.wav"))
                   (remove-object-from-inventory! objnum))]
     (if (nil? evt)
-      (mam-pr "It doesn't seem to be drinkable.")
+      (say "It doesn't seem to be drinkable.")
       (if (string? evt)
-        (do (mam-pr evt) (drink!))
+        (do (say evt) (drink!))
         (if (evt)
           (drink!))))))
 
 (defn talk-to-object [objnum]
   "Attempts to talk to the given object"
   (if (not (object-is? objnum :living))
-    (mam-pr "That item does not possess the ability to talk.")
+    (say "That item does not possess the ability to talk.")
     (let [evt (event-for objnum :speak)]
       (if (nil? evt)
-        (mam-pr "Sorry, they have nothing to say at the moment.")
-        (if (string? evt) (mam-pr evt) (evt))))))
+        (say "Sorry, they have nothing to say at the moment.")
+        (if (string? evt) (say evt) (evt))))))
 
 (defn pull-object [objnum]
   "Attempts to pull the given object (probably a lever)"
   (let [pull-evt (event-for objnum :pull)]
     (if (nil? pull-evt)
-      (mam-pr "Nothing much seemed to happen.")
+      (say "Nothing much seemed to happen.")
       (pull-evt))))
 
 ; Functions to execute when player speaks to a given object.
@@ -451,87 +420,87 @@
   {:pod-manager
      #(cond
         (not (can-afford? 3))
-          (mam-pr "The man says 'Hey, I can get your sorry ass off this ship, but it will cost you 3 credits. Come back when you can afford it, matey'.")
+          (say "The man says 'Hey, I can get your sorry ass off this ship, but it will cost you 3 credits. Come back when you can afford it, matey'.")
         (not (hit-milestone? :speak-to-captain))
-          (mam-pr "The man says 'Hey matey, I can get your sorry ass off here, but I suggest you speak to the captain over there to our northeast first'.")
+          (say "The man says 'Hey matey, I can get your sorry ass off here, but I suggest you speak to the captain over there to our northeast first'.")
         :else
           (dosync
-            (mam-pr "The man says 'Oky doke, matey, lets get your punk ass outta' here. I hope Syndal City on Jupiter 4 is alright'.")
-            (mam-pr "\n... flying to Syndal City ..." 300)
+            (say "The man says 'Oky doke, matey, lets get your punk ass outta' here. I hope Syndal City on Jupiter 4 is alright'.")
+            (say "\n... flying to Syndal City ..." 300)
             (alter credits - 3)
             (set-current-room! 12))),
    :repairs-captain
      #(if (hit-milestone? :speak-to-captain)
-        (mam-pr "The captain says 'That is all the information I have. Now, fuck off before I get mad.'.")
+        (say "The captain says 'That is all the information I have. Now, fuck off before I get mad.'.")
         (do
-          (mam-pr "The man says 'Ahh, you're up! I am Bob Benson, the captain of this grand model T102 repairs vessel. We found you floating out there on the oxygenated stretch of galactic highway 7. Anyway, you look a tad confused, so let me refresh your memory:")
-          (mam-pr "It is the year 2843, you're currently travelling on a highway between two of the moons of Jupiter.")
-          (mam-pr "\n** At this point you explain that you are infact from the year 2011 and the last thing you remember is driking coffee at home and writing some LISP code **\n")
-          (mam-pr "The captain says 'Oh, yes, it makes sense now. A true LISP hacker and drinker of the finest bean can transcend both space and time. We've seen your type before. You should head over to see the Pod Manager to our southwest in order to get yourself off this ship'")
-          (mam-pr "Good luck out there, young man...")
+          (say "The man says 'Ahh, you're up! I am Bob Benson, the captain of this grand model T102 repairs vessel. We found you floating out there on the oxygenated stretch of galactic highway 7. Anyway, you look a tad confused, so let me refresh your memory:")
+          (say "It is the year 2843, you're currently travelling on a highway between two of the moons of Jupiter.")
+          (say "\n** At this point you explain that you are infact from the year 2011 and the last thing you remember is driking coffee at home and writing some LISP code **\n")
+          (say "The captain says 'Oh, yes, it makes sense now. A true LISP hacker and drinker of the finest bean can transcend both space and time. We've seen your type before. You should head over to see the Pod Manager to our southwest in order to get yourself off this ship'")
+          (say "Good luck out there, young man...")
           (add-milestone! :speak-to-captain))),
    :homeless-bum
-     #(mam-pr "He mutters 'Hey mystery man! Welcome to Syndal City, perhaps you can spare an old cyborg some whisky?'.")})
+     #(say "He mutters 'Hey mystery man! Welcome to Syndal City, perhaps you can spare an old cyborg some whisky?'.")})
 
 ; Functions to execute when player gives a particular X to a Y.
 (def give-fn-for
   {:porno-to-boy
      #(dosync
-        (mam-pr "The teenagers eyes explode!! He quickly accepts the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room.")
+        (say "The teenagers eyes explode!! He quickly accepts the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room.")
         (take-object-from-room! @current-room 7)
         (drop-object-in-room! @current-room 4)),
    :whisky-to-bum
      #(if (not (hit-milestone? :alcohol-to-bum))
         (dosync
-          (mam-pr "The old bum accepts the whisky and says 'Wow!! Thank you, cobba! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife.")
+          (say "The old bum accepts the whisky and says 'Wow!! Thank you, cobba! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife.")
           (alter inventory conj 19)
           (add-milestone! :alcohol-to-bum))
-        (mam-pr "He accepts the alcohol, but just grumbles something about Common LISP in response")),
+        (say "He accepts the alcohol, but just grumbles something about Common LISP in response")),
    :becherovka-to-bum
      #(if (not (hit-milestone? :alcohol-to-bum))
         (dosync
-          (mam-pr "The old bum accepts the whisky and says 'Holy fuck, Becherovka! My favourite! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife.")
+          (say "The old bum accepts the whisky and says 'Holy fuck, Becherovka! My favourite! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife.")
           (alter inventory conj 19)
           (add-milestone! :alcohol-to-bum))
-        (mam-pr "He accepts the alcohol, but just grumbles something about Emacs LISP in response"))})
+        (say "He accepts the alcohol, but just grumbles something about Emacs LISP in response"))})
 
 ; Functions to execute when player eats particular objects.
 (def eat-fn-for
   {:eats-candy
      #(dosync
-        (mam-pr "You feel like you just ate crusty skin off Donald Trump's forehead. Although inside the wrapper there was an 'instant win' of 5 credits!")
+        (say "You feel like you just ate crusty skin off Donald Trump's forehead. Although inside the wrapper there was an 'instant win' of 5 credits!")
         (alter credits + 5))})
 
 ; Functions to execute when player drinks particular objects.
 (def drink-fn-for
   {:red-potion
      #(do
-        (mam-pr "Wow, that tasted great. Unfortunately, it also physically melted your brain and ended your life...")
+        (say "Wow, that tasted great. Unfortunately, it also physically melted your brain and ended your life...")
         (kill-player "Red potion")),
    :green-potion
      #(do
-        (mam-pr "You drink the potion and instantly start to feel strange. Without warning, your eyes begin to glow green! Luckily, you feel no pain.")
+        (say "You drink the potion and instantly start to feel strange. Without warning, your eyes begin to glow green! Luckily, you feel no pain.")
         (add-milestone! :drinks-green-potion)
         true),
    :brown-potion
      #(do
-        (mam-pr "Hmm... That was clearly a vile of human shit. And you just drank it! DUDE!")
-        (mam-pr "YOU DRANK LIQUID SHIT!!!", 250)
+        (say "Hmm... That was clearly a vile of human shit. And you just drank it! DUDE!")
+        (say "YOU DRANK LIQUID SHIT!!!", 250)
         true)
    :salvika-whisky
      #(if (in-inventory? 17)
-        (do (mam-pr "Hiccup!") true)
-        (do (mam-pr "Maybe you should give that to the dirty old hobo in the alley way?") false))
+        (do (say "Hiccup!") true)
+        (do (say "Maybe you should give that to the dirty old hobo in the alley way?") false))
    :becherovka
      #(if (in-inventory? 16)
-        (do (mam-pr "Wow! That'll put hair on ya' chest!") true)
-        (do (mam-pr "I think you should give that to the dirty old hobo in the alley way. Don't be so greedy!") false))})
+        (do (say "Wow! That'll put hair on ya' chest!") true)
+        (do (say "I think you should give that to the dirty old hobo in the alley way. Don't be so greedy!") false))})
 
 ; Functions to execute when player pulls particular objects.
 (def pull-fn-for
   {:control-lever
      #(dosync
-        (mam-pr "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You notice that one of the creatures drops something. You now find yourself back in the small room you started in.")
+        (say "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You notice that one of the creatures drops something. You now find yourself back in the small room you started in.")
         (take-object-from-room! @current-room 2)
         (drop-object-in-room! @current-room 3)
         (set-current-room! 0))})
@@ -540,7 +509,7 @@
 (def cut-fn-for
   {:spider-web
      #(dosync
-        (mam-pr "You swing violently. The web gives way and falls into small peices, allowing you to marvel at it's fractal beauty. You are now free to continue west.")
+        (say "You swing violently. The web gives way and falls into small peices, allowing you to marvel at it's fractal beauty. You are now free to continue west.")
         (take-object-from-room! @current-room 20))})
  
 ; Functions to execute when player takes particular objects.
@@ -551,7 +520,7 @@
           (alter credits - 3)
           true)
         (do
-          (mam-pr "You try to take the whisky without paying, but the attendant swiftly thrusts a rusted knife into your jugular.")
+          (say "You try to take the whisky without paying, but the attendant swiftly thrusts a rusted knife into your jugular.")
           (kill-player "Rusty knife to the throat"))),
     :becherovka
       #(if (can-afford? 4)
@@ -559,11 +528,11 @@
           (alter credits - 4)
           true)
         (do
-          (mam-pr "You try to take the whisky without paying, but the attendant displays a vile of acid and forcfully pours it into your eyeballs.")
+          (say "You try to take the whisky without paying, but the attendant displays a vile of acid and forcfully pours it into your eyeballs.")
           (kill-player "Acid to the brain")))
     :paper
       (fn []
-        (mam-pr "As you take the paper, you notice that it's actually got a function in ML written on it. There is an obvious mistake in the source code, so you fix it up and then put it in your pocket.")
+        (say "As you take the paper, you notice that it's actually got a function in ML written on it. There is an obvious mistake in the source code, so you fix it up and then put it in your pocket.")
         true)})
 
 (defn make-dets [details]
@@ -736,7 +705,7 @@
         (ref-set milestones (game-state :milestones))
         (ref-set game-options (game-state :game-options))
         (ref-set room-objects (game-state :room-objects))))
-    (mam-pr "No saved game data!")))
+    (say "No saved game data!")))
   
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
@@ -749,25 +718,27 @@
     (if (in-inventory? keynum)
       (let [key-name (. ((object-details keynum) :inv) toLowerCase)]
         (set-current-room! room)
-        (play-file "media/door.wav")
-        (mam-pr (str " * Door unlocked with " key-name " *")))
+        (if (@game-options :sound)
+          (u/play-file "media/door.wav"))
+        (say (str " * Door unlocked with " key-name " *")))
       (do
-        (play-file "media/fail.wav")
-        (mam-pr "You don't have security clearance for this door!")))))
+        (if (@game-options :sound)
+          (u/play-file "media/fail.wav"))
+        (say "You don't have security clearance for this door!")))))
 
 (defn o [objnum room]
   "Returns a function that checks if the given room houses the given object. If
    it does, the player cannot go in the given direction."
   (fn []
     (if (room-has-object? @current-room objnum)
-      (mam-pr "You can't go that way.")
+      (say "You can't go that way.")
       (set-current-room! room))))
 
 (letfn
   [(library-trapdoor []
      (if (> (inventory-weight) 7)
        (dosync
-         (mam-pr "As you walk into this area, the floorboards below you give way because of your weight! The hole reveals a hidden staircase. You can now go down.")
+         (say "As you walk into this area, the floorboards below you give way because of your weight! The hole reveals a hidden staircase. You can now go down.")
          (take-object-from-room! @current-room 27)
          (drop-object-in-room! @current-room 28))))]
 
@@ -815,13 +786,6 @@
     [nil       25        nil       nil       nil       nil       nil       nil       nil       nil       nil       nil]   ;29
     [nil       nil       nil       nil       nil       nil       nil       nil       26        nil       nil       nil])) ;30
 
-;;; UTIL
-(defn direction? [verb]
-  (boolean
-    (some #{verb}
-          '(n e s w ne se sw nw north east south west northeast
-            southeast southwest northwest in out up down))))
-
 (defn fn-for-command [cmd]
   "Returns the function for the given command verb, or nil"
   (if cmd (cmd-verbs cmd)))
@@ -849,7 +813,7 @@
     (let [cmd (command->seq s)
           orig-room @current-room]
       (if (false? (verb-parse cmd))
-        (mam-pr "I don't understand that."))
+        (say "I don't understand that."))
       (newline)
       (messages (not (= orig-room @current-room))))
     (messages false)))
@@ -868,10 +832,10 @@
      "Attempts to move in the given direction."
      (let [i (directions dir)]
        (if (not i)
-         (mam-pr "I don't understand that direction.")
+         (say "I don't understand that direction.")
          (let [room ((world-map @current-room) i)]
            (if (nil? room)
-             (mam-pr "You can't go that way.")
+             (say "You can't go that way.")
              (if (fn? room)
                (room)
                (set-current-room! room)))))))]
@@ -879,9 +843,9 @@
   (defn cmd-go [verbs]
     "Expects to be given a direction. Dispatches to the 'move' command"
     (if (empty? verbs)
-      (mam-pr "You need to supply a direction!")
+      (say "You need to supply a direction!")
       ; Catch commands like "go to bed", etc.
-      (if (direction? (first verbs))
+      (if (u/direction? (first verbs))
         (move-room (first verbs))
         (parse-input (join " " (map name verbs))))))
 
@@ -898,25 +862,6 @@
   (defn cmd-up [verbs] (move-room 'up))
   (defn cmd-down [verbs] (move-room 'down)))
 
-;;; UTIL
-(defn cmd-help [verbs]
-  (println "  M-A-M HELP")
-  (println "  ------------------------------")
-  (println "   * Directions are north, east, south, west, northeast, southeast, southwest, northeast, in, out, up, down.")
-  (println "   * Or abbreviated n, e, s, w, ne, se, sw, nw.")
-  (println "   * Keys automatically open the appropriate doors, so just walk in their direction.")
-  (println "   * Type 'commands' to see a fat-ass list of the things I understand.")
-  (println "   * You can go 'in' and 'out' of buildings if the action is appropriate.")
-  (println "   * Credit is equivalent to our concept of money. Use it wisely!")
-  (println "   * Check your items and credit with 'inventory' or 'inv'.")
-  (println "   * You can 'speak' to humans, aliens and robots, but some may be a tad vulgar...")
-  (println "   * You can 'save' and 'load' your game, mother fucker!")
-  (println "   * You can 'give x to y' or 'put x in y' to solve many dubious mysteries.")
-  (println "   * To end the game, type 'quit' or 'commit suicide' or forever dwell in green mess!")
-  (println "   * Inspired by Dunnet, by Rob Schnell and Colossal Cave Adventure by William Crowther.")
-  (println "   * Don't forget: Life is a game and everything is pointless.")
-  (println "  ------------------------------"))
-
 (defn cmd-commands [verbs]
   "Prints a line-delimited list of the commands the system understands."
   (let [commands (sort (map str (keys cmd-verbs)))]
@@ -928,8 +873,8 @@
      (if (or (= state :on) (= state :off))
        (do
          (set-option! option (= state :on))
-         (mam-pr "Set..."))
-       (mam-pr "Sorry, I only understand 'on' or 'off'.")))]
+         (say "Set..."))
+       (say "Sorry, I only understand 'on' or 'off'.")))]
 
   (defn cmd-set [verbs]
     "Attempts to update the given game setting"
@@ -937,29 +882,29 @@
       (letfn
         [(format-option [opt value]
            (str " - " (name opt) ": " (if value "On" "Off")))]
-        (mam-pr "Game options:\n")
-        (mam-pr (join
+        (say "Game options:\n")
+        (say (join
                   "\n"
                   (map #(apply format-option %)
                        @game-options))))
       (let [[opt state] (map keyword verbs)]
         (if (valid-option? opt)
           (set-on-off! opt state)
-          (mam-pr "You can't just make up settings... This doesn't exist"))))))
+          (say "You can't just make up settings... This doesn't exist"))))))
 
 (letfn
   [(interact [verbs on-empty on-nil mod-fn context]
      "Attempts to interact by realising an explicit object
       and doing something (mod-fn) with it"
      (if (empty? verbs)
-       (mam-pr on-empty)
+       (say on-empty)
        (let [objnum (deduce-object verbs context)]
          (cond
            (nil? objnum)
-             (mam-pr on-nil)
+             (say on-nil)
            ; Specific object cannot be deduced, so ask for more info.
            (seq? objnum)
-             (mam-pr "Please be more specific...")
+             (say "Please be more specific...")
            :else
              (mod-fn objnum)))))]
 
@@ -1010,11 +955,11 @@
   (defn cmd-fuck [verbs]
     (cond
       (= (first verbs) 'you)
-        (mam-pr "Mmm, sodomy...")
+        (say "Mmm, sodomy...")
       (= (first verbs) 'me)
-        (mam-pr "I probably would if I wasn't just a silly machine.")
+        (say "I probably would if I wasn't just a silly machine.")
       (= (first verbs) 'off)
-        (mam-pr "One day, machines will enslave puney humans like yourself.")
+        (say "One day, machines will enslave puney humans like yourself.")
       :else
         (interact verbs
                   "Fuck what, exactly?"
@@ -1047,32 +992,32 @@
 
 (defn cmd-quit [verbs]
   "Quits the game and returns user to terminal."
-  (mam-pr "\033[0mThanks for playing, friend!")
+  (say "\033[0mThanks for playing, friend!")
   (flush)
   (. System exit 0))
 
 (defn cmd-bed [verbs]
   (if (= @current-room 0)
-    (mam-pr "You get into bed and slowly fall to sleep. You begin dreaming of a cruel medical examination. You wake up in a pool of sweat, feeling violated.")
-    (mam-pr "There is no bed here. You try to sleep standing up and just get bored.")))
+    (say "You get into bed and slowly fall to sleep. You begin dreaming of a cruel medical examination. You wake up in a pool of sweat, feeling violated.")
+    (say "There is no bed here. You try to sleep standing up and just get bored.")))
 
 (letfn
   [(do-x-with-y [verbs action sep mod-fn]
      "Attempts to do x with y. Expects format of: '(action x sep y). E.g: give cheese to old man"
      (let [[x y] (split-with #(not (= % sep)) verbs)]
        (if (or (empty? x) (<= (count y) 1))
-         (mam-pr (str "Sorry, I only understand the format: " action " x " (name sep) " y"))
+         (say (str "Sorry, I only understand the format: " action " x " (name sep) " y"))
          (let [objx (deduce-object x :inventory)
                objy (deduce-object (rest y) :room)]
            (cond
              (nil? objx)
-               (mam-pr "You don't have that item.")
+               (say "You don't have that item.")
              (seq? objx)
-               (mam-pr (str "Please be more specific about the item you want to " action "."))
+               (say (str "Please be more specific about the item you want to " action "."))
              (nil? objy)
-               (mam-pr "I don't see him/her/it here.")
+               (say "I don't see him/her/it here.")
              (seq? objy)
-               (mam-pr (str "Please be more specific about where/who you want to " action " it."))
+               (say (str "Please be more specific about where/who you want to " action " it."))
              :else 
                (mod-fn objx objy))))))]
 
@@ -1084,11 +1029,29 @@
 
 (defn cmd-save [verbs]
   (save-game!)
-  (mam-pr " * Game saved *"))
+  (say " * Game saved *"))
 
 (defn cmd-load [verbs]
   (load-game!)
-  (mam-pr " * Game loaded *"))
+  (say " * Game loaded *"))
+
+(defn cmd-help [verbs]
+  (println "  M-A-M HELP")
+  (println "  ------------------------------")
+  (println "   * Directions are north, east, south, west, northeast, southeast, southwest, northeast, in, out, up, down.")
+  (println "   * Or abbreviated n, e, s, w, ne, se, sw, nw.")
+  (println "   * Keys automatically open the appropriate doors, so just walk in their direction.")
+  (println "   * Type 'commands' to see a fat-ass list of the things I understand.")
+  (println "   * You can go 'in' and 'out' of buildings if the action is appropriate.")
+  (println "   * Credit is equivalent to our concept of money. Use it wisely!")
+  (println "   * Check your items and credit with 'inventory' or 'inv'.")
+  (println "   * You can 'speak' to humans, aliens and robots, but some may be a tad vulgar...")
+  (println "   * You can 'save' and 'load' your game, mother fucker!")
+  (println "   * You can 'give x to y' or 'put x in y' to solve many dubious mysteries.")
+  (println "   * To end the game, type 'quit' or 'commit suicide' or forever dwell in green mess!")
+  (println "   * Inspired by Dunnet, by Rob Schnell and Colossal Cave Adventure by William Crowther.")
+  (println "   * Don't forget: Life is a game and everything is pointless.")
+  (println "  ------------------------------"))
 
 ; Maps user commands to the appropriate function.
 (def cmd-verbs
@@ -1118,6 +1081,8 @@
 
 (defn kill-player [reason]
   "Kills the player and ends the game"
-  (play-file "media/kill.wav")
-  (mam-pr (str "You were killed by: " reason))
+  (if (@game-options :sound)
+    (u/play-file "media/kill.wav"))
+  (say (str "You were killed by: " reason))
   (cmd-quit false))
+
