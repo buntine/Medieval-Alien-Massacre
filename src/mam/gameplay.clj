@@ -24,10 +24,15 @@
 ; Maximum weight the user can carry at any one time.
 (def total-weight 12)
 
+; Words that should be ignored in commands.
+(def ignore-words '(that is the fucking damn)) 
+
+;;; UTIL
 (defn play-url [url-string]
   "Plays audio from the specified URL"
   (.play (Applet/newAudioClip (URL. url-string))))
 
+;;; UTIL
 (defn play-file [file-name]
   "Plays audio from the specified local file"
   (if (@game-options :sound)
@@ -35,9 +40,7 @@
           url-string (str "file://" absolute-name)]
       (play-url url-string))))
 
-(def ignore-words '(that is the   ; Words that should be ignored in commands.
-                    fucking damn)) 
-
+;;; UTIL
 (defn mam-pr
   ([s] (mam-pr s (if (@game-options :retro) 25 0)))
   ([s i]
@@ -51,6 +54,7 @@
          (. Thread sleep i))
        (newline)))))
  
+;;; UTIL
 (defn print-with-newlines
   ([lines] (print-with-newlines lines ""))
   ([lines prepend]
@@ -59,6 +63,7 @@
      (mam-pr prepend))
    (mam-pr (str " - " (join "\n - " lines)))))
 
+;;; DATA
 ; Specifies the verbs that users can identify an object with (a gun might
 ; be "gun", "weapon", etc). A set means that the given term may refer to
 ; multiple objects. The system will try to deduce the correct object when
@@ -71,6 +76,7 @@
      'web 20 'knife 19 'small 19 'thin 22 'skinny 22 'fat 21 'paper 24 'book 25
      'stone 26 'rock 26})
 
+;;; DATA
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
 (def room-objects
@@ -108,6 +114,7 @@
       []           ;29
       [])))        ;30
 
+;;; DATA
 ; A vector of rooms. Each index contains both a large description (first visit) and a brief
 ; description (all subsequent visits).
 (def rooms
@@ -174,7 +181,6 @@
       "Isle one-A: Logic/Misc programming. Dead-end.")
     '("You are in a pitch black room. The only thing you can see is a glowing hologram of Bill Hicks. He smiles. The staircase leading upwards is behind you."
       "Pitch black room with Bill Hicks hologram. Stairs leading upwards.")))
-
 
 (defn objects-in-room ([] (objects-in-room @current-room))
   ([room]

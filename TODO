@@ -1,7 +1,13 @@
 Commands:
  - put x in ass/butt/bum
  - read x
+ - punch/kick
+ - steal (same as "take" but doesn't check can-afford)
 Features:
+ - Maybe move actual strings/game text into data.clj and reference it from gameplay
+   - (mam-pr (game-text 78))
+ - Random response for useless actions (eat, fuck, error responses, etc)
+   - fuck man -> "Damn... That was actually pretty gross"
  - Finish story
  - Players with green eyes can see in the dark.
  - Add Adventure-esque commands for fun.
