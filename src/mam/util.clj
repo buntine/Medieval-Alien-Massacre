@@ -32,12 +32,12 @@
        (newline))))
  
 (defn print-with-newlines
-  ([lines] (print-with-newlines lines ""))
-  ([lines prepend]
+  ([lines speed] (print-with-newlines lines speed ""))
+  ([lines speed prepend]
    "Prints a sequence of strings, separated by newlines. Only useful for side-effects"
    (if (not (empty? prepend))
-     (mam-pr prepend))
-   (mam-pr (str " - " (join "\n - " lines)))))
+     (mam-pr prepend speed))
+   (mam-pr (str " - " (join "\n - " lines)) speed)))
 
 (defn print-welcome-message []
   (println "\033[31m|---------------------------------------------------------|\033[0m")

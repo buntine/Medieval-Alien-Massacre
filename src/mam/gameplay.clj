@@ -144,9 +144,12 @@
     '("You are in a pitch black room. The only thing you can see is a glowing hologram of Bill Hicks. He smiles. The staircase leading upwards is behind you."
       "Pitch black room with Bill Hicks hologram. Stairs leading upwards.")))
 
+(defn text-speed []
+  (if (@game-options :retro) 25 0))
+
 (defn say [s]
   "Prints s to the game screen"
-  (u/mam-pr s (if (@game-options :retro) 25 0)))
+  (u/mam-pr s (text-speed)))
 
 (defn objects-in-room ([] (objects-in-room @current-room))
   ([room]
@@ -239,7 +242,7 @@
   "Displays the players inventory"
   (let [descs (map #(describe-object % :inv) @inventory)]
     (if (not (empty? descs))
-      (u/print-with-newlines descs "You currently have:")
+      (u/print-with-newlines descs (text-speed) "You currently have:")
       (say "Your inventory is currently empty."))
     (say (str "\nCREDITS: " @credits))))
 
@@ -248,7 +251,7 @@
   (let [objs (@room-objects room)]
     (if (not (empty? objs))
       (u/print-with-newlines
-        (remove nil? (map describe-object objs))))))
+        (remove nil? (map describe-object objs)) (text-speed)))))
 
 (defn describe-room ([room] (describe-room room false))
   ([room verbose?]
@@ -1085,4 +1088,3 @@
     (u/play-file "media/kill.wav"))
   (say (str "You were killed by: " reason))
   (cmd-quit false))
-
