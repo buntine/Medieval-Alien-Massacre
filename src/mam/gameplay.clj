@@ -79,11 +79,13 @@
   (if (@game-options :retro) 25 0))
 
 (defn say 
-  "Prints s to the game screen"
+  "Prints s to the game screen. If given a vector of strings, a random one will be chosen."
   ([section sentence]
    (say (t/text section sentence)))
   ([s]
-   (u/mam-pr s (text-speed))))
+   (if (vector? s)
+     (say (rand-nth s))
+     (u/mam-pr s (text-speed)))))
 
 (defn objects-in-room ([] (objects-in-room @current-room))
   ([room]
@@ -263,7 +265,7 @@
       (dosync
         (remove-object-from-inventory! objnum)
         (drop-object-in-room! @current-room objnum)
-        (say "Dropped...")))))
+        (say 'commands 'dropped)))))
 
 (letfn
   [(give-or-put [evt objx objy err-msg]
@@ -289,7 +291,7 @@
   ([objnum]
    "Attempts to fuck the given object"
    (if (not (object-is? objnum :living))
-     (say (str "You start fucking away but it just feels painful."))
+     (say 'commands 'fuck-living)
      (do
        (if (@game-options :sound)
          (u/play-file "media/fuck.wav"))

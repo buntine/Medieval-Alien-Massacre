@@ -83,9 +83,11 @@
     }
    'commands
     {
-      'cant-take "You can't take that."
-      'no-space  "You cannot carry that much weight. Try dropping something."
-      'taken     "Taken..."
+      'cant-take   "You can't take that."
+      'no-space    "You cannot carry that much weight. Try dropping something."
+      'taken       "Taken..."
+      'dropped     "Dropped..."
+      'fuck-living (vector "You start fucking away but it just feels painful." "You try, but it just won't fit!" "...Dude")
     }
   })
 
