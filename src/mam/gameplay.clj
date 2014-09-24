@@ -20,25 +20,6 @@
 (def game-options (ref {:retro true    ; Print to stdout with tiny pauses between characters.
                         :sound true})) ; Play sound during gameplay.
 
-; Maximum weight the user can carry at any one time.
-(def total-weight 12)
-
-; Words that should be ignored in commands.
-(def ignore-words '(that is the fucking damn)) 
-
-; Specifies the verbs that users can identify an object with (a gun might
-; be "gun", "weapon", etc). A set means that the given term may refer to
-; multiple objects. The system will try to deduce the correct object when
-; a command is entered. Each index corresponds to the same index in room-objects.
-(def object-identifiers
-    {'candy 0 'bar 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3 'boy 7
-     'teenager 7 'keycard #{4 5 6} 'key #{4 5 6} 'man #{8 9 21 22 23} 'robot 10
-     'green #{4 13} 'red #{5 12} 'brown 14 'silver 6 'bum 11 'potion #{12 13 14}
-     'credits 18 'attendant 15 'woman 15 'salvika 16 'whisky 16 'becherovka 17
-     'web 20 'knife 19 'small 19 'thin 22 'skinny 22 'fat 21 'paper 24 'book 25
-     'stone 26 'rock 26})
-
-
 ; A vector containing the objects that each room contains when the game starts. Each index
 ; corresponds to the room as defined in 'rooms'.
 (def room-objects
@@ -76,12 +57,33 @@
       []           ;29
       [])))        ;30
 
+; Maximum weight the user can carry at any one time.
+(def total-weight 12)
+
+; Words that should be ignored in commands.
+(def ignore-words '(that is the fucking damn)) 
+
+; Specifies the verbs that users can identify an object with (a gun might
+; be "gun", "weapon", etc). A set means that the given term may refer to
+; multiple objects. The system will try to deduce the correct object when
+; a command is entered. Each index corresponds to the same index in room-objects.
+(def object-identifiers
+    {'candy 0 'bar 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3 'boy 7
+     'teenager 7 'keycard #{4 5 6} 'key #{4 5 6} 'man #{8 9 21 22 23} 'robot 10
+     'green #{4 13} 'red #{5 12} 'brown 14 'silver 6 'bum 11 'potion #{12 13 14}
+     'credits 18 'attendant 15 'woman 15 'salvika 16 'whisky 16 'becherovka 17
+     'web 20 'knife 19 'small 19 'thin 22 'skinny 22 'fat 21 'paper 24 'book 25
+     'stone 26 'rock 26})
+
 (defn text-speed []
   (if (@game-options :retro) 25 0))
 
-(defn say [s]
+(defn say 
   "Prints s to the game screen"
-  (u/mam-pr s (text-speed)))
+  ([section sentence]
+   (say (t/text section sentence)))
+  ([s]
+   (u/mam-pr s (text-speed))))
 
 (defn objects-in-room ([] (objects-in-room @current-room))
   ([room]
@@ -174,9 +176,9 @@
   "Displays the players inventory"
   (let [descs (map #(describe-object % :inv) @inventory)]
     (if (not (empty? descs))
-      (u/print-with-newlines descs (text-speed) "You currently have:")
-      (say "Your inventory is currently empty."))
-    (say (str "\nCREDITS: " @credits))))
+      (u/print-with-newlines descs (text-speed) (t/text 'inventory 'have))
+      (say 'inventory 'empty))
+    (say (str (t/text 'inventory 'credits) @credits))))
 
 (defn describe-objects-for-room [room]
   "Prints a description for each object that's in the given room"
@@ -237,9 +239,9 @@
    the object will be taken"
   (cond
     (object-is? objnum :permanent)
-      (say "You can't take that.")
+      (say 'commands 'cant-take)
     (> (+ (inventory-weight) (obj-weight objnum)) total-weight)
-      (say "You cannot carry that much weight. Try dropping something.")
+      (say 'commands 'no-space)
     :else
       (let [evt (event-for objnum :take)]
         (if (or (nil? evt) (evt))
@@ -250,7 +252,7 @@
                 (alter credits + c)
                 (alter inventory conj objnum))
             (take-object-from-room! @current-room objnum)
-            (say "Taken...")))))))
+            (say 'commands 'taken)))))))
 
 (defn drop-object! [objnum]
   "Attempts to drop an object into the current room. If the object

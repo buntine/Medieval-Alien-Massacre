@@ -7,7 +7,7 @@
 (ns mam.text)
 
 ; All game text, namespaced to allow for easy management (adding new rooms, etc).
-(def text
+(def game-text
   ; All rooms. Each index contains both a large description (first visit) and a brief
   ; description (all subsequent visits).
   {'rooms
@@ -73,7 +73,24 @@
       '("You have arrived in Isle one-A, the logic/misc. programming section. There are some seriously odd books here including 'Forth for Jupiterians' and 'Prolog knows best'."
         "Isle one-A: Logic/Misc programming. Dead-end.")
       '("You are in a pitch black room. The only thing you can see is a glowing hologram of Bill Hicks. He smiles. The staircase leading upwards is behind you."
-        "Pitch black room with Bill Hicks hologram. Stairs leading upwards."))
+        "Pitch black room with Bill Hicks hologram. Stairs leading upwards.")
+    )
+   'inventory
+    {
+      'have    "You currently have:"
+      'empty   "Your inventory is currently empty."
+      'credits "\nCREDITS: "
+    }
+   'commands
+    {
+      'cant-take "You can't take that."
+      'no-space  "You cannot carry that much weight. Try dropping something."
+      'taken     "Taken..."
+    }
   })
 
-(def rooms (text 'rooms))
+(def rooms (game-text 'rooms))
+
+(defn text [section sentence]
+  "Returns a string of game text for given section and sentence"
+  ((game-text section) sentence))
