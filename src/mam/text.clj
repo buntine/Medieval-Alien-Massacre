@@ -87,7 +87,14 @@
       'no-space    "You cannot carry that much weight. Try dropping something."
       'taken       "Taken..."
       'dropped     "Dropped..."
-      'fuck-living (vector "You start fucking away but it just feels painful." "You try, but it just won't fit!" "...Dude")
+      'fuck-object (vector "You start fucking away but it just feels painful." "You try, but it just won't fit!" "...Dude")
+      'fuck-living (vector "Hmm... I bet that felt pretty good!" "*Pump* *Pump* *Pump*" "The room is filled with a dank scent of deep musk. It's actually kinda' gross...")
+      'give-error  "He/she/it cannot accept this item."
+      'put-error   "You cannot put this item here."
+      'cut-error   "You need a something sharp before you can cut this!"
+      'cut-object  (vector "Nothing seemed to happen." "That achieved absolutely nothing..." "Stop wasting time!")
+      'cut-living  (vector "Wow, that must have hurt..." "That's pretty rude..." "You really shouldn't be doing that!")
+      'eat-error   (vector "You force it into your throat and fucking die in pain." "You force it into your mouth and swallow. Your life flashes before your eyes. And then your life ends... Fuck you.")
     }
   })
 

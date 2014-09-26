@@ -278,10 +278,10 @@
            (remove-object-from-inventory! objx)))))]
 
   (defn give-object! [objx objy]
-    (give-or-put :give objx objy "He/she/it cannot accept this item."))
+    (give-or-put :give objx objy (t/text 'commands 'give-error)))
 
   (defn put-object! [objx objy]
-    (give-or-put :put objx objy "You cannot put this item here.")))
+    (give-or-put :put objx objy (t/text 'commands 'put-error))))
 
 (defn inspect-object [objnum]
   "Inspects an object in the current room"
@@ -291,23 +291,23 @@
   ([objnum]
    "Attempts to fuck the given object"
    (if (not (object-is? objnum :living))
-     (say 'commands 'fuck-living)
+     (say 'commands 'fuck-object)
      (do
        (if (@game-options :sound)
          (u/play-file "media/fuck.wav"))
-       (say "Hmm... I bet that felt pretty good!"))))
+       (say 'commands 'fuck-living))))
   {:ridiculous true})
 
 (defn cut-object [objnum]
   "Attempts to cut the given object"
   (if (not (has-knife?))
-    (say "You need a something sharp before you can cut this!")
+    (say 'commands 'cut-error)
     (let [evt (event-for objnum :cut)]
       (if (nil? evt)
         (say
           (if (object-is? objnum :living)
-            (say "Wow, that must have hurt...")
-            (say "Nothing seemed to happen.")))
+            (say 'commands 'cut-living)
+            (say 'commands 'cut-object)))
         (if (string? evt) (say evt) (evt))))))
 
 (defn eat-object! [objnum]
@@ -315,7 +315,7 @@
   (let [evt (event-for objnum :eat)]
     (if (nil? evt)
       (do
-        (say  "You force it into your throat and fucking die in pain.")
+        (say 'commands 'eat-error)
         (kill-player ((object-details objnum) :inv)))
       (dosync
         (if (@game-options :sound)
