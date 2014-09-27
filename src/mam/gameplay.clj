@@ -80,8 +80,9 @@
 
 (defn say 
   "Prints s to the game screen. If given a vector of strings, a random one will be chosen."
-  ([section sentence]
-   (say (t/text section sentence)))
+  ([section & path]
+   (say
+     (t/text (cons section path))))
   ([s]
    (if (vector? s)
      (say (rand-nth s))
@@ -359,7 +360,7 @@
   {:pod-manager
      #(cond
         (not (can-afford? 3))
-          (say "The man says 'Hey, I can get your sorry ass off this ship, but it will cost you 3 credits. Come back when you can afford it, matey'.")
+          (say 'talk 'pod-manager 'broke)
         (not (hit-milestone? :speak-to-captain))
           (say "The man says 'Hey matey, I can get your sorry ass off here, but I suggest you speak to the captain over there to our northeast first'.")
         :else

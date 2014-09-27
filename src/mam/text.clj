@@ -100,10 +100,23 @@
       'speechless "Sorry, they have nothing to say at the moment."
       'pull-error "Nothing much seemed to happen."
     }
+    'talk
+    {
+      'pod-manager
+      {
+        'broke "The man says 'Hey, I can get your sorry ass off this ship, but it will cost you 3 credits. Come back when you can afford it, matey'."
+      }
+    }
   })
 
 (def rooms (game-text 'rooms))
 
-(defn text [section sentence]
-  "Returns a string of game text for given section and sentence"
-  ((game-text section) sentence))
+(letfn
+  [(deduce-text [path m]
+     "some string")]
+
+  (defn text [path]
+    "Returns a string of game text for given section and sentence"
+    (deduce-text
+      (rest path)
+      (game-text (first (path)))))
