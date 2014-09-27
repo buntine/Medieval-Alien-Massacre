@@ -95,6 +95,10 @@
       'cut-object  (vector "Nothing seemed to happen." "That achieved absolutely nothing..." "Stop wasting time!")
       'cut-living  (vector "Wow, that must have hurt..." "That's pretty rude..." "You really shouldn't be doing that!")
       'eat-error   (vector "You force it into your throat and fucking die in pain." "You force it into your mouth and swallow. Your life flashes before your eyes. And then your life ends... Fuck you.")
+      'drink-error (vector "It doesn't seem to be drinkable." "Dude, you can't drink that!")
+      'talk-error (vector "That item does not possess the ability to talk." "That doesn't even make sense" "Stop trying to fuck with me...")
+      'speechless "Sorry, they have nothing to say at the moment."
+      'pull-error "Nothing much seemed to happen."
     }
   })
 

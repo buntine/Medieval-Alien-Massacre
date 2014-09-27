@@ -332,7 +332,7 @@
                     (u/play-file "media/drink.wav"))
                   (remove-object-from-inventory! objnum))]
     (if (nil? evt)
-      (say "It doesn't seem to be drinkable.")
+      (say 'commands 'drink-error)
       (if (string? evt)
         (do (say evt) (drink!))
         (if (evt)
@@ -341,17 +341,17 @@
 (defn talk-to-object [objnum]
   "Attempts to talk to the given object"
   (if (not (object-is? objnum :living))
-    (say "That item does not possess the ability to talk.")
+    (say 'commands 'talk-error)
     (let [evt (event-for objnum :speak)]
       (if (nil? evt)
-        (say "Sorry, they have nothing to say at the moment.")
+        (say 'commands 'speechless)
         (if (string? evt) (say evt) (evt))))))
 
 (defn pull-object [objnum]
   "Attempts to pull the given object (probably a lever)"
   (let [pull-evt (event-for objnum :pull)]
     (if (nil? pull-evt)
-      (say "Nothing much seemed to happen.")
+      (say 'commands 'pull-error)
       (pull-evt))))
 
 ; Functions to execute when player speaks to a given object.
