@@ -122,4 +122,4 @@
     "Returns a string of game text for the given path into game-text"
     (deduce-text
       (rest path)
-      (game-text (first (path))))))
+      (game-text (first path)))))
