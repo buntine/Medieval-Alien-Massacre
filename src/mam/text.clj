@@ -113,10 +113,13 @@
 
 (letfn
   [(deduce-text [path m]
-     "some string")]
+     (let [v (m (first path))]
+       (if (map? v)
+         (deduce-text (rest path) v)
+         v)))]
 
   (defn text [path]
-    "Returns a string of game text for given section and sentence"
+    "Returns a string of game text for the given path into game-text"
     (deduce-text
       (rest path)
-      (game-text (first (path)))))
+      (game-text (first (path))))))

@@ -80,13 +80,14 @@
 
 (defn say 
   "Prints s to the game screen. If given a vector of strings, a random one will be chosen."
-  ([section & path]
-   (say
-     (t/text (cons section path))))
   ([s]
    (if (vector? s)
      (say (rand-nth s))
-     (u/mam-pr s (text-speed)))))
+     (u/mam-pr s (text-speed))))
+  ([section & path]
+   (say
+     (t/text (conj path section)))))
+
 
 (defn objects-in-room ([] (objects-in-room @current-room))
   ([room]
