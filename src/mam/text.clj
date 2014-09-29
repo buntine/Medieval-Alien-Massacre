@@ -118,7 +118,7 @@
          (deduce-text (rest path) v)
          v)))]
 
-  (defn text [path]
+  (defn text [& path]
     "Returns a string of game text for the given path into game-text"
     (deduce-text
       (rest path)

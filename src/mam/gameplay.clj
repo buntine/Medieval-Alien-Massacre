@@ -86,7 +86,7 @@
      (u/mam-pr s (text-speed))))
   ([section & path]
    (say
-     (t/text (conj path section)))))
+     (apply t/text (conj path section)))))
 
 
 (defn objects-in-room ([] (objects-in-room @current-room))
