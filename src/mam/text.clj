@@ -109,6 +109,26 @@
         'ready     "The man says 'Oky doke, matey, lets get your punk ass outta' here. I hope Syndal City on Jupiter 4 is alright'."
         'flying    "\n... flying to Syndal City ..."
       }
+      'repairs-captain
+      {
+        'finished "The captain says 'That is all the information I have. Now, fuck off before I get mad.'."
+        'spiel
+        {
+          'a "The man says 'Ahh, you're up! I am Bob Benson, the captain of this grand model T102 repairs vessel. We found you floating out there on the oxygenated stretch of galactic highway 7. Anyway, you look a tad confused, so let me refresh your memory:"
+          'b "It is the year 2843, you're currently travelling on a highway between two of the moons of Jupiter."
+          'c "\n** At this point you explain that you are infact from the year 2011 and the last thing you remember is driking coffee at home and writing some LISP code **\n"
+          'd "The captain says 'Oh, yes, it makes sense now. A true LISP hacker and drinker of the finest bean can transcend both space and time. We've seen your type before. You should head over to see the Pod Manager to our southwest in order to get yourself off this ship'"
+          'e "Good luck out there, young man..."
+        }
+      }
+      'homeless-bum "He mutters 'Hey mystery man! Welcome to Syndal City, perhaps you can spare an old cyborg some whisky?'."
+    }
+    'give
+    {
+      'porno-to-boy "The teenagers eyes explode!! He quickly accepts the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room."
+      'whisky-to-bum "The old bum accepts the whisky and says 'Wow!! Thank you, cobba! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife."
+      'becherovka-to-bum "The old bum accepts the whisky and says 'Holy fuck, Becherovka! My favourite! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife."
+      'alcohol-to-bum "He accepts the alcohol, but just grumbles something about Common LISP in response"
     }
   })
 

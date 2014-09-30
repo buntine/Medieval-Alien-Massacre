@@ -373,38 +373,38 @@
             (set-current-room! 12))),
    :repairs-captain
      #(if (hit-milestone? :speak-to-captain)
-        (say "The captain says 'That is all the information I have. Now, fuck off before I get mad.'.")
+        (say :path '(talk repairs-captain finished))
         (do
-          (say "The man says 'Ahh, you're up! I am Bob Benson, the captain of this grand model T102 repairs vessel. We found you floating out there on the oxygenated stretch of galactic highway 7. Anyway, you look a tad confused, so let me refresh your memory:")
-          (say "It is the year 2843, you're currently travelling on a highway between two of the moons of Jupiter.")
-          (say "\n** At this point you explain that you are infact from the year 2011 and the last thing you remember is driking coffee at home and writing some LISP code **\n")
-          (say "The captain says 'Oh, yes, it makes sense now. A true LISP hacker and drinker of the finest bean can transcend both space and time. We've seen your type before. You should head over to see the Pod Manager to our southwest in order to get yourself off this ship'")
-          (say "Good luck out there, young man...")
+          (say :path '(talk repairs-captain spiel a))
+          (say :path '(talk repairs-captain spiel b))
+          (say :path '(talk repairs-captain spiel c))
+          (say :path '(talk repairs-captain spiel d))
+          (say :path '(talk repairs-captain spiel e))
           (add-milestone! :speak-to-captain))),
    :homeless-bum
-     #(say "He mutters 'Hey mystery man! Welcome to Syndal City, perhaps you can spare an old cyborg some whisky?'.")})
+     #(say :path '(talk homeless-bum))})
 
 ; Functions to execute when player gives a particular X to a Y.
 (def give-fn-for
   {:porno-to-boy
      #(dosync
-        (say "The teenagers eyes explode!! He quickly accepts the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room.")
+        (say :path '(give porno-to-boy))
         (take-object-from-room! @current-room 7)
         (drop-object-in-room! @current-room 4)),
    :whisky-to-bum
      #(if (not (hit-milestone? :alcohol-to-bum))
         (dosync
-          (say "The old bum accepts the whisky and says 'Wow!! Thank you, cobba! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife.")
+          (say :path '(give whisky-to-bum))
           (alter inventory conj 19)
           (add-milestone! :alcohol-to-bum))
-        (say "He accepts the alcohol, but just grumbles something about Common LISP in response")),
+        (say :path '(give alcohol-to-bum))),
    :becherovka-to-bum
      #(if (not (hit-milestone? :alcohol-to-bum))
         (dosync
-          (say "The old bum accepts the whisky and says 'Holy fuck, Becherovka! My favourite! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife.")
+          (say :path '(give becherovka-to-bum))
           (alter inventory conj 19)
           (add-milestone! :alcohol-to-bum))
-        (say "He accepts the alcohol, but just grumbles something about Emacs LISP in response"))})
+        (say :path '(give alcohol-to-bum)))})
 
 ; Functions to execute when player eats particular objects.
 (def eat-fn-for
