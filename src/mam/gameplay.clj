@@ -80,14 +80,15 @@
 
 (defn say 
   "Prints s to the game screen. If given a vector of strings, a random one will be chosen."
-  ([s]
-   (if (vector? s)
-     (say (rand-nth s))
-     (u/mam-pr s (text-speed))))
-  ([section & path]
-   (say
-     (apply t/text (conj path section)))))
-
+  [& {:keys [raw path speed]
+       :or {speed (text-speed)}}]
+   (if (nil? raw)
+     (say
+       :raw (apply t/text path) :speed speed)
+     (if (vector? raw)
+       (say
+         :raw (rand-nth s) :speed speed)
+       (u/mam-pr raw speed))))
 
 (defn objects-in-room ([] (objects-in-room @current-room))
   ([room]
@@ -181,8 +182,8 @@
   (let [descs (map #(describe-object % :inv) @inventory)]
     (if (not (empty? descs))
       (u/print-with-newlines descs (text-speed) (t/text 'inventory 'have))
-      (say 'inventory 'empty))
-    (say (str (t/text 'inventory 'credits) @credits))))
+      (say :path '(inventory empty)))
+    (say :raw (str (t/text 'inventory 'credits) @credits))))
 
 (defn describe-objects-for-room [room]
   "Prints a description for each object that's in the given room"
@@ -197,10 +198,10 @@
    (let [visited? (some #{room} @visited-rooms)
          descs (t/rooms room)]
      (if visited?
-       (say ((if verbose? first second) descs))
+       (say :raw ((if verbose? first second) descs))
        (dosync
          (alter visited-rooms conj room)
-         (say (first descs))))
+         (say :raw (first descs))))
      (describe-objects-for-room room))))
 
 (defn set-option! [option value]
@@ -243,9 +244,9 @@
    the object will be taken"
   (cond
     (object-is? objnum :permanent)
-      (say 'commands 'cant-take)
+      (say :path '(commands cant-take))
     (> (+ (inventory-weight) (obj-weight objnum)) total-weight)
-      (say 'commands 'no-space)
+      (say :path '(commands no-space))
     :else
       (let [evt (event-for objnum :take)]
         (if (or (nil? evt) (evt))
@@ -256,7 +257,7 @@
                 (alter credits + c)
                 (alter inventory conj objnum))
             (take-object-from-room! @current-room objnum)
-            (say 'commands 'taken)))))))
+            (say :path '(commands taken))))))))
 
 (defn drop-object! [objnum]
   "Attempts to drop an object into the current room. If the object
@@ -267,14 +268,14 @@
       (dosync
         (remove-object-from-inventory! objnum)
         (drop-object-in-room! @current-room objnum)
-        (say 'commands 'dropped)))))
+        (say :path '(commands dropped))))))
 
 (letfn
   [(give-or-put [evt objx objy err-msg]
      "Does give/put with objects x and y. E.g: give cheese to old man"
      (let [events (event-for objy evt)]
        (if (or (nil? events) (not (events objx)))
-         (say err-msg)
+         (say :raw err-msg)
          (dosync
            ((events objx))
            (remove-object-from-inventory! objx)))))]
@@ -287,42 +288,41 @@
 
 (defn inspect-object [objnum]
   "Inspects an object in the current room"
-  (say (describe-object objnum :inspect)))
+  (say :raw (describe-object objnum :inspect)))
 
 (defn fuck-object
   ([objnum]
    "Attempts to fuck the given object"
    (if (not (object-is? objnum :living))
-     (say 'commands 'fuck-object)
+     (say :path '(commands fuck-object))
      (do
        (if (@game-options :sound)
          (u/play-file "media/fuck.wav"))
-       (say 'commands 'fuck-living))))
+       (say :path '(commands fuck-living)))))
   {:ridiculous true})
 
 (defn cut-object [objnum]
   "Attempts to cut the given object"
   (if (not (has-knife?))
-    (say 'commands 'cut-error)
+    (say :path '(commands cut-error))
     (let [evt (event-for objnum :cut)]
       (if (nil? evt)
-        (say
-          (if (object-is? objnum :living)
-            (say 'commands 'cut-living)
-            (say 'commands 'cut-object)))
-        (if (string? evt) (say evt) (evt))))))
+        (if (object-is? objnum :living)
+          (say :path '(commands cut-living))
+          (say :path '(commands cut-object)))
+        (if (string? evt) (say :raw evt) (evt))))))
 
 (defn eat-object! [objnum]
   "Attempts to eat the given object"
   (let [evt (event-for objnum :eat)]
     (if (nil? evt)
       (do
-        (say 'commands 'eat-error)
+        (say :path '(commands eat-error))
         (kill-player ((object-details objnum) :inv)))
       (dosync
         (if (@game-options :sound)
           (u/play-file "media/eat.wav"))
-        (if (string? evt) (say evt) (evt))
+        (if (string? evt) (say :raw evt) (evt))
         (remove-object-from-inventory! objnum)))))
 
 (defn drink-object! [objnum]
@@ -334,26 +334,26 @@
                     (u/play-file "media/drink.wav"))
                   (remove-object-from-inventory! objnum))]
     (if (nil? evt)
-      (say 'commands 'drink-error)
+      (say :path '(commands drink-error))
       (if (string? evt)
-        (do (say evt) (drink!))
+        (do (say :raw evt) (drink!))
         (if (evt)
           (drink!))))))
 
 (defn talk-to-object [objnum]
   "Attempts to talk to the given object"
   (if (not (object-is? objnum :living))
-    (say 'commands 'talk-error)
+    (say :path '(commands talk-error))
     (let [evt (event-for objnum :speak)]
       (if (nil? evt)
-        (say 'commands 'speechless)
-        (if (string? evt) (say evt) (evt))))))
+        (say :path '(commands speechless))
+        (if (string? evt) (say :raw evt) (evt))))))
 
 (defn pull-object [objnum]
   "Attempts to pull the given object (probably a lever)"
   (let [pull-evt (event-for objnum :pull)]
     (if (nil? pull-evt)
-      (say 'commands 'pull-error)
+      (say :path '(commands pull-error))
       (pull-evt))))
 
 ; Functions to execute when player speaks to a given object.
@@ -361,13 +361,14 @@
   {:pod-manager
      #(cond
         (not (can-afford? 3))
-          (say 'talk 'pod-manager 'broke)
+          (say :path '(talk pod-manager broke))
         (not (hit-milestone? :speak-to-captain))
-          (say "The man says 'Hey matey, I can get your sorry ass off here, but I suggest you speak to the captain over there to our northeast first'.")
+          (say :path '(talk pod-manager not-ready))
         :else
           (dosync
-            (say "The man says 'Oky doke, matey, lets get your punk ass outta' here. I hope Syndal City on Jupiter 4 is alright'.")
-            (say "\n... flying to Syndal City ..." 300)
+            (say :path '(talk pod-manager ready))
+            (say :path '(talk pod-manager flying)
+                 :speed 300)
             (alter credits - 3)
             (set-current-room! 12))),
    :repairs-captain
