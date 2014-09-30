@@ -87,7 +87,7 @@
        :raw (apply t/text path) :speed speed)
      (if (vector? raw)
        (say
-         :raw (rand-nth s) :speed speed)
+         :raw (rand-nth raw) :speed speed)
        (u/mam-pr raw speed))))
 
 (defn objects-in-room ([] (objects-in-room @current-room))
