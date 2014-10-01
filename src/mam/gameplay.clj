@@ -410,33 +410,33 @@
 (def eat-fn-for
   {:eats-candy
      #(dosync
-        (say "You feel like you just ate crusty skin off Donald Trump's forehead. Although inside the wrapper there was an 'instant win' of 5 credits!")
+        (say :path '(eat candy))
         (alter credits + 5))})
 
 ; Functions to execute when player drinks particular objects.
 (def drink-fn-for
   {:red-potion
      #(do
-        (say "Wow, that tasted great. Unfortunately, it also physically melted your brain and ended your life...")
+        (say :path '(drink red-potion))
         (kill-player "Red potion")),
    :green-potion
      #(do
-        (say "You drink the potion and instantly start to feel strange. Without warning, your eyes begin to glow green! Luckily, you feel no pain.")
+        (say :path '(drink green-potion))
         (add-milestone! :drinks-green-potion)
         true),
    :brown-potion
      #(do
-        (say "Hmm... That was clearly a vile of human shit. And you just drank it! DUDE!")
-        (say "YOU DRANK LIQUID SHIT!!!", 250)
+        (say :path '(drink brown-potion a))
+        (say :path '(drink brown-potion b) :speed 250)
         true)
    :salvika-whisky
      #(if (in-inventory? 17)
-        (do (say "Hiccup!") true)
-        (do (say "Maybe you should give that to the dirty old hobo in the alley way?") false))
+        (do (say :path '(drink whisky success)) true)
+        (do (say :path '(drink whisky fail)) false))
    :becherovka
      #(if (in-inventory? 16)
-        (do (say "Wow! That'll put hair on ya' chest!") true)
-        (do (say "I think you should give that to the dirty old hobo in the alley way. Don't be so greedy!") false))})
+        (do (say :path '(drink becherovka success)) true)
+        (do (say :path '(drink becherovka fail)) false))})
 
 ; Functions to execute when player pulls particular objects.
 (def pull-fn-for

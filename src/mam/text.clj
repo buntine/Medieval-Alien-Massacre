@@ -130,6 +130,30 @@
       'becherovka-to-bum "The old bum accepts the whisky and says 'Holy fuck, Becherovka! My favourite! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife."
       'alcohol-to-bum "He accepts the alcohol, but just grumbles something about Common LISP in response"
     }
+    'eat
+    {
+      'candy "You feel like you just ate crusty skin off Donald Trump's forehead. Although inside the wrapper there was an 'instant win' of 5 credits!"
+    }
+    'drink
+    {
+      'red-potion   "Wow, that tasted great. Unfortunately, it also physically melted your brain and ended your life..."
+      'green-potion "You drink the potion and instantly start to feel strange. Without warning, your eyes begin to glow green! Luckily, you feel no pain."
+      'brown-potion
+      {
+        'a "Hmm... That was clearly a vile of human shit. And you just drank it! DUDE!"
+        'b "YOU DRANK LIQUID SHIT!!!"
+      }
+      'whisky
+      {
+        'success "Hiccup!"
+        'fail    "Maybe you should give that to the dirty old hobo in the alley way?"
+      }
+      'becherovka
+      {
+        'success "Wow! That'll put hair on ya' chest!"
+        'fail    "I think you should give that to the dirty old hobo in the alley way. Don't be so greedy!"
+      }
+    }
   })
 
 (def rooms (game-text 'rooms))
