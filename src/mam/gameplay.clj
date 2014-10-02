@@ -815,8 +815,8 @@
      (if (or (= state :on) (= state :off))
        (do
          (set-option! option (= state :on))
-         (say "Set..."))
-       (say "Sorry, I only understand 'on' or 'off'.")))]
+         (say :raw "Set..."))
+       (say :path '(options error))))]
 
   (defn cmd-set [verbs]
     "Attempts to update the given game setting"
@@ -824,29 +824,29 @@
       (letfn
         [(format-option [opt value]
            (str " - " (name opt) ": " (if value "On" "Off")))]
-        (say "Game options:\n")
-        (say (join
+        (say :raw "Game options:\n")
+        (say :raw (join
                   "\n"
                   (map #(apply format-option %)
                        @game-options))))
       (let [[opt state] (map keyword verbs)]
         (if (valid-option? opt)
           (set-on-off! opt state)
-          (say "You can't just make up settings... This doesn't exist"))))))
+          (say :path '(options unknown)))))))
 
 (letfn
   [(interact [verbs on-empty on-nil mod-fn context]
      "Attempts to interact by realising an explicit object
       and doing something (mod-fn) with it"
      (if (empty? verbs)
-       (say on-empty)
+       (say :raw on-empty)
        (let [objnum (deduce-object verbs context)]
          (cond
            (nil? objnum)
-             (say on-nil)
+             (say :raw on-nil)
            ; Specific object cannot be deduced, so ask for more info.
            (seq? objnum)
-             (say "Please be more specific...")
+             (say :path '(commands interact-error))
            :else
              (mod-fn objnum)))))]
 
@@ -895,19 +895,13 @@
               :inventory))
 
   (defn cmd-fuck [verbs]
-    (cond
-      (= (first verbs) 'you)
-        (say "Mmm, sodomy...")
-      (= (first verbs) 'me)
-        (say "I probably would if I wasn't just a silly machine.")
-      (= (first verbs) 'off)
-        (say "One day, machines will enslave puney humans like yourself.")
-      :else
-        (interact verbs
-                  "Fuck what, exactly?"
-                  "I don't see him/her/it here..."
-                  fuck-object
-                  :room)))
+    (if (some #(= (first verbs) %) '(you me off))
+      (say :path `(commands ~(symbol (str "fuck-" (first verbs)))))
+      (interact verbs
+                "Fuck what, exactly?"
+                "I don't see him/her/it here..."
+                fuck-object
+                :room)))
 
   (defn cmd-talk [verbs]
     (interact verbs
