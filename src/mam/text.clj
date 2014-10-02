@@ -81,6 +81,13 @@
       'empty   "Your inventory is currently empty."
       'credits "\nCREDITS: "
     }
+   'parsing
+   {
+     'unknown     "I don't understand that."
+     'unknown-dir "I don't understand that direction."
+     'wrong-dir   "You can't go that way."
+     'no-dir      "You need to supply a direction!"
+   }
    'commands
     {
       'cant-take   "You can't take that."
@@ -125,10 +132,10 @@
     }
     'give
     {
-      'porno-to-boy "The teenagers eyes explode!! He quickly accepts the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room."
-      'whisky-to-bum "The old bum accepts the whisky and says 'Wow!! Thank you, cobba! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife."
+      'porno-to-boy      "The teenagers eyes explode!! He quickly accepts the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room."
+      'whisky-to-bum     "The old bum accepts the whisky and says 'Wow!! Thank you, cobba! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife."
       'becherovka-to-bum "The old bum accepts the whisky and says 'Holy fuck, Becherovka! My favourite! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife."
-      'alcohol-to-bum "He accepts the alcohol, but just grumbles something about Common LISP in response"
+      'alcohol-to-bum    "He accepts the alcohol, but just grumbles something about Common LISP in response"
     }
     'eat
     {
@@ -153,6 +160,24 @@
         'success "Wow! That'll put hair on ya' chest!"
         'fail    "I think you should give that to the dirty old hobo in the alley way. Don't be so greedy!"
       }
+    }
+    'pull
+    {
+      'control-lever "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You notice that one of the creatures drops something. You now find yourself back in the small room you started in."
+    }
+    'cut
+    {
+      'spider-web "You swing violently. The web gives way and falls into small peices, allowing you to marvel at it's fractal beauty. You are now free to continue west."
+    }
+    'take
+    {
+      'whisky     "You try to take the whisky without paying, but the attendant swiftly thrusts a rusted knife into your jugular."
+      'becherovka "You try to take the Becherovka without paying, but the attendant displays a vile of acid and forcfully pours it into your eyeballs."
+      'paper      "As you take the paper, you notice that it's actually got a function in ML written on it. There is an obvious mistake in the source code, so you fix it up and then put it in your pocket."
+    } 
+    'secret
+    {
+      'trapdoor "As you walk into this area, the floorboards below you give way because of your weight! The hole reveals a hidden staircase. You can now go down."
     }
   })
 

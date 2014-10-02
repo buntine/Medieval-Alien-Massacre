@@ -442,7 +442,7 @@
 (def pull-fn-for
   {:control-lever
      #(dosync
-        (say "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You notice that one of the creatures drops something. You now find yourself back in the small room you started in.")
+        (say :path '(pull control-lever))
         (take-object-from-room! @current-room 2)
         (drop-object-in-room! @current-room 3)
         (set-current-room! 0))})
@@ -451,7 +451,7 @@
 (def cut-fn-for
   {:spider-web
      #(dosync
-        (say "You swing violently. The web gives way and falls into small peices, allowing you to marvel at it's fractal beauty. You are now free to continue west.")
+        (say :path '(cut spider-web))
         (take-object-from-room! @current-room 20))})
  
 ; Functions to execute when player takes particular objects.
@@ -462,7 +462,7 @@
           (alter credits - 3)
           true)
         (do
-          (say "You try to take the whisky without paying, but the attendant swiftly thrusts a rusted knife into your jugular.")
+          (say :path '(take whisky))
           (kill-player "Rusty knife to the throat"))),
     :becherovka
       #(if (can-afford? 4)
@@ -470,11 +470,11 @@
           (alter credits - 4)
           true)
         (do
-          (say "You try to take the whisky without paying, but the attendant displays a vile of acid and forcfully pours it into your eyeballs.")
+          (say :path '(take becherovka))
           (kill-player "Acid to the brain")))
     :paper
       (fn []
-        (say "As you take the paper, you notice that it's actually got a function in ML written on it. There is an obvious mistake in the source code, so you fix it up and then put it in your pocket.")
+        (say :pth '(take paper))
         true)})
 
 (defn make-dets [details]
@@ -647,7 +647,7 @@
         (ref-set milestones (game-state :milestones))
         (ref-set game-options (game-state :game-options))
         (ref-set room-objects (game-state :room-objects))))
-    (say "No saved game data!")))
+    (say :raw "No saved game data!")))
   
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
@@ -662,25 +662,25 @@
         (set-current-room! room)
         (if (@game-options :sound)
           (u/play-file "media/door.wav"))
-        (say (str " * Door unlocked with " key-name " *")))
+        (say :raw (str " * Door unlocked with " key-name " *")))
       (do
         (if (@game-options :sound)
           (u/play-file "media/fail.wav"))
-        (say "You don't have security clearance for this door!")))))
+        (say :raw "You don't have security clearance for this door!")))))
 
 (defn o [objnum room]
   "Returns a function that checks if the given room houses the given object. If
    it does, the player cannot go in the given direction."
   (fn []
     (if (room-has-object? @current-room objnum)
-      (say "You can't go that way.")
+      (say :raw "You can't go that way.")
       (set-current-room! room))))
 
 (letfn
   [(library-trapdoor []
      (if (> (inventory-weight) 7)
        (dosync
-         (say "As you walk into this area, the floorboards below you give way because of your weight! The hole reveals a hidden staircase. You can now go down.")
+         (say :path '(secret trapdoor))
          (take-object-from-room! @current-room 27)
          (drop-object-in-room! @current-room 28))))]
 
@@ -755,7 +755,7 @@
     (let [cmd (command->seq s)
           orig-room @current-room]
       (if (false? (verb-parse cmd))
-        (say "I don't understand that."))
+        (say :path '(parsing unknown)))
       (newline)
       (messages (not (= orig-room @current-room))))
     (messages false)))
@@ -774,10 +774,10 @@
      "Attempts to move in the given direction."
      (let [i (directions dir)]
        (if (not i)
-         (say "I don't understand that direction.")
+         (say :path '(parsing unknown-dir))
          (let [room ((world-map @current-room) i)]
            (if (nil? room)
-             (say "You can't go that way.")
+             (say :path '(parsing wrong-dir))
              (if (fn? room)
                (room)
                (set-current-room! room)))))))]
@@ -785,7 +785,7 @@
   (defn cmd-go [verbs]
     "Expects to be given a direction. Dispatches to the 'move' command"
     (if (empty? verbs)
-      (say "You need to supply a direction!")
+      (say :path '(parsing no-dir))
       ; Catch commands like "go to bed", etc.
       (if (u/direction? (first verbs))
         (move-room (first verbs))
