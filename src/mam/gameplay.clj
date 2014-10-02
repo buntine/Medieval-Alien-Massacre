@@ -929,32 +929,32 @@
 
 (defn cmd-quit [verbs]
   "Quits the game and returns user to terminal."
-  (say "\033[0mThanks for playing, friend!")
+  (say :path '(commands quit))
   (flush)
   (. System exit 0))
 
 (defn cmd-bed [verbs]
   (if (= @current-room 0)
-    (say "You get into bed and slowly fall to sleep. You begin dreaming of a cruel medical examination. You wake up in a pool of sweat, feeling violated.")
-    (say "There is no bed here. You try to sleep standing up and just get bored.")))
+    (say :path '(bed a))
+    (say :path '(bed unknown))))
 
 (letfn
   [(do-x-with-y [verbs action sep mod-fn]
      "Attempts to do x with y. Expects format of: '(action x sep y). E.g: give cheese to old man"
      (let [[x y] (split-with #(not (= % sep)) verbs)]
        (if (or (empty? x) (<= (count y) 1))
-         (say (str "Sorry, I only understand the format: " action " x " (name sep) " y"))
+         (say :raw (str "Sorry, I only understand the format: " action " x " (name sep) " y"))
          (let [objx (deduce-object x :inventory)
                objy (deduce-object (rest y) :room)]
            (cond
              (nil? objx)
-               (say "You don't have that item.")
+               (say :path '(commands do-error))
              (seq? objx)
-               (say (str "Please be more specific about the item you want to " action "."))
+               (say :raw (str "Please be more specific about the item you want to " action "."))
              (nil? objy)
-               (say "I don't see him/her/it here.")
+               (say :path '(commands do-unknown))
              (seq? objy)
-               (say (str "Please be more specific about where/who you want to " action " it."))
+               (say :raw (str "Please be more specific about where/who you want to " action " it."))
              :else 
                (mod-fn objx objy))))))]
 
@@ -966,11 +966,11 @@
 
 (defn cmd-save [verbs]
   (save-game!)
-  (say " * Game saved *"))
+  (say :raw " * Game saved *"))
 
 (defn cmd-load [verbs]
   (load-game!)
-  (say " * Game loaded *"))
+  (say :raw " * Game loaded *"))
 
 (defn cmd-help [verbs]
   (println "  M-A-M HELP")
@@ -1020,5 +1020,5 @@
   "Kills the player and ends the game"
   (if (@game-options :sound)
     (u/play-file "media/kill.wav"))
-  (say (str "You were killed by: " reason))
+  (say :raw (str "You were killed by: " reason))
   (cmd-quit false))

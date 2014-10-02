@@ -112,9 +112,12 @@
       'talk-error     ["That item does not possess the ability to talk." "That doesn't even make sense" "Stop trying to fuck with me..."]
       'speechless     "Sorry, they have nothing to say at the moment."
       'pull-error     "Nothing much seemed to happen."
+      'do-error       "You don't have that item."
+      'do-unknown     "I don't see him/her/it here."
       'fuck-you       ["Mmm, sodomy..." "No, thank you" "Puny Human filth..." "Please commit ritual suicide"]
       'fuck-me        ["I probably would if I wasn't just a silly machine." "Present your genitalia..." "I already have"]
       'fuck-off       ["One day, machines will enslave puney humans like yourself.", "I do not possess the ability to do this. Bitch."]
+      'quit           ["\033[0mThanks for playing, friend!" "\033[0mOK, fine. Mere Human scum"]
     }
     'talk
     {
@@ -187,6 +190,11 @@
     'secret
     {
       'trapdoor "As you walk into this area, the floorboards below you give way because of your weight! The hole reveals a hidden staircase. You can now go down."
+    }
+    'bed
+    {
+      'a       "You get into bed and slowly fall to sleep. You begin dreaming of a cruel medical examination. You wake up in a pool of sweat, feeling violated."
+      'unknown "There is no bed here. You try to sleep standing up and just get bored."
     }
   })
 
