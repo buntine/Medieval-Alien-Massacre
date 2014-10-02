@@ -895,13 +895,14 @@
               :inventory))
 
   (defn cmd-fuck [verbs]
-    (if (some #(= (first verbs) %) '(you me off))
-      (say :path `(commands ~(symbol (str "fuck-" (first verbs)))))
-      (interact verbs
-                "Fuck what, exactly?"
-                "I don't see him/her/it here..."
-                fuck-object
-                :room)))
+    (let [v (first verbs)]
+      (if (some #(= v %) '(you me off))
+        (say :path (map symbol ['commands (str "fuck-" v)]))
+        (interact verbs
+                  "Fuck what, exactly?"
+                  "I don't see him/her/it here..."
+                  fuck-object
+                  :room))))
 
   (defn cmd-talk [verbs]
     (interact verbs
