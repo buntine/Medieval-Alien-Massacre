@@ -95,29 +95,47 @@
    }
    'commands
     {
-      'interact-error "Please be more specific..."
-      'cant-take      "You can't take that."
-      'no-space       "You cannot carry that much weight. Try dropping something."
-      'taken          "Taken..."
-      'dropped        "Dropped..."
-      'fuck-object    ["You start fucking away but it just feels painful." "You try, but it just won't fit!" "...Dude"]
-      'fuck-living    ["Hmm... I bet that felt pretty good!" "*Pump* *Pump* *Pump*" "The room is filled with a dank scent of deep musk. It's actually kinda' gross..."]
-      'give-error     "He/she/it cannot accept this item."
-      'put-error      "You cannot put this item here."
-      'cut-error      "You need a something sharp before you can cut this!"
-      'cut-object     ["Nothing seemed to happen." "That achieved absolutely nothing..." "Stop wasting time!"]
-      'cut-living     ["Wow, that must have hurt..." "That's pretty rude..." "You really shouldn't be doing that!"]
-      'eat-error      ["You force it into your throat and fucking die in pain." "You force it into your mouth and swallow. Your life flashes before your eyes. And then your life ends... Fuck you."]
-      'drink-error    ["It doesn't seem to be drinkable." "Dude, you can't drink that!"]
-      'talk-error     ["That item does not possess the ability to talk." "That doesn't even make sense" "Stop trying to fuck with me..."]
-      'speechless     "Sorry, they have nothing to say at the moment."
-      'pull-error     "Nothing much seemed to happen."
-      'do-error       "You don't have that item."
-      'do-unknown     "I don't see him/her/it here."
-      'fuck-you       ["Mmm, sodomy..." "No, thank you" "Puny Human filth..." "Please commit ritual suicide"]
-      'fuck-me        ["I probably would if I wasn't just a silly machine." "Present your genitalia..." "I already have"]
-      'fuck-off       ["One day, machines will enslave puney humans like yourself.", "I do not possess the ability to do this. Bitch."]
-      'quit           ["\033[0mThanks for playing, friend!" "\033[0mOK, fine. Mere Human scum"]
+      'interact-error  "Please be more specific..."
+      'cant-take       "You can't take that."
+      'take-error      "You must supply an item to take!"
+      'take-unknown    "I don't see that here..."
+      'drop-error      "You must supply an item to drop!"
+      'drop-unknown    "You don't have that item..."
+      'inspect-error   "You must supply and item to inspect!"
+      'inspect-unknown "I don't see that here..."
+      'cut-error       "You must supply an item to cut!"
+      'cut-unknown     "I don't see that here..."
+      'eat-error       "You must supply an item to eat!"
+      'eat-unknown     "You don't have that item..."
+      'drink-error     "You must supply an item to drink!"
+      'drink-unknown   "You don't have that item..."
+      'fuck-error      ["Fuck what, exactly?", "Settle down, poser"]
+      'fuck-unknown    ["I don't see him/her/it here...", "You're starting to make me horny"]
+      'talk-error      "Talk to who exactly, dumbass?"
+      'talk-unknown    "I don't see him/her/it here..."
+      'pull-error      "I don't know what to pull."
+      'pull-unknown    "I don't see that here..."
+      'no-space        "You cannot carry that much weight. Try dropping something."
+      'taken           "Taken..."
+      'dropped         "Dropped..."
+      'fuck-object     ["You start fucking away but it just feels painful." "You try, but it just won't fit!" "...Dude"]
+      'fuck-living     ["Hmm... I bet that felt pretty good!" "*Pump* *Pump* *Pump*" "The room is filled with a dank scent of deep musk. It's actually kinda' gross..."]
+      'give-error      "He/she/it cannot accept this item."
+      'put-error       "You cannot put this item here."
+      'no-knife        "You need a something sharp before you can cut this!"
+      'cut-object      ["Nothing seemed to happen." "That achieved absolutely nothing..." "Stop wasting time!"]
+      'cut-living      ["Wow, that must have hurt..." "That's pretty rude..." "You really shouldn't be doing that!"]
+      'do-not-eat      ["You force it into your throat and fucking die in pain." "You force it into your mouth and swallow. Your life flashes before your eyes. And then your life ends... Fuck you."]
+      'cannot-drink    ["It doesn't seem to be drinkable." "Dude, you can't drink that!"]
+      'cannot-talk     ["That item does not possess the ability to talk." "That doesn't even make sense" "Stop trying to fuck with me..."]
+      'speechless      "Sorry, they have nothing to say at the moment."
+      'cannot-pull     "Nothing much seemed to happen."
+      'do-error        "You don't have that item."
+      'do-unknown      "I don't see him/her/it here."
+      'fuck-you        ["Mmm, sodomy..." "No, thank you" "Puny Human filth..." "Please commit ritual suicide"]
+      'fuck-me         ["I probably would if I wasn't just a silly machine." "Present your genitalia..." "I already have"]
+      'fuck-off        ["One day, machines will enslave puney humans like yourself.", "I do not possess the ability to do this. Bitch."]
+      'quit            ["\033[0mThanks for playing, friend!" "\033[0mOK, fine. Mere Human scum"]
     }
     'talk
     {

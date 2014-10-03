@@ -304,7 +304,7 @@
 (defn cut-object [objnum]
   "Attempts to cut the given object"
   (if (not (has-knife?))
-    (say :path '(commands cut-error))
+    (say :path '(commands no-knife))
     (let [evt (event-for objnum :cut)]
       (if (nil? evt)
         (if (object-is? objnum :living)
@@ -317,7 +317,7 @@
   (let [evt (event-for objnum :eat)]
     (if (nil? evt)
       (do
-        (say :path '(commands eat-error))
+        (say :path '(commands do-not-eat))
         (kill-player ((object-details objnum) :inv)))
       (dosync
         (if (@game-options :sound)
@@ -334,7 +334,7 @@
                     (u/play-file "media/drink.wav"))
                   (remove-object-from-inventory! objnum))]
     (if (nil? evt)
-      (say :path '(commands drink-error))
+      (say :path '(commands cannot-drink))
       (if (string? evt)
         (do (say :raw evt) (drink!))
         (if (evt)
@@ -343,7 +343,7 @@
 (defn talk-to-object [objnum]
   "Attempts to talk to the given object"
   (if (not (object-is? objnum :living))
-    (say :path '(commands talk-error))
+    (say :path '(commands cannot-talk))
     (let [evt (event-for objnum :speak)]
       (if (nil? evt)
         (say :path '(commands speechless))
@@ -353,7 +353,7 @@
   "Attempts to pull the given object (probably a lever)"
   (let [pull-evt (event-for objnum :pull)]
     (if (nil? pull-evt)
-      (say :path '(commands pull-error))
+      (say :path '(commands cannot-pull))
       (pull-evt))))
 
 ; Functions to execute when player speaks to a given object.
@@ -835,32 +835,36 @@
           (say :path '(options unknown)))))))
 
 (letfn
-  [(interact [verbs on-empty on-nil mod-fn context]
+  [(interact [verbs base mod-fn context]
      "Attempts to interact by realising an explicit object
       and doing something (mod-fn) with it"
-     (if (empty? verbs)
-       (say :raw on-empty)
-       (let [objnum (deduce-object verbs context)]
-         (cond
-           (nil? objnum)
-             (say :raw on-nil)
-           ; Specific object cannot be deduced, so ask for more info.
-           (seq? objnum)
-             (say :path '(commands interact-error))
-           :else
-             (mod-fn objnum)))))]
+     (letfn
+       [(say-for-path [qualifier]
+          (say :path
+               (map symbol
+                    ['commands (str base "-" qualifier)])))]
+
+       (if (empty? verbs)
+         (say-for-path "error")
+         (let [objnum (deduce-object verbs context)]
+           (cond
+             (nil? objnum)
+               (say-for-path "unknown")
+             ; Specific object cannot be deduced, so ask for more info.
+             (seq? objnum)
+               (say :path '(commands interact-error))
+             :else
+               (mod-fn objnum))))))]
 
   (defn cmd-take [verbs]
     (interact verbs
-              "You must supply an item to take!"
-              "I don't see that here..."
+              'take
               take-object!
               :room))
 
   (defn cmd-drop [verbs]
     (interact verbs
-              "You must supply an item to drop!"
-              "You don't have that item..."
+              'drop
               drop-object!
               :inventory))
 
@@ -868,29 +872,24 @@
     (if (empty? verbs)
       (cmd-look)
       (interact verbs
-                "You must supply and item to inspect!"
-                "I don't see that here..."
+                'inspect
                 inspect-object
                 :room)))
 
   (defn cmd-cut [verbs]
     (interact verbs
-              "You must supply an item to cut!"
-              "I don't see that here..."
+              'cut
               cut-object
               :room))
 
   (defn cmd-eat [verbs]
     (interact verbs
-              "You must supply an item to eat!"
-              "You don't have that item..."
               eat-object!
               :inventory))
 
   (defn cmd-drink [verbs]
     (interact verbs
-              "You must supply an item to drink!"
-              "You don't have that item..."
+              'drink
               drink-object!
               :inventory))
 
@@ -899,22 +898,19 @@
       (if (some #(= v %) '(you me off))
         (say :path (map symbol ['commands (str "fuck-" v)]))
         (interact verbs
-                  "Fuck what, exactly?"
-                  "I don't see him/her/it here..."
+                  'fuck
                   fuck-object
                   :room))))
 
   (defn cmd-talk [verbs]
     (interact verbs
-              "Talk to who exactly, dumbass?"
-              "I don't see him/her/it here..."
+              'talk
               talk-to-object
               :room))
 
   (defn cmd-pull [verbs]
     (interact verbs
-              "I don't know what to pull."
-              "I don't see that here..."
+              'pull
               pull-object
               :room)))
 
