@@ -884,6 +884,7 @@
 
   (defn cmd-eat [verbs]
     (interact verbs
+              'eat
               eat-object!
               :inventory))
 
