@@ -474,7 +474,7 @@
         (say :pth '(take paper))
         true)})
 
-(defn make-dets [details]
+(defn make-dets [id details]
   "A helper function to merge in some sane defaults for object details"
   (let [defaults {:game nil, :inv nil, :weight 0, :edible false, :permanent false,
                   :living false, :events {}, :credits nil}]
@@ -485,31 +485,28 @@
 ; weights or inventory descriptions. Events, such as :eat, :drink, :speak, :give, :take and :put
 ; can be assigned and will be executed in the correct contexts.
 (def object-details
-  (vector
-    (make-dets {:game "There is a tasty-looking candy bar here"
-                :inv "A candy bar"
-                :inspect "It's called 'Space hack bar' and there is a competition running according to the wrapper"
-                :weight 1
-                :events {:eat (eat-fn-for :eats-candy)}}),
-    (make-dets {:game "There is a small bed here"
-                :inspect "It's black and sorta' small looking. Perhaps for a unwanted child or a gimp of some kind?"
-                :permanent true}),
-    (make-dets {:game "There is a large metal lever here"
-                :inspect "There is no label, but it seems to have some wear from usage"
-                :events {:pull (pull-fn-for :control-lever)}
-                :permanent true}),
+  (map
+    #(= (apply make-dets %))
+    (vector
+      ['candy-bar
+       {:weight 1
+        :events {:eat (eat-fn-for :eats-candy)}}]
+      ['small-bed {:permanent true}]
+      ['large-lever
+        {:events {:pull (pull-fn-for :control-lever)}
+         :permanent true}]
     (make-dets {:game "There is a porno mag here"
                 :inv "A porno mag"
                 :inspect "The title is 'Humaniod Whores, vol #995, June 2843'"
-                :weight 2}),
+                :weight 2})
     (make-dets {:game "There is a green keycard here"
                 :inv "Green keycard"
                 :inspect "It says 'All access: Green'"
-                :weight 1}),
+                :weight 1})
     (make-dets {:game "There is a red keycard here"
                 :inv "Red keycard"
                 :inspect "It says 'All access: Red'"
-                :weight 1}),
+                :weight 1})
     (make-dets {:game "There is a silver keycard here"
                 :inv "Silver keycard"
                 :inspect "It says 'All access: Silver'"
