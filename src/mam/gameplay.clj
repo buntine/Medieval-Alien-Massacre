@@ -375,11 +375,8 @@
      #(if (hit-milestone? :speak-to-captain)
         (say :path '(talk repairs-captain finished))
         (do
-          (say :path '(talk repairs-captain spiel a))
-          (say :path '(talk repairs-captain spiel b))
-          (say :path '(talk repairs-captain spiel c))
-          (say :path '(talk repairs-captain spiel d))
-          (say :path '(talk repairs-captain spiel e))
+          (doseq [x '(a b c d e)]
+            (say :path (concat '(talk repairs-captain spiel) [x])))
           (add-milestone! :speak-to-captain))),
    :homeless-bum
      #(say :path '(talk homeless-bum))})
