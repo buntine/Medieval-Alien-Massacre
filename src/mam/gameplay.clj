@@ -492,50 +492,41 @@
        {:weight 1
         :events {:eat (eat-fn-for :eats-candy)}}]
       ['small-bed
-        {:permanent true}]
+       {:permanent true}]
       ['large-lever
-        {:events {:pull (pull-fn-for :control-lever)}
+       {:events {:pull (pull-fn-for :control-lever)}
          :permanent true}]
       ['porno-mag
-        {:weight 2}]
+       {:weight 2}]
       ['green-keycard
-        {:weight 1}]
-    (make-dets {:game "There is a red keycard here"
-                :inv "Red keycard"
-                :inspect "It says 'All access: Red'"
-                :weight 1})
-    (make-dets {:game "There is a silver keycard here"
-                :inv "Silver keycard"
-                :inspect "It says 'All access: Silver'"
-                :weight 1}),
-    (make-dets {:game "There is a teenage alien boy here!"
-                :inspect "He is excitedly looking for something..."
-                :permanent true
-                :events {:give {3 (give-fn-for :porno-to-boy)},
-                         :speak "He mentions that he's looking for 'some ill pronz with Sasha Grey'. You nod, knowingly"}
-                :living true}),
-    (make-dets {:game "There is an Alien man here"
-                :inspect "He is wearing a nice uniform and has a tag that says 'Pod manager'"
-                :permanent true
-                :events {:speak (speech-fn-for :pod-manager)}
-                :living true}),
-    (make-dets {:game "There is an important-looking Alien man here"
-                :inspect "He is wearing a stupid blonde wig, but looks friendly"
-                :permanent true
-                :events {:speak (speech-fn-for :repairs-captain)}
-                :living true}),
-    (make-dets {:game "There is a small robot here"
-                :inspect "He looks a bit like R2D2, but without the lights. There seems to be a vac-u-lock Dildo sticking out of his forehead."
-                :permanent true
-                :events {:speak "The robot says 'Hello, I am Nexus model 19, series 4. It seems to me that you are not from around here. Perhaps you are lost? Regardless, I have but one thing to tell you, and that, of course, is the meaning to life. The answer is, simply stated in Human tongue, the persuit of excellence in Skateboarding.'"}
-                :living true}),
-    (make-dets {:game "There is a dirty, old homeless bum here"
-                :inspect "He smells like cheap alcohol and blue cheese"
-                :events {:speak (speech-fn-for :homeless-bum)
-                         :give {16 (give-fn-for :whisky-to-bum)
-                                17 (give-fn-for :becherovka-to-bum)}}
-                :permanent true
-                :living true}),
+       {:weight 1}]
+      ['red-keycard
+       {:weight 1}]
+      ['silver-keycard
+       {:weight 1}]
+      ['alien-boy 
+       {:permanent true
+        :events {:give {3 (give-fn-for :porno-to-boy)},
+                 :speak (t/text 'objects 'alien-boy 'speak)}
+        :living true}]
+      ['pod-manager
+       {:permanent true
+        :events {:speak (speech-fn-for :pod-manager)}
+        :living true}]
+      ['repairs-captain
+       {:permanent true
+        :events {:speak (speech-fn-for :repairs-captain)}
+        :living true}]
+      ['small-robot
+       {:permanent true
+        :events {:speak (t/text 'objects 'small-robot 'speak)}
+        :living true}]
+      ['homeless-bum 
+       {:events {:speak (speech-fn-for :homeless-bum)
+                 :give {16 (give-fn-for :whisky-to-bum)
+                        17 (give-fn-for :becherovka-to-bum)}}
+        :permanent true
+        :living true}]
     (make-dets {:game "There is a red potion here"
                 :inspect "It looks a bit like diluted blood"
                 :inv "Red potion"

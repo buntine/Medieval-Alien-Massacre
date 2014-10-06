@@ -99,12 +99,44 @@
        inv     "Green keycard"
        inspect "It says 'All access: Green'"
      }
+     red-keycard {
+       game    "There is a red keycard here"
+       inv     "Red keycard"
+       inspect "It says 'All access: Red'"
+     }
+     silver-keycard {
+       game    "There is a silver keycard here"
+       inv     "Silver keycard"
+       inspect "It says 'All access: Silver'"
+     }
+     alien-boy {
+       game    "There is a teenage alien boy here!"
+       inspect "He is excitedly looking for something..."
+       speak   "He mentions that he's looking for 'lots of ass porn with Sasha Grey'. You nod, knowingly"
+     }
+     pod-manager {
+       game    "There is an Alien man here"
+       inspect "He is wearing a nice uniform and has a tag that says 'Pod manager'"
+     }
+     repairs-captain {
+       game    "There is an important-looking Alien man here"
+       inspect "He is wearing a stupid blonde wig, but looks friendly"
+     }
+     small-robot {
+       game    "There is a small robot here"
+       inspect "He looks a bit like R2D2, but without the lights. There seems to be a vac-u-lock Dildo sticking out of his forehead."
+       speak   "The robot says 'Hello, I am Nexus model 19, series 4. It seems to me that you are not from around here. Perhaps you are lost? Regardless, I have but one thing to tell you, and that, of course, is the meaning to life. The answer is, simply stated in Human tongue, the persuit of excellence in Skateboarding.'"
+     }
+     homeless-bum {
+       game    "There is a dirty, old homeless bum here"
+       inspect "He smells like cheap alcohol and blue cheese"
+     }
    }
    inventory {
       have    "You currently have:"
       empty   "Your inventory is currently empty."
       credits "\nCREDITS: "
-    }
+   }
    parsing {
      unknown     "I don't understand that."
      unknown-dir "I don't understand that direction."
