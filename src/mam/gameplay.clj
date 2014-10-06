@@ -491,18 +491,15 @@
       ['candy-bar
        {:weight 1
         :events {:eat (eat-fn-for :eats-candy)}}]
-      ['small-bed {:permanent true}]
+      ['small-bed
+        {:permanent true}]
       ['large-lever
         {:events {:pull (pull-fn-for :control-lever)}
          :permanent true}]
-    (make-dets {:game "There is a porno mag here"
-                :inv "A porno mag"
-                :inspect "The title is 'Humaniod Whores, vol #995, June 2843'"
-                :weight 2})
-    (make-dets {:game "There is a green keycard here"
-                :inv "Green keycard"
-                :inspect "It says 'All access: Green'"
-                :weight 1})
+      ['porno-mag
+        {:weight 2}]
+      ['green-keycard
+        {:weight 1}]
     (make-dets {:game "There is a red keycard here"
                 :inv "Red keycard"
                 :inspect "It says 'All access: Red'"

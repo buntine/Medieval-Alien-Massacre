@@ -75,45 +75,47 @@
       ("You are in a pitch black room. The only thing you can see is a glowing hologram of Bill Hicks. He smiles. The staircase leading upwards is behind you."
        "Pitch black room with Bill Hicks hologram. Stairs leading upwards.")
     )
-   objects
-   {
-     candy-bar
-     {
+   objects {
+     candy-bar {
        game    "There is a tasty-looking candy bar here"
        inv     "A candy bar"
        inspect "It's called 'Space hack bar' and there is a competition running according to the wrapper"
      }
-     small-bed
-     {
+     small-bed {
        game    "There is a small bed here"
        inspect "It's black and sorta' small looking. Perhaps for an unwanted child or a gimp of some kind?"
      }
-     large-lever
-     {
+     large-lever {
        game    "There is a large metal lever here"
        inspect "There is no label, but it seems to have some wear from usage"
      }
+     porno-mag {
+       game    "There is a porno mag here"
+       inv     "A porno mag"
+       inspect "The title is 'Humaniod Whores, vol #995, June 2843'"
+     }
+     green-keycard {
+       game    "There is a green keycard here"
+       inv     "Green keycard"
+       inspect "It says 'All access: Green'"
+     }
    }
-   inventory
-    {
+   inventory {
       have    "You currently have:"
       empty   "Your inventory is currently empty."
       credits "\nCREDITS: "
     }
-   parsing
-   {
+   parsing {
      unknown     "I don't understand that."
      unknown-dir "I don't understand that direction."
      wrong-dir   "You can't go that way."
      no-dir      "You need to supply a direction!"
    }
-   options
-   {
+   options {
      error   "Sorry, I only understand 'on' or 'off'."
      unknown "You can't just make up settings... This doesn't exist"
    }
-   commands
-    {
+   commands {
       interact-error  "Please be more specific..."
       cant-take       "You can't take that."
       take-error      "You must supply an item to take!"
@@ -156,20 +158,16 @@
       fuck-off        ["One day, machines will enslave puney humans like yourself.", "I do not possess the ability to do this. Bitch."]
       quit            ["\033[0mThanks for playing, friend!" "\033[0mOK, fine. Mere Human scum"]
     }
-    talk
-    {
-      pod-manager
-      {
+    talk {
+      pod-manager {
         broke     "The man says 'Hey, I can get your sorry ass off this ship, but it will cost you 3 credits. Come back when you can afford it, matey'."
         not-ready "The man says 'Hey matey, I can get your sorry ass off here, but I suggest you speak to the captain over there to our northeast first'."
         ready     "The man says 'Oky doke, matey, lets get your punk ass outta' here. I hope Syndal City on Jupiter 4 is alright'."
         flying    "\n... flying to Syndal City ..."
       }
-      repairs-captain
-      {
+      repairs-captain {
         finished "The captain says 'That is all the information I have. Now, fuck off before I get mad.'."
-        spiel
-        {
+        spiel {
           a "The man says 'Ahh, you're up! I am Bob Benson, the captain of this grand model T102 repairs vessel. We found you floating out there on the oxygenated stretch of galactic highway 7. Anyway, you look a tad confused, so let me refresh your memory:"
           b "It is the year 2843, you're currently travelling on a highway between two of the moons of Jupiter."
           c "\n** At this point you explain that you are infact from the year 2011 and the last thing you remember is driking coffee at home and writing some LISP code **\n"
@@ -179,19 +177,16 @@
       }
       homeless-bum "He mutters 'Hey mystery man! Welcome to Syndal City, perhaps you can spare an old cyborg some whisky?'."
     }
-    give
-    {
+    give {
       porno-to-boy      "The teenagers eyes explode!! He quickly accepts the porno mag and runs away. He throws a green keycard in your general direction as he leaves the room."
       whisky-to-bum     "The old bum accepts the whisky and says 'Wow!! Thank you, cobba! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife."
       becherovka-to-bum "The old bum accepts the whisky and says 'Holy fuck, Becherovka! My favourite! Please, take this small knife in return, It may help to 'cut' things that lay in your path'. You, in turn, take the knife."
       alcohol-to-bum    "He accepts the alcohol, but just grumbles something about Common LISP in response"
     }
-    eat
-    {
+    eat {
       candy "You feel like you just ate crusty skin off Donald Trump's forehead. Although inside the wrapper there was an 'instant win' of 5 credits!"
     }
-    drink
-    {
+    drink {
       red-potion   "Wow, that tasted great. Unfortunately, it also physically melted your brain and ended your life..."
       green-potion "You drink the potion and instantly start to feel strange. Without warning, your eyes begin to glow green! Luckily, you feel no pain."
       brown-potion
@@ -199,37 +194,30 @@
         a "Hmm... That was clearly a vile of human shit. And you just drank it! DUDE!"
         b "YOU DRANK LIQUID SHIT!!!"
       }
-      whisky
-      {
+      whisky {
         success "Hiccup!"
         fail    "Maybe you should give that to the dirty old hobo in the alley way?"
       }
-      becherovka
-      {
+      becherovka {
         success "Wow! That'll put hair on ya' chest!"
         fail    "I think you should give that to the dirty old hobo in the alley way. Don't be so greedy!"
       }
     }
-    pull
-    {
+    pull {
       control-lever "You pull the lever forwards and nothing much seems to happen. After about 10 seconds, 2 small creatures enter the room and you instantly pass out. You notice that one of the creatures drops something. You now find yourself back in the small room you started in."
     }
-    cut
-    {
+    cut {
       spider-web "You swing violently. The web gives way and falls into small peices, allowing you to marvel at it's fractal beauty. You are now free to continue west."
     }
-    take
-    {
+    take {
       whisky     "You try to take the whisky without paying, but the attendant swiftly thrusts a rusted knife into your jugular."
       becherovka "You try to take the Becherovka without paying, but the attendant displays a vile of acid and forcfully pours it into your eyeballs."
       paper      "As you take the paper, you notice that it's actually got a function in ML written on it. There is an obvious mistake in the source code, so you fix it up and then put it in your pocket."
     } 
-    secret
-    {
+    secret {
       trapdoor "As you walk into this area, the floorboards below you give way because of your weight! The hole reveals a hidden staircase. You can now go down."
     }
-    bed
-    {
+    bed {
       a       "You get into bed and slowly fall to sleep. You begin dreaming of a cruel medical examination. You wake up in a pool of sweat, feeling violated."
       unknown "There is no bed here. You try to sleep standing up and just get bored."
     }
