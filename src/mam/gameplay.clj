@@ -527,21 +527,15 @@
                         17 (give-fn-for :becherovka-to-bum)}}
         :permanent true
         :living true}]
-    (make-dets {:game "There is a red potion here"
-                :inspect "It looks a bit like diluted blood"
-                :inv "Red potion"
-                :events {:drink (drink-fn-for :red-potion)}
-                :weight 1}),
-    (make-dets {:game "There is a green potion here"
-                :inspect "It smells weird and is foaming"
-                :inv "Green potion"
-                :events {:drink (drink-fn-for :green-potion)}
-                :weight 1}),
-    (make-dets {:game "There is a brown potion here"
-                :inspect "It seems to be bubbling!"
-                :inv "Brown potion"
-                :events {:drink (drink-fn-for :brown-potion)}
-                :weight 1}),
+      ['red-potion
+       {:events {:drink (drink-fn-for :red-potion)}
+        :weight 1}]
+      ['green-potion
+       {:events {:drink (drink-fn-for :green-potion)}
+        :weight 1}]
+      ['brown-potion 
+       {:events {:drink (drink-fn-for :brown-potion)}
+        :weight 1}]
     (make-dets {:game "There is a shop attendant (a woman) here"
                 :inspect "She is wearing an old cooking pot as a hat. What a dumb old bitch."
                 :permanent true

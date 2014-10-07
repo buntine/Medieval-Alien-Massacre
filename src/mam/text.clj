@@ -131,6 +131,21 @@
        game    "There is a dirty, old homeless bum here"
        inspect "He smells like cheap alcohol and blue cheese"
      }
+     red-potion {
+       game    "There is a red potion here"
+       inspect "It looks a bit like diluted blood"
+       inv     "Red potion"
+     }
+     green-potion {
+       game    "There is a green potion here"
+       inspect "It smells weird and is foaming"
+       inv     "Green potion"
+     }
+     brown-potion {
+       game    "There is a brown potion here"
+       inspect "It seems to be bubbling!"
+       inv     "Brown potion"
+     }
    }
    inventory {
       have    "You currently have:"

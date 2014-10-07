@@ -4,6 +4,8 @@ A sadistic and pro-death text-based adventure for (bastard) children.
 
 A hobby project, written in Clojure (A Lisp for the JVM).
 
+This project is dedicated to the memory of my friend Adam Hillier.
+
 
 ## Installation (If you want to make changes. If you just want to play, skip to "Usage").
 
