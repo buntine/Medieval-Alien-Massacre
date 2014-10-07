@@ -536,26 +536,20 @@
       ['brown-potion 
        {:events {:drink (drink-fn-for :brown-potion)}
         :weight 1}]
-    (make-dets {:game "There is a shop attendant (a woman) here"
-                :inspect "She is wearing an old cooking pot as a hat. What a dumb old bitch."
-                :permanent true
-                :living true
-                :events {:speak "She says 'Welcome, stranger. We don't get many customers these days. Anyway, the whisky is 3 credits and the Becharovka is 4 credits. Just take what you like.'. She also mentions that theft is punishable by a swift death."}}),
-    (make-dets {:game "There is a bottle of 'Salvika' whisky here"
-                :inspect "Looks OK. The price tag says 3 credits."
-                :inv "Bottle of Salvika whisky"
-                :events {:drink (drink-fn-for :salvika-whisky)
-                         :take (take-fn-for :salvika-whisky)}
-                :weight 2}),
-    (make-dets {:game "There is a bottle of Becherovka (a Czech Liquer) here"
-                :inspect "Looks great. The price tag says 4 credits."
-                :inv "Bottle of Becherovka"
-                :events {:drink (drink-fn-for :becherovka)
-                         :take (take-fn-for :becherovka)}
-                :weight 2}),
-    (make-dets {:game "There is 5 credits here!"
-                :inspect "Some dumbass must have dropped it."
-                :credits 5}),
+      ['shop-att-a
+       {:permanent true
+        :events {:speak (t/text 'objects 'shop-att-a 'speak)}
+        :living true}]
+      ['salvika 
+       {:events {:drink (drink-fn-for :salvika-whisky)
+                 :take (take-fn-for :salvika-whisky)}
+        :weight 2}]
+      ['becherovka
+       {:events {:drink (drink-fn-for :becherovka)
+                 :take (take-fn-for :becherovka)}
+        :weight 2}]
+      ['5-credits
+       {:credits 5}]
     (make-dets {:game "There is a small knife here"
                 :inspect "It looks old and will probably only work once or twice..."
                 :inv "Small knife"

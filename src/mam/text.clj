@@ -146,6 +146,26 @@
        inspect "It seems to be bubbling!"
        inv     "Brown potion"
      }
+     shop-att-a {
+       game    "There is a shop attendant (a woman) here"
+       inspect "She is wearing an old cooking pot as a hat. What a dumb old bitch."
+       speak   "She says 'Welcome, stranger. We don't get many customers these days. Anyway, the whisky is 3 credits and the Becharovka is 4 credits. Just 'take' what you like.'. She also mentions that theft is punishable by a swift death." 
+     }
+     salvika {
+       game    "There is a bottle of 'Salvika' whisky here"
+       inspect "Looks OK. The price tag says 3 credits."
+       speak   "Bottle of Salvika whisky"
+     }
+     becherovka {
+       game    "There is a bottle of Becherovka (a Czech Liquer) here"
+       inspect "Looks great. The price tag says 4 credits."
+       speak   "Bottle of Becherovka"
+     }
+     5-credits {
+       game    "There is 5 credits here!"
+       inspect "Some dumbass must have dropped it."
+       
+     }
    }
    inventory {
       have    "You currently have:"
