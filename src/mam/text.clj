@@ -161,7 +161,7 @@
        inspect "Looks great. The price tag says 4 credits."
        speak   "Bottle of Becherovka"
      }
-     5-credits {
+     five-credits {
        game    "There is 5 credits here!"
        inspect "Some dumbass must have dropped it."
        

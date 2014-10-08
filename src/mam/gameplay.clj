@@ -548,7 +548,7 @@
        {:events {:drink (drink-fn-for :becherovka)
                  :take (take-fn-for :becherovka)}
         :weight 2}]
-      ['5-credits
+      ['five-credits
        {:credits 5}]
       ['small-knife
        {:cutter true
