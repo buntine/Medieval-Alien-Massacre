@@ -564,30 +564,21 @@
        {:permanent true
         :living true
         :events {:speak (t/text 'objects 'thin-protester 'speak)}}]
-    (make-dets {:game "There is a gentle-looking old man here"
-                :inspect "He has a tag that says 'Curator' on it. He seems to be slightly aroused..."
-                :permanent true
-                :living true
-                :events {:speak "He says 'Hello, my strange looking friend. I am the curator of this fine establishment. It has been my life ambition to preserve the teachings of the early Computer Science scholars. Ever since the mid-24th century, the Computer Science field has been in disarray. The art of computer programming has been lost to all but a few. For over 100 years, humans have been working on a function to compute the true name of our God. So far, it's proven nearly impossible. Around here somewhere is my latest attempt. I wrote it in the ancient language ML, but again I failed...'"}}),
-    (make-dets {:game "There is a peice of paper on the ground here."
-                :inspect "It seems to have some source code written on there."
-                :inv "Paper with ML code"
-                :weight 1
-                :events {:take (take-fn-for :paper)}}),
-    (make-dets {:game "There is a book on the ground here."
-                :inspect "It is a dirty old copy of 'Programming Language Pragmatics' by Michael L. Scott."
-                :inv "Book: Programming Language Pragmatics"
-                :weight 2}),
-    (make-dets {:game "There is a medium sized stone here."
-                :inspect "It doesn't look particularly special"
-                :inv "Stone"
-                :weight 3}),
-    (make-dets {:game "The floorboards look particularly weak here."
-                :inspect "It seems like they might break if enough weight is put on top of them!"
-                :permanent true}),
-    (make-dets {:game "There is a staircase leading downwards here."
-                :inspect "It is a hidden passage of some sort. Might be dangerous..."
-                :permanent true})))
+      ['gentle-old-man
+       {:permanent true
+        :living true
+        :events {:speak (t/text 'objects 'gentle-old-man 'speak)}}]
+      ['paper-a
+       {:weight 1
+        :events {:take (take-fn-for :paper)}}]
+      ['book-a
+       {:weight 2}]
+      ['medium-stone
+       {:weight 3}]
+      ['wet-floor
+       {:permanent true}]
+      ['staircase-a
+       {:permanent true}])))
 
 (defn save-game! []
   "Saves the current game data into a file on the disk"

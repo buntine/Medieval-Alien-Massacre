@@ -185,6 +185,34 @@
        inspect "He has a sign that says 'More Referential Transparency!'."
        speak   "He says 'OOP is inherantly imperative! With mutating state, we stand no chance!'."
      }
+     gentle-old-man {
+       game    "There is a gentle-looking old man here"
+       inspect "He has a tag that says 'Curator' on it. He seems to be slightly aroused..."
+       speak   "He says 'Hello, my strange looking friend. I am the curator of this fine establishment. It has been my life ambition to preserve the teachings of the early Computer Science scholars. Ever since the mid-24th century, the Computer Science field has been in disarray. The art of computer programming has been lost to all but a few. For over 100 years, humans have been working on a function to compute the true name of our God. So far, it's proven nearly impossible. Around here somewhere is my latest attempt. I wrote it in the ancient language ML, but again I failed...'"
+     }
+     paper-a {
+       game    "There is a peice of paper on the ground here."
+       inspect "It seems to have some source code written on there."
+       inv     "Paper with ML code"
+     }
+     book-a {
+       game    "There is a book on the ground here."
+       inspect "It is a dirty old copy of 'Programming Language Pragmatics' by Michael L. Scott."
+       inv     "Book: Programming Language Pragmatics"
+     }
+     medium-stone {
+       game    "There is a medium sized stone here."
+       inspect "It doesn't look particularly special"
+       inv     "Stone"
+     }
+     wet-floor {
+       game    "The floorboards look particularly weak here."
+       inspect "It seems like they might break if enough weight is put on top of them!"
+     }
+     staircase-a {
+       game    "There is a staircase leading downwards here."
+       inspect "It is a hidden passage of some sort. Might be dangerous..."
+     }
    }
    inventory {
       have    "You currently have:"
