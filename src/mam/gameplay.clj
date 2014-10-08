@@ -550,25 +550,20 @@
         :weight 2}]
       ['5-credits
        {:credits 5}]
-    (make-dets {:game "There is a small knife here"
-                :inspect "It looks old and will probably only work once or twice..."
-                :inv "Small knife"
-                :cutter true
-                :weight 2}),
-    (make-dets {:game "There is a thick spider web (must be some Jupiterian species) blocking your way out!"
-                :inspect "It's tough. You'll need to find something sharp to cut through it."
-                :events {:cut (cut-fn-for :spider-web)}
-                :permanent true}),
-    (make-dets {:game "There is a fat man protesting here"
-                :inspect "He has a sign that says 'OOP killed my father!'."
-                :permanent true
-                :living true
-                :events {:speak "He says 'The Object Oriented paradigm is unfit for use by our advanced society. We must end this madness!'."}}),
-    (make-dets {:game "There is a thin man protesting here"
-                :inspect "He has a sign that says 'More Referential Transparency!'."
-                :permanent true
-                :living true
-                :events {:speak "He says 'OOP is inherantly imperative! With mutating state, we stand no chance!'."}}),
+      ['small-knife
+       {:cutter true
+        :weight 2}]
+      ['spider-web
+       {:events {:cut (cut-fn-for :spider-web)}
+        :permanent true}]
+      ['fat-protester
+       {:permanent true
+        :living true
+        :events {:speak (t/text 'objects 'fat-protester 'speak)}}]
+      ['thin-protester
+       {:permanent true
+        :living true
+        :events {:speak (t/text 'objects 'thin-protester 'speak)}}]
     (make-dets {:game "There is a gentle-looking old man here"
                 :inspect "He has a tag that says 'Curator' on it. He seems to be slightly aroused..."
                 :permanent true

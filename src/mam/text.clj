@@ -166,6 +166,25 @@
        inspect "Some dumbass must have dropped it."
        
      }
+     small-knife {
+       game    "There is a small knife here"
+       inspect "It looks old and will probably only work once or twice..."
+       inv     "Small knife"
+     }
+     spider-web {
+       game    "There is a thick spider web (must be some Jupiterian species) blocking your way out!"
+       inspect "It's tough. You'll need to find something sharp to cut through it."
+     }
+     fat-protester {
+       game    "There is a fat man protesting here"
+       inspect "He has a sign that says 'OOP killed my father!'."
+       speak   "He says 'The Object Oriented paradigm is unfit for use by our advanced society. We must end this madness!'."
+     }
+     thin-protester {
+       game    "There is a thin man protesting here"
+       inspect "He has a sign that says 'More Referential Transparency!'."
+       speak   "He says 'OOP is inherantly imperative! With mutating state, we stand no chance!'."
+     }
    }
    inventory {
       have    "You currently have:"
