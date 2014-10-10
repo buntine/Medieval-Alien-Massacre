@@ -17,24 +17,31 @@ First, install Leiningen: http://github.com/technomancy/leiningen
 
 And then:
 
+```
   $ lein deps
   $ lein uberjar
+```
 
 Also install rlwrap (optional, but highly recommended as it provides tab completion, history, etc):
 
+```
   $ sudo apt-get install rlwrap
-
+```
 
 Usage
 -----
 
 If you've installed rlwrap:
 
+```
   $ ./play
+```
 
 Otherwise:
 
+```
   $ java -jar mam-1.0.1-SNAPSHOT-standalone.jar
+```
 
 Or see a list of standalone packages in my downloads: https://github.com/buntine/Medieval-Alien-Massacre/archives/master
 

@@ -474,11 +474,23 @@
         (say :pth '(take paper))
         true)})
 
+;(defn make-dets [id details]
+;  "A helper function to merge in some sane defaults for object details"
+;  (let [defaults {:game nil, :inv nil, :weight 0, :edible false, :permanent false,
+;                  :living false, :events {}, :credits nil}]
+;    (merge defaults details)))
+
 (defn make-dets [id details]
   "A helper function to merge in some sane defaults for object details"
-  (let [defaults {:game nil, :inv nil, :weight 0, :edible false, :permanent false,
-                  :living false, :events {}, :credits nil}]
-    (merge defaults details)))
+  (letfn
+    [(text-path [basename]
+       ('commands id basename))] 
+
+    (let [defaults {:weight 0, :edible false, :permanent false,
+                    :living false, :events {}, :credits nil,
+                    :game (text-path 'game), :inv (text-path 'inv),
+                    :inspect (text-path 'inspect)}]
+      (merge defaults details))))
 
 ; The details of all objects. Each object is assigned one or more numbers in object-identifiers,
 ; which corresponds to it's index here. Permanent object cannot be taken and thus don't require

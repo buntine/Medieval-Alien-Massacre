@@ -11,7 +11,7 @@
   ; All rooms. Each index contains both a large description (first visit) and a brief
   ; description (all subsequent visits).
   '{rooms
-    (vector
+    [
       ("You are in a small, silver-walled room with no windows. There is a door to the north labelled 'Repairs deck' and another door to the east."
        "Small, featureless room. Doors to north and east.")
       ("You are in another small, featureless room. There is nothing of interest here except doors to the north and west."
@@ -74,7 +74,7 @@
        "Isle one-A: Logic/Misc programming. Dead-end.")
       ("You are in a pitch black room. The only thing you can see is a glowing hologram of Bill Hicks. He smiles. The staircase leading upwards is behind you."
        "Pitch black room with Bill Hicks hologram. Stairs leading upwards.")
-    )
+    ]
    objects {
      candy-bar {
        game    "There is a tasty-looking candy bar here"
