@@ -484,7 +484,7 @@
   "A helper function to merge in some sane defaults for object details"
   (letfn
     [(text-path [basename]
-       ('commands id basename))] 
+       (t/text ('commands id basename)))] 
 
     (let [defaults {:weight 0, :edible false, :permanent false,
                     :living false, :events {}, :credits nil,
@@ -497,8 +497,9 @@
 ; weights or inventory descriptions. Events, such as :eat, :drink, :speak, :give, :take and :put
 ; can be assigned and will be executed in the correct contexts.
 (def object-details
+  (vec 
   (map
-    #(= (apply make-dets %))
+    #(apply make-dets %)
     (vector
       ['candy-bar
        {:weight 1
@@ -590,7 +591,7 @@
       ['wet-floor
        {:permanent true}]
       ['staircase-a
-       {:permanent true}])))
+       {:permanent true}]))))
 
 (defn save-game! []
   "Saves the current game data into a file on the disk"
