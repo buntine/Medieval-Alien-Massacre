@@ -593,8 +593,6 @@
       ['staircase-a
        {:permanent true}]))))
 
-(print object-details)
-
 (defn save-game! []
   "Saves the current game data into a file on the disk"
   (let [game-state {:current-room @current-room

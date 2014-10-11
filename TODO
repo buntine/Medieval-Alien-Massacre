@@ -2,7 +2,9 @@ Commands:
  - put x in ass/butt/bum
  - read x
  - punch/kick
+ - kill
  - steal (same as "take" but doesn't check can-afford)
+ - open door (same as go in)
 Features:
  - Refactor make-dets and move text into text.clj
  - Restructure gameplay.clj so all methods are in correct places
