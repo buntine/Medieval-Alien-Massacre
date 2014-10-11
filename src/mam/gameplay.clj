@@ -484,7 +484,7 @@
   "A helper function to merge in some sane defaults for object details"
   (letfn
     [(text-path [basename]
-       (t/text ('commands id basename)))] 
+       (t/text 'objects id basename))]
 
     (let [defaults {:weight 0, :edible false, :permanent false,
                     :living false, :events {}, :credits nil,
@@ -496,9 +496,9 @@
 ; which corresponds to it's index here. Permanent object cannot be taken and thus don't require
 ; weights or inventory descriptions. Events, such as :eat, :drink, :speak, :give, :take and :put
 ; can be assigned and will be executed in the correct contexts.
+; TODO: Refector. Do not use indexes to identify objects.
 (def object-details
-  (vec 
-  (map
+  (vec (map
     #(apply make-dets %)
     (vector
       ['candy-bar
@@ -592,6 +592,8 @@
        {:permanent true}]
       ['staircase-a
        {:permanent true}]))))
+
+(print object-details)
 
 (defn save-game! []
   "Saves the current game data into a file on the disk"
