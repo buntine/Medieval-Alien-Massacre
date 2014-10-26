@@ -51,7 +51,7 @@
    E.g: 'cheese' might mean objects 6 and 12 or object 9 or nothing."
   (let [objnums (object-identifiers verb)
         fns {:room #(room-has-object? @s/current-room %)
-             :inventory in-inventory?}]
+             :inventory s/in-inventory?}]
     (if (nil? objnums)
       '()
       (filter (fns context)
@@ -83,7 +83,7 @@
 
 (defn has-knife? []
   "Returns true if the player has a knife-like object"
-  (some #((object-details %) :cutter) @inventory))
+  (some #((object-details %) :cutter) @s/inventory))
 
 (defn obj-weight [objnum]
   "Returns the weight assigned to the given object"
@@ -91,7 +91,7 @@
 
 (defn inventory-weight []
   "Returns the current weight of the players inventory"
-  (reduce + 0 (map obj-weight @inventory)))
+  (reduce + 0 (map obj-weight @s/inventory)))
 
 (defn event-for [objnum evt]
   "Returns either the value (usually a fn) assigned to the given event, or nil"
@@ -110,11 +110,11 @@
 
 (defn display-inventory []
   "Displays the players inventory"
-  (let [descs (map #(describe-object % :inv) @inventory)]
+  (let [descs (map #(describe-object % :inv) @s/inventory)]
     (if (not (empty? descs))
       (u/print-with-newlines descs (text-speed) (t/text 'inventory 'have))
       (say :path '(inventory empty)))
-    (say :raw (str (t/text 'inventory 'credits) @credits))))
+    (say :raw (str (t/text 'inventory 'credits) @s/credits))))
 
 (defn describe-objects-for-room [room]
   "Prints a description for each object that's in the given room"
@@ -134,16 +134,6 @@
          (alter visited-rooms conj room)
          (say :raw (first descs))))
      (describe-objects-for-room room))))
-
-(defn set-option! [option value]
-  "Sets one of the pre-defined game options. Assumes valid input."
-  (dosync
-    (alter game-options assoc option value)))
-
-(defn valid-option? [option]
-  "Returns true if option is valid game option."
-  (let [opts (map key @game-options)]
-    (boolean (some #{option} opts))))
 
 (defn take-object! [objnum]
   "Attempts to take an object from the current room. If the object
@@ -504,12 +494,12 @@
   (fn []
     (if (in-inventory? keynum)
       (let [key-name (. ((object-details keynum) :inv) toLowerCase)]
-        (set-current-room! room)
-        (if (@game-options :sound)
+        (s/set-current-room! room)
+        (if (@s/game-options :sound)
           (u/play-file "media/door.wav"))
         (say :raw (str " * Door unlocked with " key-name " *")))
       (do
-        (if (@game-options :sound)
+        (if (@s/game-options :sound)
           (u/play-file "media/fail.wav"))
         (say :raw "You don't have security clearance for this door!")))))
 
@@ -517,24 +507,24 @@
   "Returns a function that checks if the given room houses the given object. If
    it does, the player cannot go in the given direction."
   (fn []
-    (if (room-has-object? @current-room objnum)
+    (if (room-has-object? @s/current-room objnum)
       (say :raw "You can't go that way.")
-      (set-current-room! room))))
+      (s/set-current-room! room))))
 
 (letfn
   [(library-trapdoor []
      (if (> (inventory-weight) 7)
        (dosync
          (say :path '(secret trapdoor))
-         (take-object-from-room! @current-room 27)
-         (drop-object-in-room! @current-room 28))))]
+         (s/take-object-from-room! 27)
+         (s/drop-object-in-room! 28))))]
 
   (defn rc [i room]
     "Returns a function that performs the 'room check' (a named function) identified by i. The function should either return a number indicating the room to move the player to, or a false value, in which case the player will be sent to 'room'"
     (fn []
       (let [fnvec [library-trapdoor]
             new-room (or ((fnvec i)) room)]
-        (set-current-room! new-room)))))
+        (s/set-current-room! new-room)))))
 
 ; Map to specify which rooms the player will enter on the given movement.
 ; A function indicates that something special needs to be done (check conditions, etc).
@@ -598,11 +588,11 @@
   "Parses the user input"
   (if (not (empty? s))
     (let [cmd (command->seq s)
-          orig-room @current-room]
+          orig-room @s/current-room]
       (if (false? (verb-parse cmd))
         (say :path '(parsing unknown)))
       (newline)
-      (messages (not (= orig-room @current-room))))
+      (messages (not (= orig-room @s/current-room))))
     (messages false)))
 
 (defn request-command []
@@ -620,12 +610,12 @@
      (let [i (directions dir)]
        (if (not i)
          (say :path '(parsing unknown-dir))
-         (let [room ((world-map @current-room) i)]
+         (let [room ((world-map @s/current-room) i)]
            (if (nil? room)
              (say :path '(parsing wrong-dir))
              (if (fn? room)
                (room)
-               (set-current-room! room)))))))]
+               (s/set-current-room! room)))))))]
 
   (defn cmd-go [verbs]
     "Expects to be given a direction. Dispatches to the 'move' command"
@@ -657,9 +647,9 @@
 
 (letfn
   [(set-on-off! [option state]
-     (if (or (= state :on) (= state :off))
+     (if (contains? [:on :off] state)
        (do
-         (set-option! option (= state :on))
+         (s/set-option! option (= state :on))
          (say :raw "Set..."))
        (say :path '(options error))))]
 
@@ -673,9 +663,9 @@
         (say :raw (join
                   "\n"
                   (map #(apply format-option %)
-                       @game-options))))
+                       @s/game-options))))
       (let [[opt state] (map keyword verbs)]
-        (if (valid-option? opt)
+        (if (s/valid-option? opt)
           (set-on-off! opt state)
           (say :path '(options unknown)))))))
 
@@ -763,7 +753,7 @@
 (defn cmd-look ([verbs] (cmd-inspect verbs))
   ([]
    "Prints a long description of a room"
-   (describe-room @current-room true)))
+   (describe-room @s/current-room true)))
 
 (defn cmd-inventory [verbs]
   "Displays the players inventory"
@@ -776,7 +766,7 @@
   (. System exit 0))
 
 (defn cmd-bed [verbs]
-  (if (= @current-room 0)
+  (if (= @s/current-room 0)
     (say :path '(bed a))
     (say :path '(bed unknown))))
 
@@ -807,12 +797,13 @@
     (do-x-with-y verbs 'put 'in put-object!)))
 
 (defn cmd-save [verbs]
-  (save-game!)
+  (s/save-game!)
   (say :raw " * Game saved *"))
 
 (defn cmd-load [verbs]
-  (load-game!)
-  (say :raw " * Game loaded *"))
+  (if (s/load-game!)
+    (say :raw " * Game loaded *")
+    (say :raw "No saved game data!")))
 
 (defn cmd-help [verbs]
   (println "  M-A-M HELP")
@@ -852,36 +843,11 @@
   ([verbose]
    "Describes current room and prompts for user input"
    (when verbose
-     (describe-room @current-room)
+     (describe-room @s/current-room)
      (newline))
    (print "> ")
    (flush)
    (parse-input (request-command))))
-
-(defn save-game! []
-  "Saves the current game data into a file on the disk"
-  (let [game-state {:current-room @current-room
-                    :inventory @inventory
-                    :visited-rooms @visited-rooms
-                    :credits @credits
-                    :milestones @milestones
-                    :game-options @game-options
-                    :room-objects @room-objects}]
-    (spit "savedata", (with-out-str (pr game-state)))))
-
-(defn load-game! []
-  "Loads all previously saved game data"
-  (if (. (java.io.File. "savedata") exists)
-    (let [game-state (read-string (slurp "savedata"))]
-      (dosync
-        (ref-set current-room (game-state :current-room))
-        (ref-set inventory (game-state :inventory))
-        (ref-set visited-rooms (game-state :visited-rooms))
-        (ref-set credits (game-state :credits))
-        (ref-set milestones (game-state :milestones))
-        (ref-set game-options (game-state :game-options))
-        (ref-set room-objects (game-state :room-objects))))
-    (say :raw "No saved game data!")))
 
 (defn kill-player [reason]
   "Kills the player and ends the game"

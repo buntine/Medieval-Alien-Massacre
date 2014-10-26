@@ -51,6 +51,16 @@
       []           ;29
       [])))        ;30
 
+(defn set-option! [option value]
+  "Sets one of the pre-defined game options. Assumes valid input."
+  (dosync
+    (alter game-options assoc option value)))
+
+(defn valid-option? [option]
+  "Returns true if option is valid game option."
+  (let [opts (map key @game-options)]
+    (boolean (some #{option} opts))))
+
 (defn can-afford? [n]
   "Returns true if the player can afford the given price"
   (>= @credits n))
@@ -113,3 +123,28 @@
   "Physically adds/removes credits."
   (alter credits + c))
 
+(defn save-game! []
+  "Saves the current game data into a file on the disk"
+  (let [game-state {:current-room @current-room
+                    :inventory @inventory
+                    :visited-rooms @visited-rooms
+                    :credits @credits
+                    :milestones @milestones
+                    :game-options @game-options
+                    :room-objects @room-objects}]
+    (spit "savedata", (with-out-str (pr game-state)))))
+
+(defn load-game! []
+  "Loads all previously saved game data"
+  (if (. (java.io.File. "savedata") exists)
+    (let [game-state (read-string (slurp "savedata"))]
+      (dosync
+        (ref-set current-room (game-state :current-room))
+        (ref-set inventory (game-state :inventory))
+        (ref-set visited-rooms (game-state :visited-rooms))
+        (ref-set credits (game-state :credits))
+        (ref-set milestones (game-state :milestones))
+        (ref-set game-options (game-state :game-options))
+        (ref-set room-objects (game-state :room-objects))
+        true))
+    false))
