@@ -51,6 +51,19 @@
       []           ;29
       [])))        ;30
 
+(defn can-afford? [n]
+  "Returns true if the player can afford the given price"
+  (>= @credits n))
+
+(defn hit-milestone? [m]
+  "Returns true if the player has hit the given, named milestone"
+  (contains? @milestones m))
+
+(defn add-milestone! [m]
+  "Adds the given milestone to the players list"
+  (dosync
+    (alter milestones conj m)))
+
 (defn set-current-room! [room]
   (dosync
     (ref-set current-room room)))
@@ -75,12 +88,18 @@
             (fn [objs]
               (assoc-in objs [room] changed))))]
 
-  (defn take-object-from-room! [room objnum]
-    (alter-room! room (vec (remove #(= objnum %)
-                                (objects-in-room room)))))
+  (defn take-object-from-room!
+    ([objnum] (take-object-from-room! @current-room objnum))
+    ([room objnum]
+     (alter-room! room
+                  (vec (remove #(= objnum %)
+                                 (objects-in-room room))))))
 
-  (defn drop-object-in-room! [room objnum]
-    (alter-room! room (conj (objects-in-room room) objnum))))
+  (defn drop-object-in-room!
+    ([objnum] (drop-object-in-room! @current-room objnum))
+    ([room objnum]
+     (alter-room! room
+                  (conj (objects-in-room room) objnum)))))
 
 (defn remove-object-from-inventory! [objnum]
   "Physically removes an object from the players inventory."
@@ -90,7 +109,7 @@
   "Physically adds an object to the players inventory."
   (alter inventory conj objnum))
 
-(defn add-to-wallet! [c]
+(defn pay-the-man! [c]
   "Physically adds/removes credits."
   (alter credits + c))
 

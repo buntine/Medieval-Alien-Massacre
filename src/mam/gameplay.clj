@@ -81,19 +81,6 @@
             (concat (prospects-for (first verbs) context) realised)
             context))))
 
-(defn can-afford? [n]
-  "Returns true if the player can afford the given price"
-  (>= @credits n))
-
-(defn hit-milestone? [m]
-  "Returns true if the player has hit the given, named milestone"
-  (contains? @milestones m))
-
-(defn add-milestone! [m]
-  "Adds the given milestone to the players list"
-  (dosync
-    (alter milestones conj m)))
-
 (defn has-knife? []
   "Returns true if the player has a knife-like object"
   (some #((object-details %) :cutter) @inventory))
@@ -174,7 +161,7 @@
             (let [c ((object-details objnum) :credits)]
               ; If we are taking credits, just add them to the players wallet.
               (if (integer? c)
-                (s/add-to-wallet! c)
+                (s/pay-the-man! c)
                 (s/add-to-inventory! objnum))
             (s/take-object-from-room! @s/current-room objnum)
             (say :path '(commands taken))))))))
@@ -187,7 +174,7 @@
     (if (or (nil? evt) (evt))
       (dosync
         (s/remove-object-from-inventory! objnum)
-        (s/drop-object-in-room! @s/current-room objnum)
+        (s/drop-object-in-room! objnum)
         (say :path '(commands dropped))))))
 
 (letfn
@@ -250,9 +237,9 @@
    false then the side-effect will not occur (removal of item from game)."
   (let [evt (event-for objnum :drink)
         drink! #(dosync
-                  (if (@game-options :sound)
+                  (if (@s/game-options :sound)
                     (u/play-file "media/drink.wav"))
-                  (remove-object-from-inventory! objnum))]
+                  (s/remove-object-from-inventory! objnum))]
     (if (nil? evt)
       (say :path '(commands cannot-drink))
       (if (string? evt)
@@ -280,24 +267,24 @@
 (def speech-fn-for
   {:pod-manager
      #(cond
-        (not (can-afford? 3))
+        (not (s/can-afford? 3))
           (say :path '(talk pod-manager broke))
-        (not (hit-milestone? :speak-to-captain))
+        (not (s/hit-milestone? :speak-to-captain))
           (say :path '(talk pod-manager not-ready))
         :else
           (dosync
             (say :path '(talk pod-manager ready))
             (say :path '(talk pod-manager flying)
                  :speed 300)
-            (alter credits - 3)
-            (set-current-room! 12))),
+            (s/pay-the-man! -3)
+            (s/set-current-room! 12))),
    :repairs-captain
-     #(if (hit-milestone? :speak-to-captain)
+     #(if (s/hit-milestone? :speak-to-captain)
         (say :path '(talk repairs-captain finished))
         (do
           (doseq [x '(a b c d e)]
             (say :path (concat '(talk repairs-captain spiel) [x])))
-          (add-milestone! :speak-to-captain))),
+          (s/add-milestone! :speak-to-captain))),
    :homeless-bum
      #(say :path '(talk homeless-bum))})
 
@@ -306,21 +293,21 @@
   {:porno-to-boy
      #(dosync
         (say :path '(give porno-to-boy))
-        (take-object-from-room! @current-room 7)
-        (drop-object-in-room! @current-room 4)),
+        (s/take-object-from-room! 7)
+        (s/drop-object-in-room! 4)),
    :whisky-to-bum
-     #(if (not (hit-milestone? :alcohol-to-bum))
+     #(if (not (s/hit-milestone? :alcohol-to-bum))
         (dosync
           (say :path '(give whisky-to-bum))
-          (alter inventory conj 19)
-          (add-milestone! :alcohol-to-bum))
+          (s/add-object-to-inventory! 19)
+          (s/add-milestone! :alcohol-to-bum))
         (say :path '(give alcohol-to-bum))),
    :becherovka-to-bum
-     #(if (not (hit-milestone? :alcohol-to-bum))
+     #(if (not (s/hit-milestone? :alcohol-to-bum))
         (dosync
           (say :path '(give becherovka-to-bum))
-          (alter inventory conj 19)
-          (add-milestone! :alcohol-to-bum))
+          (s/add-object-to-inventory! 19)
+          (s/add-milestone! :alcohol-to-bum))
         (say :path '(give alcohol-to-bum)))})
 
 ; Functions to execute when player eats particular objects.
@@ -328,7 +315,7 @@
   {:eats-candy
      #(dosync
         (say :path '(eat candy))
-        (alter credits + 5))})
+        (s/pay-the-man! 5))})
 
 ; Functions to execute when player drinks particular objects.
 (def drink-fn-for
@@ -339,7 +326,7 @@
    :green-potion
      #(do
         (say :path '(drink green-potion))
-        (add-milestone! :drinks-green-potion)
+        (s/add-milestone! :drinks-green-potion)
         true),
    :brown-potion
      #(do
@@ -347,11 +334,11 @@
         (say :path '(drink brown-potion b) :speed 250)
         true)
    :salvika-whisky
-     #(if (in-inventory? 17)
+     #(if (s/in-inventory? 17)
         (do (say :path '(drink whisky success)) true)
         (do (say :path '(drink whisky fail)) false))
    :becherovka
-     #(if (in-inventory? 16)
+     #(if (s/in-inventory? 16)
         (do (say :path '(drink becherovka success)) true)
         (do (say :path '(drink becherovka fail)) false))})
 
@@ -360,31 +347,31 @@
   {:control-lever
      #(dosync
         (say :path '(pull control-lever))
-        (take-object-from-room! @current-room 2)
-        (drop-object-in-room! @current-room 3)
-        (set-current-room! 0))})
+        (s/take-object-from-room! 2)
+        (s/drop-object-in-room! 3)
+        (s/set-current-room! 0))})
 
 ; Functions to execute when player cuts particular objects.
 (def cut-fn-for
   {:spider-web
      #(dosync
         (say :path '(cut spider-web))
-        (take-object-from-room! @current-room 20))})
+        (s/take-object-from-room! 20))})
  
 ; Functions to execute when player takes particular objects.
 (def take-fn-for
   {:salvika-whisky
      #(if (can-afford? 3)
         (dosync
-          (alter credits - 3)
+          (s/pay-the-man! -3)
           true)
         (do
           (say :path '(take whisky))
           (kill-player "Rusty knife to the throat"))),
     :becherovka
-      #(if (can-afford? 4)
+      #(if (s/can-afford? 4)
         (dosync
-          (alter credits - 4)
+          (s/pay-the-man -4)
           true)
         (do
           (say :path '(take becherovka))
@@ -393,12 +380,6 @@
       (fn []
         (say :pth '(take paper))
         true)})
-
-;(defn make-dets [id details]
-;  "A helper function to merge in some sane defaults for object details"
-;  (let [defaults {:game nil, :inv nil, :weight 0, :edible false, :permanent false,
-;                  :living false, :events {}, :credits nil}]
-;    (merge defaults details)))
 
 (defn make-dets [id details]
   "A helper function to merge in some sane defaults for object details"
