@@ -6,56 +6,12 @@
 (ns mam.gameplay
   (:require [mam.util :as u])
   (:require [mam.text :as t])
+  (:require [mam.state :as s])
   (:use [clojure.string :only (join split)]))
 
 ; Declarations for some procedures I mention before they have been
 ; defined.
 (declare messages object-details kill-player cmd-verbs cmd-look)
-
-(def current-room (ref 0))             ; Current room the player is in.
-(def visited-rooms (ref []))           ; Rooms that the player has visited.
-(def inventory (ref []))               ; Players inventory of items.
-(def credits (ref 0))                  ; Players credits (aka $$$).
-(def milestones (ref #{}))             ; Players milestones. Used to track and manipulate story.
-(def game-options (ref {:retro true    ; Print to stdout with tiny pauses between characters.
-                        :sound true})) ; Play sound during gameplay.
-
-; A vector containing the objects that each room contains when the game starts. Each index
-; corresponds to the room as defined in 'rooms'.
-(def room-objects
-  (ref
-    (vector
-      [0 1]        ;0
-      []           ;1
-      [2]          ;2
-      []           ;3
-      []           ;4
-      []           ;5
-      []           ;6
-      [7]          ;7
-      []           ;8
-      []           ;9
-      [8]          ;10
-      [9 10]       ;11
-      [11]         ;12
-      []           ;13
-      []           ;14
-      [12 13 14]   ;15
-      [18]         ;16
-      [15 16 17]   ;17
-      []           ;18
-      [20]         ;19
-      []           ;20
-      [21 22 26]   ;21
-      []           ;22
-      [23]         ;23
-      []           ;24
-      []           ;25
-      [27]         ;26
-      [25]         ;27
-      [24]         ;28
-      []           ;29
-      [])))        ;30
 
 ; Maximum weight the user can carry at any one time.
 (def total-weight 12)
@@ -90,23 +46,11 @@
          :raw (rand-nth raw) :speed speed)
        (u/mam-pr raw speed))))
 
-(defn objects-in-room ([] (objects-in-room @current-room))
-  ([room]
-   (nth @room-objects room)))
-
-(defn room-has-object? [room objnum]
-  "Returns true if the gien room currently houses the given object"
-  (boolean (some #{objnum} (objects-in-room room))))
-
-(defn in-inventory? [objnum]
-  "Returns true if object assigned to 'objnum' is in players inventory"
-  (boolean (some #{objnum} @inventory)))
-
 (defn prospects-for [verb context]
   "Returns the prospective objects for the given verb.
    E.g: 'cheese' might mean objects 6 and 12 or object 9 or nothing."
   (let [objnums (object-identifiers verb)
-        fns {:room #(room-has-object? @current-room %)
+        fns {:room #(room-has-object? @s/current-room %)
              :inventory in-inventory?}]
     (if (nil? objnums)
       '()
@@ -214,30 +158,6 @@
   (let [opts (map key @game-options)]
     (boolean (some #{option} opts))))
 
-(defn set-current-room! [room]
-  (dosync
-    (ref-set current-room room)))
-
-(letfn
-  [(alter-room! [room changed]
-     "Physically alters the contents of the given. Must be called from within
-      a dosync form"
-     (alter room-objects
-            (fn [objs]
-              (assoc-in objs [room] changed))))]
-
-  (defn take-object-from-room! [room objnum]
-    (alter-room! room (vec (remove #(= objnum %)
-                                (objects-in-room room)))))
-
-  (defn drop-object-in-room! [room objnum]
-    (alter-room! room (conj (objects-in-room room) objnum))))
-
-(defn remove-object-from-inventory! [objnum]
-  "Physically removes an object from the players inventory. Must be called
-   within a dosync form"
-  (ref-set inventory (vec (remove #(= % objnum) @inventory))))
- 
 (defn take-object! [objnum]
   "Attempts to take an object from the current room. If the object
    has an event for :take, then it must return a boolean - if true,
@@ -254,9 +174,9 @@
             (let [c ((object-details objnum) :credits)]
               ; If we are taking credits, just add them to the players wallet.
               (if (integer? c)
-                (alter credits + c)
-                (alter inventory conj objnum))
-            (take-object-from-room! @current-room objnum)
+                (s/add-to-wallet! c)
+                (s/add-to-inventory! objnum))
+            (s/take-object-from-room! @s/current-room objnum)
             (say :path '(commands taken))))))))
 
 (defn drop-object! [objnum]
@@ -266,8 +186,8 @@
   (let [evt (event-for objnum :drop)]
     (if (or (nil? evt) (evt))
       (dosync
-        (remove-object-from-inventory! objnum)
-        (drop-object-in-room! @current-room objnum)
+        (s/remove-object-from-inventory! objnum)
+        (s/drop-object-in-room! @s/current-room objnum)
         (say :path '(commands dropped))))))
 
 (letfn
@@ -278,7 +198,7 @@
          (say :raw err-msg)
          (dosync
            ((events objx))
-           (remove-object-from-inventory! objx)))))]
+           (s/remove-object-from-inventory! objx)))))]
 
   (defn give-object! [objx objy]
     (give-or-put :give objx objy (t/text 'commands 'give-error)))
@@ -296,7 +216,7 @@
    (if (not (object-is? objnum :living))
      (say :path '(commands fuck-object))
      (do
-       (if (@game-options :sound)
+       (if (@s/game-options :sound)
          (u/play-file "media/fuck.wav"))
        (say :path '(commands fuck-living)))))
   {:ridiculous true})
@@ -323,7 +243,7 @@
         (if (@game-options :sound)
           (u/play-file "media/eat.wav"))
         (if (string? evt) (say :raw evt) (evt))
-        (remove-object-from-inventory! objnum)))))
+        (s/remove-object-from-inventory! objnum)))))
 
 (defn drink-object! [objnum]
   "Attempts to drink the given object. The event must return a boolean value, if
@@ -592,31 +512,6 @@
        {:permanent true}]
       ['staircase-a
        {:permanent true}]))))
-
-(defn save-game! []
-  "Saves the current game data into a file on the disk"
-  (let [game-state {:current-room @current-room
-                    :inventory @inventory
-                    :visited-rooms @visited-rooms
-                    :credits @credits
-                    :milestones @milestones
-                    :game-options @game-options
-                    :room-objects @room-objects}]
-    (spit "savedata", (with-out-str (pr game-state)))))
-
-(defn load-game! []
-  "Loads all previously saved game data"
-  (if (. (java.io.File. "savedata") exists)
-    (let [game-state (read-string (slurp "savedata"))]
-      (dosync
-        (ref-set current-room (game-state :current-room))
-        (ref-set inventory (game-state :inventory))
-        (ref-set visited-rooms (game-state :visited-rooms))
-        (ref-set credits (game-state :credits))
-        (ref-set milestones (game-state :milestones))
-        (ref-set game-options (game-state :game-options))
-        (ref-set room-objects (game-state :room-objects))))
-    (say :raw "No saved game data!")))
   
 (def directions {'north 0 'east 1 'south 2 'west 3 'northeast 4
                  'southeast 5 'southwest 6 'northwest 7 'up 8 'down 9
@@ -981,6 +876,31 @@
    (print "> ")
    (flush)
    (parse-input (request-command))))
+
+(defn save-game! []
+  "Saves the current game data into a file on the disk"
+  (let [game-state {:current-room @current-room
+                    :inventory @inventory
+                    :visited-rooms @visited-rooms
+                    :credits @credits
+                    :milestones @milestones
+                    :game-options @game-options
+                    :room-objects @room-objects}]
+    (spit "savedata", (with-out-str (pr game-state)))))
+
+(defn load-game! []
+  "Loads all previously saved game data"
+  (if (. (java.io.File. "savedata") exists)
+    (let [game-state (read-string (slurp "savedata"))]
+      (dosync
+        (ref-set current-room (game-state :current-room))
+        (ref-set inventory (game-state :inventory))
+        (ref-set visited-rooms (game-state :visited-rooms))
+        (ref-set credits (game-state :credits))
+        (ref-set milestones (game-state :milestones))
+        (ref-set game-options (game-state :game-options))
+        (ref-set room-objects (game-state :room-objects))))
+    (say :raw "No saved game data!")))
 
 (defn kill-player [reason]
   "Kills the player and ends the game"
