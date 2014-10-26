@@ -19,20 +19,8 @@
 ; Words that should be ignored in commands.
 (def ignore-words '(that is the fucking damn)) 
 
-; Specifies the verbs that users can identify an object with (a gun might
-; be "gun", "weapon", etc). A set means that the given term may refer to
-; multiple objects. The system will try to deduce the correct object when
-; a command is entered. Each index corresponds to the same index in room-objects.
-(def object-identifiers
-    {'candy 0 'bar 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3 'boy 7
-     'teenager 7 'keycard #{4 5 6} 'key #{4 5 6} 'man #{8 9 21 22 23} 'robot 10
-     'green #{4 13} 'red #{5 12} 'brown 14 'silver 6 'bum 11 'potion #{12 13 14}
-     'credits 18 'attendant 15 'woman 15 'salvika 16 'whisky 16 'becherovka 17
-     'web 20 'knife 19 'small 19 'thin 22 'skinny 22 'fat 21 'paper 24 'book 25
-     'stone 26 'rock 26})
-
 (defn text-speed []
-  (if (@game-options :retro) 25 0))
+  (if (@s/game-options :retro) 25 0))
 
 (defn say 
   "Prints s to the game screen. If given a vector of strings, a random one will be chosen."
@@ -49,8 +37,8 @@
 (defn prospects-for [verb context]
   "Returns the prospective objects for the given verb.
    E.g: 'cheese' might mean objects 6 and 12 or object 9 or nothing."
-  (let [objnums (object-identifiers verb)
-        fns {:room #(room-has-object? @s/current-room %)
+  (let [objnums (s/object-identifiers verb)
+        fns {:room #(s/room-has-object? %)
              :inventory s/in-inventory?}]
     (if (nil? objnums)
       '()
@@ -118,7 +106,7 @@
 
 (defn describe-objects-for-room [room]
   "Prints a description for each object that's in the given room"
-  (let [objs (@room-objects room)]
+  (let [objs (@s/room-objects room)]
     (if (not (empty? objs))
       (u/print-with-newlines
         (remove nil? (map describe-object objs)) (text-speed)))))
@@ -126,12 +114,12 @@
 (defn describe-room ([room] (describe-room room false))
   ([room verbose?]
    "Prints a description of the current room"
-   (let [visited? (some #{room} @visited-rooms)
+   (let [visited? (some #{room} @s/visited-rooms)
          descs (t/rooms room)]
      (if visited?
        (say :raw ((if verbose? first second) descs))
        (dosync
-         (alter visited-rooms conj room)
+         (s/visit-room! room)
          (say :raw (first descs))))
      (describe-objects-for-room room))))
 
@@ -152,7 +140,7 @@
               ; If we are taking credits, just add them to the players wallet.
               (if (integer? c)
                 (s/pay-the-man! c)
-                (s/add-to-inventory! objnum))
+                (s/add-object-to-inventory! objnum))
             (s/take-object-from-room! @s/current-room objnum)
             (say :path '(commands taken))))))))
 
@@ -217,7 +205,7 @@
         (say :path '(commands do-not-eat))
         (kill-player ((object-details objnum) :inv)))
       (dosync
-        (if (@game-options :sound)
+        (if (@s/game-options :sound)
           (u/play-file "media/eat.wav"))
         (if (string? evt) (say :raw evt) (evt))
         (s/remove-object-from-inventory! objnum)))))
@@ -351,7 +339,7 @@
 ; Functions to execute when player takes particular objects.
 (def take-fn-for
   {:salvika-whisky
-     #(if (can-afford? 3)
+     #(if (s/can-afford? 3)
         (dosync
           (s/pay-the-man! -3)
           true)
@@ -361,7 +349,7 @@
     :becherovka
       #(if (s/can-afford? 4)
         (dosync
-          (s/pay-the-man -4)
+          (s/pay-the-man! -4)
           true)
         (do
           (say :path '(take becherovka))
@@ -383,7 +371,7 @@
                     :inspect (text-path 'inspect)}]
       (merge defaults details))))
 
-; The details of all objects. Each object is assigned one or more numbers in object-identifiers,
+; The details of all objects. Each object is assigned one or more numbers in s/object-identifiers,
 ; which corresponds to it's index here. Permanent object cannot be taken and thus don't require
 ; weights or inventory descriptions. Events, such as :eat, :drink, :speak, :give, :take and :put
 ; can be assigned and will be executed in the correct contexts.
@@ -492,7 +480,7 @@
   "Returns a function that checks if the player has the given key. If they
    do, set the current room to 'room'. Otherwise, let them know"
   (fn []
-    (if (in-inventory? keynum)
+    (if (s/in-inventory? keynum)
       (let [key-name (. ((object-details keynum) :inv) toLowerCase)]
         (s/set-current-room! room)
         (if (@s/game-options :sound)
@@ -507,7 +495,7 @@
   "Returns a function that checks if the given room houses the given object. If
    it does, the player cannot go in the given direction."
   (fn []
-    (if (room-has-object? @s/current-room objnum)
+    (if (s/room-has-object? objnum)
       (say :raw "You can't go that way.")
       (s/set-current-room! room))))
 
@@ -851,7 +839,7 @@
 
 (defn kill-player [reason]
   "Kills the player and ends the game"
-  (if (@game-options :sound)
+  (if (@s/game-options :sound)
     (u/play-file "media/kill.wav"))
   (say :raw (str "You were killed by: " reason))
   (cmd-quit false))

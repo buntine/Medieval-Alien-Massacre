@@ -51,6 +51,18 @@
       []           ;29
       [])))        ;30
 
+; Specifies the verbs that users can identify an object with (a gun might
+; be "gun", "weapon", etc). A set means that the given term may refer to
+; multiple objects. The system will try to deduce the correct object when
+; a command is entered. Each index corresponds to the same index in room-objects.
+(def object-identifiers
+    {'candy 0 'bar 0 'bed 1 'lever 2 'mag 3 'magazine 3 'porno 3 'boy 7
+     'teenager 7 'keycard #{4 5 6} 'key #{4 5 6} 'man #{8 9 21 22 23} 'robot 10
+     'green #{4 13} 'red #{5 12} 'brown 14 'silver 6 'bum 11 'potion #{12 13 14}
+     'credits 18 'attendant 15 'woman 15 'salvika 16 'whisky 16 'becherovka 17
+     'web 20 'knife 19 'small 19 'thin 22 'skinny 22 'fat 21 'paper 24 'book 25
+     'stone 26 'rock 26})
+
 (defn set-option! [option value]
   "Sets one of the pre-defined game options. Assumes valid input."
   (dosync
@@ -82,9 +94,11 @@
   ([room]
    (nth @room-objects room)))
 
-(defn room-has-object? [room objnum]
+(defn room-has-object?
   "Returns true if the gien room currently houses the given object"
-  (boolean (some #{objnum} (objects-in-room room))))
+  ([objnum] (room-has-object? @current-room objnum))
+  ([room objnum]
+   (boolean (some #{objnum} (objects-in-room room)))))
 
 (defn in-inventory? [objnum]
   "Returns true if object assigned to 'objnum' is in players inventory"
@@ -120,8 +134,10 @@
   (alter inventory conj objnum))
 
 (defn pay-the-man! [c]
-  "Physically adds/removes credits."
   (alter credits + c))
+
+(defn visit-room! [room]
+  (alter visited-rooms conj room))
 
 (defn save-game! []
   "Saves the current game data into a file on the disk"
