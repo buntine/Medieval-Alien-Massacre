@@ -819,7 +819,7 @@
    'northeast cmd-northeast 'southeast cmd-southeast 'southwest cmd-southwest
    'drop cmd-drop 'throw cmd-drop 'inventory cmd-inventory 'pull cmd-pull
    'northwest cmd-northwest 'help cmd-help 'take cmd-take 'get cmd-take 'buy cmd-take
-   'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit
+   'examine cmd-inspect 'inspect cmd-inspect 'look cmd-look 'quit cmd-quit 'exit cmd-quit
    'suicide cmd-quit 'bed cmd-bed 'sleep cmd-bed 'eat cmd-eat 'fuck cmd-fuck
    'rape cmd-fuck 'talk cmd-talk 'speak cmd-talk 'inv cmd-inventory
    'save cmd-save 'load cmd-load 'give cmd-give 'put cmd-put 'in cmd-in
