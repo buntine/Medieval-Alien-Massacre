@@ -40,7 +40,7 @@ If you've installed rlwrap:
 Otherwise:
 
 ```
-  $ java -jar mam-1.0.1-SNAPSHOT-standalone.jar
+  $ java -jar target/mam-1.0.1-SNAPSHOT-standalone.jar
 ```
 
 Or see a list of standalone packages in my downloads: https://github.com/buntine/Medieval-Alien-Massacre/archives/master
