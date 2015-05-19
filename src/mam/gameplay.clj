@@ -356,7 +356,7 @@
           (kill-player "Acid to the brain")))
     :paper
       (fn []
-        (say :pth '(take paper))
+        (say :path '(take paper))
         true)})
 
 (defn make-dets [id details]
