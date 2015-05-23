@@ -7,7 +7,7 @@ A hobby project, written in Clojure (A Lisp for the JVM).
 
 This project is dedicated to the memory of my friend Adam Hillier.
 
-Please see the new and improved version of MAM at: [Moon Dweller](http://github.com/buntine/moon-dweller).
+Please see the new and improved version of MAM at: [Moon Dweller](http://github.com/buntine/MoonDweller).
 
 
 Installation
