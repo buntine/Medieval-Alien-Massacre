@@ -58,6 +58,6 @@ Or see a list of standalone packages in my downloads: https://github.com/buntine
 
 Copyright (C) 2010-2014 Andrew Buntine
 
-http://www.andrewbuntine.com
+http://bunts.io
 
 Distributed under the Eclipse Public License, the same as Clojure.
